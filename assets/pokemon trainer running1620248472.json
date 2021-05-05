@@ -1,0 +1,888 @@
+[{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 176.694,
+        "median": 185.25,
+        "standardDeviation": 20016.1,
+        "kurtosis": -1.00126,
+        "skewness": -0.935278,
+        "entropy": 0.483687
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 56.24,
+        "median": 0,
+        "standardDeviation": 27172,
+        "kurtosis": -0.182929,
+        "skewness": 1.34799,
+        "entropy": 0.761168
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 219.877,
+        "median": 247,
+        "standardDeviation": 17475.7,
+        "kurtosis": 4.08718,
+        "skewness": -2.37005,
+        "entropy": 0.397629
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 215.037,
+        "median": 247,
+        "standardDeviation": 17767.6,
+        "kurtosis": 2.93551,
+        "skewness": -2.06634,
+        "entropy": 0.388924
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 215.624,
+        "median": 247,
+        "standardDeviation": 17648.9,
+        "kurtosis": 3.15903,
+        "skewness": -2.12016,
+        "entropy": 0.387028
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Background",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 0,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "9003b736d863e946f6ea574b1a6efce80dfda410c59448aab77ba0e97f592e43"
+    },
+    "tainted": false,
+    "filesize": "0B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "3.45445MB",
+    "userTime": "0.060u",
+    "elapsedTime": "0:01.062",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+},
+{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 174.792,
+        "median": 185.25,
+        "standardDeviation": 21245.6,
+        "kurtosis": -1.07757,
+        "skewness": -0.888421,
+        "entropy": 0.519997
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 63.3195,
+        "median": 0,
+        "standardDeviation": 28313.4,
+        "kurtosis": -0.642486,
+        "skewness": 1.16513,
+        "entropy": 0.808591
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 214.896,
+        "median": 247,
+        "standardDeviation": 18890.2,
+        "kurtosis": 2.69159,
+        "skewness": -2.0762,
+        "entropy": 0.431523
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 209.697,
+        "median": 247,
+        "standardDeviation": 19114.9,
+        "kurtosis": 1.83054,
+        "skewness": -1.81251,
+        "entropy": 0.420588
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 211.256,
+        "median": 247,
+        "standardDeviation": 18664,
+        "kurtosis": 2.30008,
+        "skewness": -1.92063,
+        "entropy": 0.419285
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Background",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 1,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "a377e2d92065406059c17c4d440e949b200f55869eaa75ed81a25591315ce3ad"
+    },
+    "tainted": false,
+    "filesize": "0B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "1.62344MB",
+    "userTime": "0.140u",
+    "elapsedTime": "0:01.132",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+},
+{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 175.417,
+        "median": 185.25,
+        "standardDeviation": 20684.7,
+        "kurtosis": -1.06099,
+        "skewness": -0.902397,
+        "entropy": 0.487383
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 58.5741,
+        "median": 0,
+        "standardDeviation": 27566.8,
+        "kurtosis": -0.348365,
+        "skewness": 1.28516,
+        "entropy": 0.777492
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 217.111,
+        "median": 247,
+        "standardDeviation": 18323.5,
+        "kurtosis": 3.22062,
+        "skewness": -2.19097,
+        "entropy": 0.39599
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 212.239,
+        "median": 247,
+        "standardDeviation": 18675.7,
+        "kurtosis": 2.23547,
+        "skewness": -1.92144,
+        "entropy": 0.388091
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 213.743,
+        "median": 247,
+        "standardDeviation": 18172.8,
+        "kurtosis": 2.76577,
+        "skewness": -2.03242,
+        "entropy": 0.387957
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Background",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 2,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "b98149ff1fb0adc780dd5d4b2a13838cbb3d2e5da9fa8bc9bb508fa20f9e9c65"
+    },
+    "tainted": false,
+    "filesize": "0B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "998970B",
+    "userTime": "0.220u",
+    "elapsedTime": "0:01.215",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+},
+{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 176.084,
+        "median": 185.25,
+        "standardDeviation": 20492.2,
+        "kurtosis": -1.03515,
+        "skewness": -0.923255,
+        "entropy": 0.486069
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 56.8104,
+        "median": 0,
+        "standardDeviation": 27270.2,
+        "kurtosis": -0.224767,
+        "skewness": 1.33238,
+        "entropy": 0.765222
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 219.855,
+        "median": 247,
+        "standardDeviation": 17843.5,
+        "kurtosis": 4.23912,
+        "skewness": -2.41166,
+        "entropy": 0.396112
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 214.019,
+        "median": 247,
+        "standardDeviation": 18434,
+        "kurtosis": 2.77357,
+        "skewness": -2.05221,
+        "entropy": 0.394052
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 213.649,
+        "median": 247,
+        "standardDeviation": 18420.9,
+        "kurtosis": 2.73601,
+        "skewness": -2.03561,
+        "entropy": 0.388889
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Background",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 3,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "a9a1f9ad72ea403de1a28a51dde9e1d3527201290eb4399dbb99f99f9841064b"
+    },
+    "tainted": false,
+    "filesize": "0B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "709867B",
+    "userTime": "0.330u",
+    "elapsedTime": "0:01.302",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+},
+{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 174.222,
+        "median": 185.25,
+        "standardDeviation": 21567.1,
+        "kurtosis": -1.09848,
+        "skewness": -0.876616,
+        "entropy": 0.520514
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 64.8305,
+        "median": 0,
+        "standardDeviation": 28536.1,
+        "kurtosis": -0.725778,
+        "skewness": 1.12882,
+        "entropy": 0.817925
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 213.573,
+        "median": 247,
+        "standardDeviation": 19247.3,
+        "kurtosis": 2.44921,
+        "skewness": -2.02019,
+        "entropy": 0.427338
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 208.284,
+        "median": 247,
+        "standardDeviation": 19484.8,
+        "kurtosis": 1.6229,
+        "skewness": -1.76017,
+        "entropy": 0.419559
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 210.201,
+        "median": 247,
+        "standardDeviation": 19000.3,
+        "kurtosis": 2.13847,
+        "skewness": -1.88579,
+        "entropy": 0.417232
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "Background",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 4,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "ea06ee7c80a48860c90c1e4008b58f67e34fa1310e6a80352d76c0e982aceb89"
+    },
+    "tainted": false,
+    "filesize": "0B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "587787B",
+    "userTime": "0.400u",
+    "elapsedTime": "0:01.365",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+},
+{
+  "version": "1.0",
+  "image": {
+    "name": "/home/videosdownloader/public_html/image/public/uploadt/pokemon trainer running.gif",
+    "baseName": "pokemon trainer running.gif",
+    "format": "GIF",
+    "formatDescription": "GIF",
+    "mimeType": "image/gif",
+    "class": "PseudoClass",
+    "geometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "units": "Undefined",
+    "type": "PaletteAlpha",
+    "baseType": "Undefined",
+    "endianness": "Undefined",
+    "colorspace": "sRGB",
+    "depth": 8,
+    "baseDepth": 8,
+    "channelDepth": {
+      "alpha": 1,
+      "red": 8,
+      "green": 8,
+      "blue": 1
+    },
+    "pixels": 860000,
+    "imageStatistics": {
+      "Overall": {
+        "min": 0,
+        "max": 255,
+        "mean": 175.646,
+        "median": 185.25,
+        "standardDeviation": 20707.1,
+        "kurtosis": -1.0421,
+        "skewness": -0.912068,
+        "entropy": 0.492039
+      }
+    },
+    "channelStatistics": {
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 59.3616,
+        "median": 0,
+        "standardDeviation": 27695.8,
+        "kurtosis": -0.400895,
+        "skewness": 1.26456,
+        "entropy": 0.782844
+      },
+      "red": {
+        "min": 0,
+        "max": 255,
+        "mean": 216.699,
+        "median": 247,
+        "standardDeviation": 18422.8,
+        "kurtosis": 3.16182,
+        "skewness": -2.17506,
+        "entropy": 0.400982
+      },
+      "green": {
+        "min": 0,
+        "max": 247,
+        "mean": 212.593,
+        "median": 247,
+        "standardDeviation": 18476.1,
+        "kurtosis": 2.46649,
+        "skewness": -1.96124,
+        "entropy": 0.392135
+      },
+      "blue": {
+        "min": 0,
+        "max": 249,
+        "mean": 213.931,
+        "median": 247,
+        "standardDeviation": 18233.6,
+        "kurtosis": 2.91679,
+        "skewness": -2.07397,
+        "entropy": 0.392193
+      }
+    },
+    "alpha": "#F7F7F700",
+    "colormapEntries": 32,
+    "colormap": [
+      "#966045FF","#E46045FF","#FFE1AFFF","#FF6666FF","#E4B998FF",
+      "#FFCD5EFF","#C18139FF","#E6B164FF","#CDCDCDFF","#E9E9F9FF",
+      "#743030FF","#8479A3FF","#439ACFFF","#35357BFF","#5460BCFF",
+      "#000000FF","#F7F7F700","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF","#000000FF","#000000FF","#000000FF",
+      "#000000FF","#000000FF"
+    ],
+    "renderingIntent": "Perceptual",
+    "gamma": 0.454545,
+    "chromaticity": {
+      "redPrimary": {
+        "x": 0.64,
+        "y": 0.33
+      },
+      "greenPrimary": {
+        "x": 0.3,
+        "y": 0.6
+      },
+      "bluePrimary": {
+        "x": 0.15,
+        "y": 0.06
+      },
+      "whitePrimary": {
+        "x": 0.3127,
+        "y": 0.329
+      }
+    },
+    "matteColor": "#BDBDBD",
+    "backgroundColor": "#F7F7F700",
+    "borderColor": "#DFDFDF",
+    "transparentColor": "#F7F7F700",
+    "interlace": "None",
+    "intensity": "Undefined",
+    "compose": "Over",
+    "pageGeometry": {
+      "width": 500,
+      "height": 430,
+      "x": 0,
+      "y": 0
+    },
+    "dispose": "None",
+    "delay": "13x100",
+    "iterations": 0,
+    "scene": 5,
+    "scenes": 6,
+    "compression": "LZW",
+    "orientation": "Undefined",
+    "properties": {
+      "date:create": "2021-05-05T21:01:09+00:00",
+      "date:modify": "2021-05-05T21:01:09+00:00",
+      "signature": "7461b7dc177ccb5624a18c529b7fc2be5beecd7263abd9dd80d41f4730d42b6f"
+    },
+    "tainted": false,
+    "filesize": "40734B",
+    "numberPixels": "215000",
+    "pixelsPerSecond": "497337B",
+    "userTime": "0.470u",
+    "elapsedTime": "0:01.432",
+    "version": "ImageMagick 7.0.10-58 Q16 x86_64 2021-01-14 https://imagemagick.org"
+  }
+}]

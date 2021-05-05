@@ -3,6 +3,10 @@ import { Platform, Text, View, StyleSheet, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+import LottieView from 'lottie-react-native';
+
+
+
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -24,7 +28,25 @@ export default function App() {
     text = JSON.stringify(location);
   }
   if (location === null || location === undefined) {
-    return <View style={styles.container}></View>;
+    return (
+      <View
+          style={{
+              flex: 1,
+              backgroundColor: '#ffffff'
+          }}
+      >
+          <LottieView
+              source={require('./assets/trainer.json')}
+              autoPlay
+              loop={true}
+              speed={1}
+              onAnimationFinish={() => {
+                  console.log('Animation Finished!')
+                  // this.props.navigation.replace('Home');
+              }}
+          />
+      </View>
+  )
   } else {
     return (
       <View style={styles.container}>
