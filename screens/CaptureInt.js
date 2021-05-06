@@ -11,12 +11,13 @@ import {
   Dimensions,
   DeviceEventEmitter,
 } from 'react-native';
-import { BarCodeScanner, Permissions, Gyroscope } from 'expo';
+import { Gyroscope } from 'expo-sensors';
+import { Camera } from 'expo-camera';
 
 const { height, width } = Dimensions.get('window');
-
-export const CameraCapture = (props) => {
-  const [hasCameraPermission, setCameraPermission] = useState(null);
+export default function CaptureInt(props) {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(null);
 
   //Set up refs
@@ -39,10 +40,7 @@ export const CameraCapture = (props) => {
 
     onPanResponderMove: Animated.event([
       null,
-      {
-        dx: animatedPokeball.x,
-        dy: animatedPokeball.y,
-      },
+      { dx: animatedPokeball.x, dy: animatedPokeball.y },
     ]),
 
     onPanResponderRelease: (event, gesture) => {
@@ -61,39 +59,19 @@ export const CameraCapture = (props) => {
 
   useEffect(() => {
     (async () => {
-      const { status } = await CameraCapture.requestPermissionAsync();
-      setCameraPermission(status === 'granted');
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
     })();
-    Gyroscope.setUpdateInterval(50);
-
-    Gyroscope.addListener(
-      this.trackGyrometer(
-        Animated.event([
-          {
-            x: this.animatedPokemonPosition.x,
-            y: this.animatedPokemonPosition.y,
-          },
-        ])
-      )
-    );
-    return function cleanup() {
-      Gyroscope.removeAllListeners();
-    };
   }, []);
-  if (hasCameraPermission === null) {
-    return <View />;
-  }
-  if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
 
-  const trackGyrometer = (eventHandler) => {
+  function trackGyrometer(eventHandler) {
     return (data) => {
       pokemonPosition.x += (data.y - 0.03) * 30;
       pokemonPosition.y += (data.x + 0.05) * 30;
+
       eventHandler(pokemonPosition);
     };
-  };
+  }
 
   const goBack = () => {
     props.navigator.pop();
@@ -110,15 +88,47 @@ export const CameraCapture = (props) => {
       Math.abs(pokeballX - pokemonX) < 50 && Math.abs(pokeballY - pokemonY) < 50
     );
   };
+
+  useEffect(() => {
+    Gyroscope.setUpdateInterval(50);
+
+    Gyroscope.addListener(
+      trackGyrometer(
+        Animated.event([
+          { x: animatedPokemonPosition.x, y: animatedPokemonPosition.y },
+        ])
+      )
+    );
+    return function cleanup() {
+      Gyroscope.removeAllListeners();
+    };
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
   return (
-    <View>
-      {hasCameraPermission && (
-        <BarCodeScanner
-          style={styles.camera}
-          type={'back'}
-          onBarCodeRead={() => {}}
-        />
-      )}
+    <View style={styles.container}>
+      <StatusBar animated hidden />
+      <Camera style={styles.camera} type={type}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setType(
+                type === Camera.Constants.Type.back
+                  ? Camera.Constants.Type.front
+                  : Camera.Constants.Type.back
+              );
+            }}
+          >
+            <Text style={styles.text}> Flip </Text>
+          </TouchableOpacity>
+        </View>
+      </Camera>
 
       {captured ? (
         <View style={[styles.overlay, styles.captureOverlay]}>
@@ -126,8 +136,8 @@ export const CameraCapture = (props) => {
         </View>
       ) : (
         <Animated.Image
-          source={props.route.params.pokemon.image}
-          styles={[
+          source={require('../img/pokemon/1.png')}
+          style={[
             styles.pokemon,
             {
               transform: [
@@ -147,11 +157,11 @@ export const CameraCapture = (props) => {
 
       <View style={[styles.overlay, styles.bottomOverlay]}>
         <Animated.Image
-          source={require('../img/pokeball.png')}
+          source={require('../img/pokemon/pokeball.png')}
           style={{
             transform: [
-              { translateX: this.animatedPokeball.x },
-              { translateY: this.animatedPokeball.y },
+              { translateX: animatedPokeball.x },
+              { translateY: animatedPokeball.y },
               { rotate: interpolatedRotateAnimation },
             ],
           }}
@@ -160,7 +170,7 @@ export const CameraCapture = (props) => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
