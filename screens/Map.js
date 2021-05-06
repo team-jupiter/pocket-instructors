@@ -5,7 +5,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  Image
+  Image,
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -20,7 +20,7 @@ if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 
-export default function Map2({ navigation }) {
+export default function Map({ navigation }) {
   const targetRadius = 150;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -68,7 +68,7 @@ export default function Map2({ navigation }) {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
         }}
       >
         <LottieView
@@ -93,7 +93,7 @@ export default function Map2({ navigation }) {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
 
     let instructorTracker = [];
@@ -153,7 +153,7 @@ export default function Map2({ navigation }) {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
             latitudeDelta: 1 / 300,
-            longitudeDelta: 2 / 300
+            longitudeDelta: 2 / 300,
           }}
           // provider={PROVIDER_GOOGLE}
           // customMapStyle={MapStyle}
@@ -173,7 +173,7 @@ export default function Map2({ navigation }) {
             // key={`${p.latitude}::${p.longitude}`}
             coordinate={{
               latitude: userLocation.latitude,
-              longitude: userLocation.longitude
+              longitude: userLocation.longitude,
             }}
           >
             <Image
@@ -209,7 +209,7 @@ export default function Map2({ navigation }) {
               // key={`${p.latitude}::${p.longitude}`}
               coordinate={{
                 latitude: p.latitude,
-                longitude: p.longitude
+                longitude: p.longitude,
               }}
             >
               <Image
@@ -231,16 +231,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
-    padding: 8
+    padding: 8,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
-  }
+    height: Dimensions.get('window').height,
+  },
 });

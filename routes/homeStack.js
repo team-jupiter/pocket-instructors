@@ -5,19 +5,24 @@ import { createAppContainer } from 'react-navigation';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Map from '../screens/Map';
+import CaptureInstructor from '../screens/CaptureInt';
+import CaptureInt from '../screens/CaptureInt';
 
 const screens = {
-    // name of screen: {
-    //   screen: screenName }
-    Login: {
-        screen: Login,
-    },
-    SignUp: {
-        screen: SignUp,
-    },
-    Map: {
-        screen: Map,
-    },
+  // name of screen: {
+  //   screen: screenName }
+  Login: {
+    screen: Login,
+  },
+  SignUp: {
+    screen: SignUp,
+  },
+  Map: {
+    screen: Map,
+  },
+  CaptureInt: {
+    screen: CaptureInt,
+  },
 };
 
 const homeStack = createStackNavigator(screens);
