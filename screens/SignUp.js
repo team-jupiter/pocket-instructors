@@ -31,6 +31,9 @@ export default class SignUp extends Component {
             const result = await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
+            this.props.navigation.navigate('Map', { email });
+            this.props.navigation.navigate('Map');
+
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);

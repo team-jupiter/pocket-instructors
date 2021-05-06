@@ -6,13 +6,38 @@ import MapView from 'react-native-maps';
 import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
-import Navigator from '../routes/homeStack';
 if (firebase.app.length === 0) {
     firebase.initializeApp(FirebaseConfig);
 }
-export default function Map({ Navigator }) {
+export default function Map({ navigation }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [userData, setUserData] = useState([]);
+
+    const ref = firebase.firestore().collection('Trainer');
+    // function getTrainerData() {
+    //     ref.onSnapshot((querySnapshot) => {
+    //         const items = [];
+    //         querySnapshot.forEach((doc) => {
+    //             items.push(doc.data());
+    //         });
+    //         console.log(items);
+    //     });
+    // }
+
+    const email = navigation.getParam('email');
+    console.log('EMAIL -->', email);
+    function getTrainerData() {
+        ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+            const items = [];
+            querySnapshot.forEach((doc) => {
+                items.push(doc.data());
+            });
+            setUserData(items);
+            console.log('ITEMS ', items);
+        });
+    }
+
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -23,6 +48,8 @@ export default function Map({ Navigator }) {
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
         })();
+        getTrainerData();
+        console.log(userData);
     }, []);
     let text = `waiting..`;
     if (errorMsg) {

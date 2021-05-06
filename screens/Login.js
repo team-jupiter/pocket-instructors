@@ -16,26 +16,27 @@ import Navigator from '../routes/homeStack';
 export default class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            email: '',
-            password: '',
-        };
     }
+    state = {
+        email: '',
+        password: '',
+        userData: [],
+    };
+
     async onLogin() {
         try {
             const { email, password } = this.state;
             const result = await firebase
                 .auth()
                 .signInWithEmailAndPassword(email, password);
-            console.log(result);
+            console.log('LOGGED IN');
+            this.props.navigation.navigate('Map', { email });
         } catch (error) {
             console.log('LOGIN PAGE ERROR', error);
-            console.log(FirebaseConfig);
         }
     }
-    pressHandler() {
+    pressSignUpHandler() {
         this.props.navigation.navigate('SignUp');
-        console.log(this.props.navigation);
     }
 
     render() {
@@ -66,7 +67,10 @@ export default class Login extends Component {
                     <Text style={styles.buttonText}> Login </Text>
                 </TouchableOpacity>
 
-                <Button title="SignUp" onPress={() => this.pressHandler()} />
+                <Button
+                    title="SignUp"
+                    onPress={() => this.pressSignUpHandler()}
+                />
             </View>
         );
     }
