@@ -26,8 +26,8 @@ export default function Map({ navigation }) {
   const targetRadius = 150;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [userData, setUserData] = useState([]);
-
+  const [userData, setUserData] = useState();
+  const [instructors, setInstructors] = useState([]);
   const ref = firebase.firestore().collection('Trainer');
 
   const onPress = () => {
@@ -41,12 +41,21 @@ export default function Map({ navigation }) {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
+        console.log('QUEREY--->', querySnapshot)
         items.push(doc.data());
       });
       setUserData(items);
       console.log('ITEMS ', items);
     });
   }
+  function addInstructor(newInstructor) {
+    if (instructors.length) {
+        console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+        ref.doc('trainer1').update({
+            instructors: [...instructors, newInstructor],
+        });
+    }
+}
 
   useEffect(() => {
     (async () => {
@@ -64,6 +73,12 @@ export default function Map({ navigation }) {
     getTrainerData();
     console.log(userData);
   }, []);
+  useEffect(() => {
+    if (userData) {
+      console.log("USERDATA--->",userData)
+      setInstructors(userData[0].instructors);
+    }
+  }, [userData]);
   let text = `waiting..`;
   if (errorMsg) {
     text = errorMsg;
@@ -237,3 +252,5 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
   },
 });
+
+
