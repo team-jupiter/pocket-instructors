@@ -19,7 +19,7 @@ export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(null);
-
+  console.log(props);
   //Set up refs
   const gyroTracker = null;
 
@@ -43,6 +43,7 @@ export default function CaptureInt(props) {
       { dx: animatedPokeball.x, dy: animatedPokeball.y },
     ]),
 
+    // if capture is set to true push to data base
     onPanResponderRelease: (event, gesture) => {
       if (isCaptured(gesture)) {
         (setCaptured = true),
