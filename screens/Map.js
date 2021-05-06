@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet, Dimensions } from 'react-native';
+import {
+    Platform,
+    Text,
+    View,
+    StyleSheet,
+    Dimensions,
+    Button,
+} from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
@@ -12,30 +19,52 @@ if (firebase.app.length === 0) {
 export default function Map({ navigation }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [userData, setUserData] = useState([]);
-
+    const [userData, setUserData] = useState();
+    const [instructors, setInstructors] = useState([]);
     const ref = firebase.firestore().collection('Trainer');
-    // function getTrainerData() {
-    //     ref.onSnapshot((querySnapshot) => {
-    //         const items = [];
-    //         querySnapshot.forEach((doc) => {
-    //             items.push(doc.data());
-    //         });
-    //         console.log(items);
-    //     });
-    // }
 
     const email = navigation.getParam('email');
-    console.log('EMAIL -->', email);
-    function getTrainerData() {
-        ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+
+    //pulling trainer data
+    async function getTrainerData() {
+        await ref.where('email', '==', email).onSnapshot((querySnapshot) => {
             const items = [];
             querySnapshot.forEach((doc) => {
                 items.push(doc.data());
             });
-            setUserData(items);
-            console.log('ITEMS ', items);
+            return setUserData(items);
         });
+    }
+
+    const newInstructor = {
+        instructorDexID: 2,
+        instructorName: 'Jon Dagdagan',
+        description:
+            'Jon is a legendary instructor. His voice is said to bring peace to world wars and calamities',
+        maxAttack: 200,
+        maxDefense: 50,
+        maxHP: 500,
+        moveSet: [
+            {
+                move: 'Provides pictures for student projects',
+                attack: 200,
+                type: 'Built Different',
+            },
+            {
+                move: 'Closes HELP ticket',
+                attack: 150,
+                type: 'Educational',
+            },
+        ],
+        type: 'Educational',
+    };
+    function addInstructor(newInstructor) {
+        if (instructors.length) {
+            console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+            ref.doc('trainer1').update({
+                instructors: [...instructors, newInstructor],
+            });
+        }
     }
 
     useEffect(() => {
@@ -49,8 +78,14 @@ export default function Map({ navigation }) {
             setLocation(location);
         })();
         getTrainerData();
-        console.log(userData);
     }, []);
+
+    useEffect(() => {
+        if (userData) {
+            setInstructors(userData[0].instructors);
+        }
+    }, [userData]);
+
     let text = `waiting..`;
     if (errorMsg) {
         text = errorMsg;
