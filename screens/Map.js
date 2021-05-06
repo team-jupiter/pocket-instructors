@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  TouchableOpacity
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -15,6 +16,7 @@ import { generateRandomPoint } from '../Utilities/locationGenerator';
 import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
+import loading from '../screens/loading'
 
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -27,6 +29,11 @@ export default function Map({ navigation }) {
   const [userData, setUserData] = useState([]);
 
   const ref = firebase.firestore().collection('Trainer');
+
+  const onPress = () => {
+
+    navigation.navigate('CaptureInt');
+  };
 
   const email = navigation.getParam('email');
   console.log('EMAIL -->', email);
@@ -64,25 +71,10 @@ export default function Map({ navigation }) {
     text = JSON.stringify(location);
   }
   if (location === null || location === undefined) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff',
-        }}
-      >
-        <LottieView
-          source={require('../assets/trainer.json')}
-          autoPlay
-          loop={true}
-          speed={1}
-          onAnimationFinish={() => {
-            console.log('Animation Finished!');
-            // this.props.navigation.replace('Home');
-          }}
-        />
-      </View>
-    );
+    return(
+      loading()
+    )
+
   } else {
     //Going to make the call to firebase here ---- every ~5 seconds, I am going to destroy existing markers
     //and create ~5 new Pokemon using the images that we have stored in the DB for each Pokemon
@@ -205,7 +197,8 @@ export default function Map({ navigation }) {
 
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((p) => (
-            <MapView.Marker
+
+            <MapView.Marker onPress={onPress}
               // key={`${p.latitude}::${p.longitude}`}
               coordinate={{
                 latitude: p.latitude,
