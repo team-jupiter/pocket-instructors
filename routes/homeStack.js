@@ -5,6 +5,7 @@ import { createAppContainer } from 'react-navigation';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Map from '../screens/Map';
+
 const screens = {
     // name of screen: {
     //   screen: screenName }

@@ -31,14 +31,14 @@ export default function Map2({ navigation }) {
   const email = navigation.getParam('email');
   console.log('EMAIL -->', email);
   function getTrainerData() {
-    ref.where('email', '==', email).onSnapshot((querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push(doc.data());
+      ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+          const items = [];
+          querySnapshot.forEach((doc) => {
+              items.push(doc.data());
+          });
+          setUserData(items);
+          console.log('ITEMS ', items);
       });
-      setUserData(items);
-      console.log('ITEMS ', items);
-    });
   }
 
   useEffect(() => {
@@ -56,6 +56,7 @@ export default function Map2({ navigation }) {
 
     getTrainerData();
     console.log(userData);
+
   }, []);
   let text = `waiting..`;
   if (errorMsg) {
@@ -66,23 +67,23 @@ export default function Map2({ navigation }) {
   if (location === null || location === undefined) {
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff'
-        }}
-      >
-        <LottieView
-          source={require('../assets/trainer.json')}
-          autoPlay
-          loop={true}
-          speed={1}
-          onAnimationFinish={() => {
-            console.log('Animation Finished!');
-            // this.props.navigation.replace('Home');
+          style={{
+              flex: 1,
+              backgroundColor: '#ffffff',
           }}
-        />
+      >
+          <LottieView
+              source={require('../assets/trainer.json')}
+              autoPlay
+              loop={true}
+              speed={1}
+              onAnimationFinish={() => {
+                  console.log('Animation Finished!');
+                  // this.props.navigation.replace('Home');
+              }}
+          />
       </View>
-    );
+  );
   } else {
     //Going to make the call to firebase here ---- every ~5 seconds, I am going to destroy existing markers
     //and create ~5 new Pokemon using the images that we have stored in the DB for each Pokemon

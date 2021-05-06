@@ -31,6 +31,7 @@ export default class Login extends Component {
                 .signInWithEmailAndPassword(email, password);
             console.log('LOGGED IN');
             this.props.navigation.navigate('Map', { email });
+            //changing above to test page before merge
         } catch (error) {
             console.log('LOGIN PAGE ERROR', error);
         }
