@@ -7,9 +7,7 @@ import {
   PanResponder,
   View,
   Text,
-  Image,
   Dimensions,
-  DeviceEventEmitter,
 } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
@@ -20,9 +18,15 @@ export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(false);
+  console.log(props);
 
   //bringing in addInstructor from props
   const { addInstructor } = props.navigation.state.params;
+
+  const { instructorUrl } = props.navigation.state.params.eachInstructor;
+
+  console.log(typeof instructorUrl);
+  console.log(instructorUrl.toString());
   //Set up refs
   const gyroTracker = null;
 
@@ -141,7 +145,7 @@ export default function CaptureInt(props) {
         </View>
       ) : (
         <Animated.Image
-          source={require('../img/pokemon/5.png')}
+          source={{ uri: instructorUrl }}
           style={[
             styles.pokemon,
             {
