@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -15,8 +16,7 @@ import { generateRandomPoint } from '../Utilities/locationGenerator';
 import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
-import CaptureInt from './CaptureInt';
-import { Redirect } from 'react-router-dom';
+import loading from '../screens/loading';
 
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -30,48 +30,33 @@ export default function Map({ navigation }) {
   const [instructors, setInstructors] = useState([]);
   const ref = firebase.firestore().collection('Trainer');
 
+  const jakesDog = require('../imgs/jakedog.png');
+  const onPress = () => {
+    navigation.navigate('CaptureInt', { addInstructor, jakesDog });
+  };
+
   const email = navigation.getParam('email');
-  console.log('EMAIL -->', email);
+  // console.log('EMAIL -->', email);
   function getTrainerData() {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
+        console.log('QUEREY--->', querySnapshot);
         items.push(doc.data());
       });
       setUserData(items);
-      console.log('ITEMS ', items);
+      // console.log('ITEMS ', items);
     });
   }
-  //   const newInstructor = {
-  //     instructorDexID: 2,
-  //     instructorName: 'Jon Dagdagan',
-  //     description:
-  //         'Jon is a legendary instructor. His voice is said to bring peace to world wars and calamities',
-  //     maxAttack: 200,
-  //     maxDefense: 50,
-  //     maxHP: 500,
-  //     moveSet: [
-  //         {
-  //             move: 'Provides pictures for student projects',
-  //             attack: 200,
-  //             type: 'Built Different',
-  //         },
-  //         {
-  //             move: 'Closes HELP ticket',
-  //             attack: 150,
-  //             type: 'Educational',
-  //         },
-  //     ],
-  //     type: 'Educational',
-  // };
   function addInstructor(newInstructor) {
     if (instructors.length) {
-      console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
       ref.doc('trainer1').update({
         instructors: [...instructors, newInstructor],
       });
     }
   }
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -86,11 +71,11 @@ export default function Map({ navigation }) {
     })();
 
     getTrainerData();
-    console.log(userData);
+    // console.log(userData);
   }, []);
-
   useEffect(() => {
     if (userData) {
+      // console.log('USERDATA--->', userData);
       setInstructors(userData[0].instructors);
     }
   }, [userData]);
@@ -101,25 +86,7 @@ export default function Map({ navigation }) {
     text = JSON.stringify(location);
   }
   if (location === null || location === undefined) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff',
-        }}
-      >
-        <LottieView
-          source={require('../assets/trainer.json')}
-          autoPlay
-          loop={true}
-          speed={1}
-          onAnimationFinish={() => {
-            console.log('Animation Finished!');
-            // this.props.navigation.replace('Home');
-          }}
-        />
-      </View>
-    );
+    return loading();
   } else {
     //Going to make the call to firebase here ---- every ~5 seconds, I am going to destroy existing markers
     //and create ~5 new Pokemon using the images that we have stored in the DB for each Pokemon
@@ -243,6 +210,7 @@ export default function Map({ navigation }) {
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((p) => (
             <MapView.Marker
+              onPress={onPress}
               // key={`${p.latitude}::${p.longitude}`}
               coordinate={{
                 latitude: p.latitude,
@@ -253,9 +221,6 @@ export default function Map({ navigation }) {
                 source={require('../imgs/jakedog.png')}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
-                onPress={() => {
-                  <Redirect to={CaptureInt} />;
-                }}
               />
             </MapView.Marker>
           ))}
