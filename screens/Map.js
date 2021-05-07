@@ -5,7 +5,8 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  Image
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -14,6 +15,7 @@ import { generateRandomPoint } from '../Utilities/locationGenerator';
 import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
+import loading from '../screens/loading';
 
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -23,13 +25,18 @@ export default function Map({ navigation }) {
   const targetRadius = 150;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState();
   const [allInstructors, setAllInstructors] = useState([]);
+  const [instructors, setInstructors] = useState([]);
 
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
 
+  const jakesDog = require('../imgs/jakedog.png');
+  const onPress = () => {
+    navigation.navigate('CaptureInt', { addInstructor, jakesDog });
+  };
 
   function rng() {
     const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
@@ -40,10 +47,19 @@ export default function Map({ navigation }) {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
+        // console.log('QUEREY--->', querySnapshot);
         items.push(doc.data());
       });
       setUserData(items);
     });
+  }
+  function addInstructor(newInstructor) {
+    if (instructors.length) {
+      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+      ref.doc('trainer1').update({
+        instructors: [...instructors, newInstructor],
+      });
+    }
   }
 
   function getAllInstructorData() {
@@ -86,6 +102,13 @@ export default function Map({ navigation }) {
     getAllInstructorData();
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      // console.log('USERDATA--->', userData);
+      setInstructors(userData[0].instructors);
+    }
+  }, [userData]);
+
   let text = `waiting..`;
   if (errorMsg) {
     text = errorMsg;
@@ -93,24 +116,7 @@ export default function Map({ navigation }) {
     text = JSON.stringify(location);
   }
   if (location === null || location === undefined) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff'
-        }}
-      >
-        <LottieView
-          source={require('../assets/trainer.json')}
-          autoPlay
-          loop={true}
-          speed={1}
-          onAnimationFinish={() => {
-            console.log('Animation Finished!');
-          }}
-        />
-      </View>
-    );
+    return loading();
   } else {
 
 
@@ -118,7 +124,7 @@ export default function Map({ navigation }) {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
 
     let instructorTracker = [];
@@ -160,7 +166,7 @@ export default function Map({ navigation }) {
       newObjToPush.longitude = instructorLocation.longitude;
       newObjToPush.latitude = instructorLocation.latitude;
 
-      console.log('newObjToPush is...', newObjToPush)
+    //   console.log('newObjToPush is...', newObjToPush)
       instructorTracker.push(newObjToPush);
     }
 
@@ -181,7 +187,7 @@ export default function Map({ navigation }) {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
             latitudeDelta: 1 / 300,
-            longitudeDelta: 2 / 300
+            longitudeDelta: 2 / 300,
           }}
           // provider={PROVIDER_GOOGLE}
           // customMapStyle={MapStyle}
@@ -189,9 +195,10 @@ export default function Map({ navigation }) {
         >
           {/* Create an array of randomly generated instuctors and then .map through each one */}
           <MapView.Marker
+            onPress={onPress}
             coordinate={{
               latitude: userLocation.latitude,
-              longitude: userLocation.longitude
+              longitude: userLocation.longitude,
             }}
           >
             <Image
@@ -232,16 +239,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
-    padding: 8
+    padding: 8,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
-  }
+    height: Dimensions.get('window').height,
+  },
 });
