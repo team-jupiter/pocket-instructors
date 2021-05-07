@@ -13,6 +13,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { generateRandomPoint } from '../Utilities/locationGenerator';
 //import { dummyData } from './startingdummy';
 import LottieView from 'lottie-react-native';
+// import firebase from 'firebase/app';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
 
@@ -20,16 +21,19 @@ if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 
-export default function Map2({ navigation }) {
+export default function Map({ navigation }) {
   const targetRadius = 150;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [userData, setUserData] = useState([]);
+  //   const [instructorData, setInstructorData] = useState([])
 
   const ref = firebase.firestore().collection('Trainer');
+  const ref4 = firebase.firestore().collection('Instructors');
 
   const email = navigation.getParam('email');
-  console.log('EMAIL -->', email);
+
+  //   console.log('EMAIL -->', email);
   function getTrainerData() {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
@@ -37,8 +41,66 @@ export default function Map2({ navigation }) {
         items.push(doc.data());
       });
       setUserData(items);
-      console.log('ITEMS ', items);
+      //   console.log('ITEMS ', items);
     });
+  }
+
+  function rng() {
+    const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
+    return randomInstructorNumber;
+  }
+
+  function getInstructorData() {
+    // const items2 = [];
+    const randomInstructorNumber = rng();
+    console.log('randomInstructorNumber is.....', randomInstructorNumber);
+    const items2 = [];
+    ref4
+      .where('instructorDexID', '==', randomInstructorNumber)
+      .onSnapshot((querySnapshot) => {
+        //   const items2 = []
+        querySnapshot.forEach((doc) => {
+          items2.push(doc.data());
+        });
+        //   setInstructorData(items2);
+        // console.log('instructor output is .... ', items2);
+        return items2;
+      });
+    // return items2
+  }
+
+//   async function getInstructorDataAsync() {
+//     const asyncOutput = [];
+//     const randomInstructorNumber = rng();
+//     console.log('rng results are ....', randomInstructorNumber);
+//     const asyncResults = await ref4
+//       .where('instructorDexID', '==', randomInstructorNumber)
+//       .get();
+//     asyncResults.forEach((doc) => {
+//       asyncOutput.push(doc.data());
+//     });
+//     //   const allCapitalsRes = await citiesRef.where('capital', '==', true).get();
+//     console.log('asyncOutput is .....', asyncOutput);
+//     return asyncOutput
+//   }
+
+async function getInstructorDataAsync() {
+        const asyncOutput = [];
+        const randomInstructorNumber = rng();
+        console.log('rng results are ....', randomInstructorNumber);
+        const asyncResults = await ref4
+          .where('instructorDexID', '==', randomInstructorNumber)
+          .get();
+        asyncResults.forEach((doc) => {
+          asyncOutput.push(doc.data());
+        });
+        //   const allCapitalsRes = await citiesRef.where('capital', '==', true).get();
+        console.log('asyncOutput is .....', asyncOutput);
+        return asyncOutput
+      }
+
+  function printThis() {
+    console.log('print this');
   }
 
   useEffect(() => {
@@ -55,6 +117,7 @@ export default function Map2({ navigation }) {
     })();
 
     getTrainerData();
+    // getInstructorData();
     console.log(userData);
   }, []);
   let text = `waiting..`;
@@ -97,16 +160,41 @@ export default function Map2({ navigation }) {
     };
 
     let instructorTracker = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 5; i++) {
       //generate random number btwn 1-10 ... or however many Pokemon there are .... eg Math.floor(Math.random() * 10)
       //make API call to grab object for that user (e.g. firebase/pokemon/id/1)
+
+      //   const randomInstructorNumber = Math.floor(Math.random() * 2) + 1
       const instructorLocation = generateRandomPoint(
         userLocation,
         targetRadius,
         1
       );
 
-      // console.log('results of RNG code ....', instructorLocation);
+      getInstructorDataAsync()
+
+      const getInstructorDataAsyncOutput = getInstructorDataAsync();//this func is async w an await ...
+      console.log('getInstructorDataAsyncOutput is....', getInstructorDataAsyncOutput)
+
+      // const getInstructorVar = getInstructorData()
+      // console.log('getInstructorVar', getInstructorVar)
+      // console.log('randomInstructorNumber is .....', randomInstructorNumber)
+      // getInstructorDataAsync(randomInstructorNumber)
+      // console.log('getinstructdataresults ...', getInstructorData())
+      // ref4.where('instructorDexID', '==', 2).onSnapshot((querySnapshot) => {
+      //     const items2 = []
+      //     querySnapshot.forEach((doc) => {
+      //       items2.push(doc.data());
+      //     });
+      //   //   setInstructorData(items2);
+      //   //   console.log('instructor output is .... ', instructorData);
+      //  console.log('item2 is...', items2)
+      //     //   return items2
+      //   });
+
+      //   console.log('interimArr is ....', interimArr)
+
+
 
       let newObjToPush = {};
 
@@ -118,20 +206,6 @@ export default function Map2({ navigation }) {
       //   instructorTracker
       // );
     }
-
-    const instructorLocation = generateRandomPoint(
-      userLocation,
-      targetRadius,
-      1
-    );
-    // console.log('userLocation is ...', userLocation);
-    // console.log('instructorLocation is ...', instructorLocation);
-    // // console.log('the entire instructorTracker array looks like ...', instructorTracker)
-    // console.log(
-    //   'first instructorTracker in arr lat is....',
-    //   instructorTracker[0].latitude
-    // );
-    // console.log('instructorLocation is ...', instructorLocation)
 
     return (
       // somewhere here, I will need to be able to have a button or trigger where we can redirect to the
@@ -183,37 +257,21 @@ export default function Map2({ navigation }) {
             />
           </MapView.Marker>
 
-          {/* solomarker */}
-          {/* <MapView.Marker
-          coordinate={{latitude: instructorLocation.latitude,
-          longitude: instructorLocation.longitude}}
-          image={require('./imgs/steel.png')}
-        /> */}
-
-          {/* iterating through multiple markers */}
-          {/* {instructorTracker.map((eachInstructor, index) => {
-            console.log('eachInstructors lat is...', eachInstructor.latitude)
-            // <MapView.Marker
-            //   key={index}
-            //   coordinate={{
-            //     latitude: eachInstructor.latitude,
-            //     longitude: eachInstructor.longitude
-            //   }}
-            //   image={require('./imgs/steel.png')}
-            // />
-          })} */}
-
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
-          {instructorTracker.map((p) => (
+          {instructorTracker.map((eachInstructor) => (
             <MapView.Marker
-              // key={`${p.latitude}::${p.longitude}`}
+              key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
-                latitude: p.latitude,
-                longitude: p.longitude
+                latitude: eachInstructor.latitude,
+                longitude: eachInstructor.longitude
               }}
             >
               <Image
-                source={require('../imgs/jakedog.png')}
+                source={{
+                  uri:
+                    'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/steel.png?alt=media&token=87f81123-d76e-4068-8104-e71c4199b6e7'
+                }}
+                // source={require('../imgs/jakedog.png')}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
               />
