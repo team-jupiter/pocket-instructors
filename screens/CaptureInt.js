@@ -15,11 +15,14 @@ import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
 
 const { height, width } = Dimensions.get('window');
+
 export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [captured, setCaptured] = useState(null);
+  const [captured, setCaptured] = useState(false);
 
+  //bringing in addInstructor from props
+  const { addInstructor } = props.navigation.state.params;
   //Set up refs
   const gyroTracker = null;
 
@@ -29,6 +32,7 @@ export default function CaptureInt(props) {
 
   const animatedPokeball = new Animated.ValueXY();
 
+  //allows pokeballs to spins
   const interpolatedRotateAnimation = animatedPokeball.x.interpolate({
     inputRange: [0, width / 2, width],
     outputRange: ['-360deg', '0deg', '360deg'],
@@ -43,15 +47,17 @@ export default function CaptureInt(props) {
       { dx: animatedPokeball.x, dy: animatedPokeball.y },
     ]),
 
+    // if capture is set to true push to data base
     onPanResponderRelease: (event, gesture) => {
       if (isCaptured(gesture)) {
-        (setCaptured = true),
+        setCaptured(true),
           () => {
             setTimeout(goBack, 1500);
           };
       } else {
         Animated.spring(animatedPokeball, {
           toValue: { x: 0, y: 0 },
+          useNativeDriver: true,
         }).start();
       }
     },
@@ -64,17 +70,8 @@ export default function CaptureInt(props) {
     })();
   }, []);
 
-  function trackGyrometer(eventHandler) {
-    return (data) => {
-      pokemonPosition.x += (data.y - 0.03) * 30;
-      pokemonPosition.y += (data.x + 0.05) * 30;
-
-      eventHandler(pokemonPosition);
-    };
-  }
-
   const goBack = () => {
-    props.navigator.pop();
+    props.navigation.pop();
   };
 
   const isCaptured = (gesture) => {
@@ -82,8 +79,9 @@ export default function CaptureInt(props) {
     const pokeballY = gesture.moveY;
 
     const pokemonX = width / 2 + pokemonPosition.x;
-    const pokemonY = height / 3 + pokemonPosition.Position.y;
+    const pokemonY = height / 3 + pokemonPosition.y;
 
+    //only returns if both these absolute vals under 50
     return (
       Math.abs(pokeballX - pokemonX) < 50 && Math.abs(pokeballY - pokemonY) < 50
     );
@@ -103,7 +101,14 @@ export default function CaptureInt(props) {
       Gyroscope.removeAllListeners();
     };
   }, []);
+  function trackGyrometer(eventHandler) {
+    return (data) => {
+      pokemonPosition.x += (data.y - 0.03) * 30;
+      pokemonPosition.y += (data.x + 0.05) * 30;
 
+      eventHandler(pokemonPosition);
+    };
+  }
   if (hasPermission === null) {
     return <View />;
   }
@@ -136,7 +141,7 @@ export default function CaptureInt(props) {
         </View>
       ) : (
         <Animated.Image
-          source={require('../img/pokemon/1.png')}
+          source={require('../img/pokemon/5.png')}
           style={[
             styles.pokemon,
             {
