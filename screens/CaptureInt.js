@@ -82,7 +82,7 @@ export default function CaptureInt(props) {
     const pokeballY = gesture.moveY;
 
     const pokemonX = width / 2 + pokemonPosition.x;
-    const pokemonY = height / 3 + pokemonPosition.Position.y;
+    const pokemonY = height / 3 + pokemonPosition.y;
 
     return (
       Math.abs(pokeballX - pokemonX) < 50 && Math.abs(pokeballY - pokemonY) < 50
