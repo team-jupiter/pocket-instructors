@@ -44,7 +44,7 @@ export default function Map({ navigation }) {
   };
 
 
-  console.log('checking to see how often this runs')
+//   console.log('checking to see how often this runs')
 //   let instructorTracker = [];
   //let secondCurrentInsLocator = {}
 
@@ -107,16 +107,16 @@ export default function Map({ navigation }) {
       }
       let locationForIns = await Location.getCurrentPositionAsync({});
       setLocationForIns(locationForIns);
-      console.log(locationForIns)
-      console.log('useEffect statement for location INSTRUCTORs triggered')
+    //   console.log(locationForIns)
+    //   console.log('useEffect statement for location INSTRUCTORs triggered')
       if (currentInsTriggerUseEffect === true) {
           currentInsTriggerUseEffect = false
       } else if (currentInsTriggerUseEffect === false) {
         currentInsTriggerUseEffect = true
       }
-      console.log('currentInsTriggerUseEffect is ....', currentInsTriggerUseEffect)
+    //   console.log('currentInsTriggerUseEffect is ....', currentInsTriggerUseEffect)
     })()
-    }, 15000)
+    }, 5000)
     // return () => clearInterval(interval)
   }, []);
 
@@ -132,9 +132,9 @@ export default function Map({ navigation }) {
       }
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-      console.log('useEffect statement for YOUR location triggered')
+    //   console.log('useEffect statement for YOUR location triggered')
     })()
-    }, 5000)
+    }, 500)
     // const intervalIns = setInterval(() => {
     // (async () => {
     //     // getTrainerData();
@@ -170,7 +170,7 @@ export default function Map({ navigation }) {
     return loading();
   } else {
 
-    console.log('useeffect is triggered')
+    // console.log('useeffect is triggered')
     // console.log('location is...', location, 'locationForIns is ....', locationForIns)
     // console.log('location in the else statement is...', location)
     // console.log('locationForIns in the else statement is...', locationForIns)
