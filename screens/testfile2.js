@@ -1,4 +1,4 @@
-import React, { useState, useEffect, clearInterval } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Platform,
   Text,
@@ -21,14 +21,9 @@ if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 
-let instructorTracker = [];
-let currentInsTriggerUseEffect = true
-let currentInsTriggerForLoop = true
-
 export default function Map({ navigation }) {
   const targetRadius = 150;
   const [location, setLocation] = useState(null);
-  const [locationForIns, setLocationForIns] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [userData, setUserData] = useState();
   const [allInstructors, setAllInstructors] = useState([]);
@@ -43,10 +38,7 @@ export default function Map({ navigation }) {
     navigation.navigate('CaptureInt', { addInstructor, jakesDog });
   };
 
-
-  console.log('checking to see how often this runs')
-//   let instructorTracker = [];
-  //let secondCurrentInsLocator = {}
+  // setInterval(function(){ console.log("Hello"); }, 3000)
 
   function rng() {
     const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
@@ -96,62 +88,25 @@ export default function Map({ navigation }) {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
     (async () => {
-        // getTrainerData();
-        getAllInstructorData();
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-      let locationForIns = await Location.getCurrentPositionAsync({});
-      setLocationForIns(locationForIns);
-      console.log(locationForIns)
-      console.log('useEffect statement for location INSTRUCTORs triggered')
-      if (currentInsTriggerUseEffect === true) {
-          currentInsTriggerUseEffect = false
-      } else if (currentInsTriggerUseEffect === false) {
-        currentInsTriggerUseEffect = true
-      }
-      console.log('currentInsTriggerUseEffect is ....', currentInsTriggerUseEffect)
-    })()
-    }, 15000)
-    // return () => clearInterval(interval)
-  }, []);
+      //let location = await Location.getCurrentPositionAsync({});
+      Location.watchPositionAsync({
+        accuracy: 5,
+        timeInterval: 1000
+      }, (locationInstance => {
+        console.log('location is...', locationInstance)
+        setLocation(locationInstance);
+      }))
+    })();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-    (async () => {
-        getTrainerData();
-        // getAllInstructorData();
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log('useEffect statement for YOUR location triggered')
-    })()
-    }, 5000)
-    // const intervalIns = setInterval(() => {
-    // (async () => {
-    //     // getTrainerData();
-    //     getAllInstructorData();
-    //     let { status } = await Location.requestForegroundPermissionsAsync();
-    //     if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //     }
-    //     let locationForIns = await Location.getCurrentPositionAsync({});
-    //     setLocationForIns(locationForIns);
-    //     console.log('locationForIns in the useeffect statement is...', locationForIns)
-    // })()
-    // }, 10000)
-    // return () => clearInterval(interval)
+    getTrainerData();
+    getAllInstructorData();
   }, []);
-
 
   useEffect(() => {
     if (userData) {
@@ -166,83 +121,59 @@ export default function Map({ navigation }) {
   } else if (location) {
     text = JSON.stringify(location);
   }
-  if (location === null || location === undefined || locationForIns === null || locationForIns === undefined) {
+  if (location === null || location === undefined) {
     return loading();
   } else {
 
-    console.log('useeffect is triggered')
-    // console.log('location is...', location, 'locationForIns is ....', locationForIns)
-    // console.log('location in the else statement is...', location)
-    // console.log('locationForIns in the else statement is...', locationForIns)
 
-    const userLocationForIns = {
-      latitude: locationForIns.coords.latitude,
-      longitude: locationForIns.coords.longitude,
+    const userLocation = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
       longtitudeDelta: 2 / 300,
     };
 
-    const userLocation = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 1 / 300,
-        longtitudeDelta: 2 / 300,
-      };
+    let instructorTracker = [];
 
-    // let instructorTracker = [];
-
-
-
-    if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
-        if (currentInsTriggerForLoop === true) {
-            currentInsTriggerForLoop = false
-        } else if (currentInsTriggerForLoop === false) {
-            currentInsTriggerForLoop = true
-        }
-        while (instructorTracker.length > 0) {instructorTracker.pop()}
-        for (let i = 0; i < 3; i++) {
-            const randomInstructorNumber = Math.floor(Math.random() * 3);
-            const instructorLocation = generateRandomPoint(
-              userLocationForIns,
-              targetRadius,
-              1
-            );
+    for (let i = 0; i < 3; i++) {
+      const randomInstructorNumber = Math.floor(Math.random() * 3);
+      const instructorLocation = generateRandomPoint(
+        userLocation,
+        targetRadius,
+        1
+      );
 
 
-            //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
-            let urlHolder = '';
-            if (
-              allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
-            ) {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
-            } else if (
-              allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
-            ) {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
-            } else {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
-            }
+      //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
+    //   let urlHolder = '';
+    //   if (
+    //     allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
+    //   ) {
+    //     urlHolder =
+    //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
+    //   } else if (
+    //     allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
+    //   ) {
+    //     urlHolder =
+    //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
+    //   } else {
+    //     urlHolder =
+    //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
+    //   }
 
-            let newObjToPush = {};
+      let newObjToPush = {};
 
-            newObjToPush.instructorDexID =
-              allInstructors[randomInstructorNumber].instructorDexID;
-            newObjToPush.instructorName =
-              allInstructors[randomInstructorNumber].instructorName;
+    //   newObjToPush.instructorDexID =
+    //     allInstructors[randomInstructorNumber].instructorDexID;
+    //   newObjToPush.instructorName =
+    //     allInstructors[randomInstructorNumber].instructorName;
+    // //   newObjToPush.instructorUrl = urlHolder;
+    //   newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
+      newObjToPush.longitude = instructorLocation.longitude;
+      newObjToPush.latitude = instructorLocation.latitude;
 
-            //use 'urlHolder' to use static images not from Firebase
-            newObjToPush.instructorUrl = urlHolder;
-            // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
-
-            newObjToPush.longitude = instructorLocation.longitude;
-            newObjToPush.latitude = instructorLocation.latitude;
-
-            instructorTracker.push(newObjToPush);
-          }
-
+    //   console.log('newObjToPush is...', newObjToPush)
+      instructorTracker.push(newObjToPush);
     }
 
     return (
@@ -295,7 +226,7 @@ export default function Map({ navigation }) {
               <Image
                 source={{
                   uri:
-                    eachInstructor.instructorUrl
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU'
                 }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'

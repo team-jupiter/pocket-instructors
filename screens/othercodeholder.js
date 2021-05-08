@@ -109,12 +109,7 @@ export default function Map({ navigation }) {
       setLocationForIns(locationForIns);
       console.log(locationForIns)
       console.log('useEffect statement for location INSTRUCTORs triggered')
-      if (currentInsTriggerUseEffect === true) {
-          currentInsTriggerUseEffect = false
-      } else if (currentInsTriggerUseEffect === false) {
-        currentInsTriggerUseEffect = true
-      }
-      console.log('currentInsTriggerUseEffect is ....', currentInsTriggerUseEffect)
+
     })()
     }, 15000)
     // return () => clearInterval(interval)
@@ -193,56 +188,51 @@ export default function Map({ navigation }) {
 
 
 
-    if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
-        if (currentInsTriggerForLoop === true) {
-            currentInsTriggerForLoop = false
-        } else if (currentInsTriggerForLoop === false) {
-            currentInsTriggerForLoop = true
-        }
-        while (instructorTracker.length > 0) {instructorTracker.pop()}
-        for (let i = 0; i < 3; i++) {
-            const randomInstructorNumber = Math.floor(Math.random() * 3);
-            const instructorLocation = generateRandomPoint(
-              userLocationForIns,
-              targetRadius,
-              1
-            );
+    // if (currentInsTriggerUseEffect === currentInsTriggerForLoop) {
+
+    // }
+
+    for (let i = 0; i < 3; i++) {
+      const randomInstructorNumber = Math.floor(Math.random() * 3);
+      const instructorLocation = generateRandomPoint(
+        userLocationForIns,
+        targetRadius,
+        1
+      );
 
 
-            //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
-            let urlHolder = '';
-            if (
-              allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
-            ) {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
-            } else if (
-              allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
-            ) {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
-            } else {
-              urlHolder =
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
-            }
+      //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
+      let urlHolder = '';
+      if (
+        allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
+      ) {
+        urlHolder =
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
+      } else if (
+        allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
+      ) {
+        urlHolder =
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
+      } else {
+        urlHolder =
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
+      }
 
-            let newObjToPush = {};
+      let newObjToPush = {};
 
-            newObjToPush.instructorDexID =
-              allInstructors[randomInstructorNumber].instructorDexID;
-            newObjToPush.instructorName =
-              allInstructors[randomInstructorNumber].instructorName;
+      newObjToPush.instructorDexID =
+        allInstructors[randomInstructorNumber].instructorDexID;
+      newObjToPush.instructorName =
+        allInstructors[randomInstructorNumber].instructorName;
 
-            //use 'urlHolder' to use static images not from Firebase
-            newObjToPush.instructorUrl = urlHolder;
-            // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
+      //use 'urlHolder' to use static images not from Firebase
+      newObjToPush.instructorUrl = urlHolder;
+      // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
 
-            newObjToPush.longitude = instructorLocation.longitude;
-            newObjToPush.latitude = instructorLocation.latitude;
+      newObjToPush.longitude = instructorLocation.longitude;
+      newObjToPush.latitude = instructorLocation.latitude;
 
-            instructorTracker.push(newObjToPush);
-          }
-
+      instructorTracker.push(newObjToPush);
     }
 
     return (
