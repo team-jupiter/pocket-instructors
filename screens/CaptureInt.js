@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
+import * as firebase from 'firebase';
 
 const { height, width } = Dimensions.get('window');
 
@@ -18,15 +19,24 @@ export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(false);
-  console.log(props);
+  const ref = firebase.firestore().collection('Trainer');
+  const ref4 = firebase.firestore().collection('Instructors');
+
+  function addInstructor(newInstructor) {
+    if (instructors.length) {
+      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+      ref.doc('trainer1').update({
+        instructors: [...instructors, newInstructor],
+      });
+    }
+  }
 
   //bringing in addInstructor from props
-  const { addInstructor } = props.navigation.state.params;
 
+  const { eachInstructor } = props.navigation.state.params;
   const { instructorUrl } = props.navigation.state.params.eachInstructor;
+  const { instructors } = props.navigation.state.params;
 
-  console.log(typeof instructorUrl);
-  console.log(instructorUrl.toString());
   //Set up refs
   const gyroTracker = null;
 
@@ -142,6 +152,7 @@ export default function CaptureInt(props) {
       {captured ? (
         <View style={[styles.overlay, styles.captureOverlay]}>
           <Text style={styles.cancelText}>Pokemon Captured!</Text>
+          {addInstructor(eachInstructor)}
         </View>
       ) : (
         <Animated.Image

@@ -36,7 +36,7 @@ export default function Map({ navigation }) {
   const jakesDog = require('../imgs/jakedog.png');
   const onPress = (eachInstructor) => {
     navigation.navigate('CaptureInt', {
-      addInstructor,
+      instructors,
       jakesDog,
       eachInstructor,
     });
@@ -212,7 +212,7 @@ export default function Map({ navigation }) {
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((eachInstructor) => (
             <MapView.Marker
-              onPress={onPress(eachInstructor)}
+              onPress={() => onPress(eachInstructor)}
               key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
                 latitude: eachInstructor.latitude,
