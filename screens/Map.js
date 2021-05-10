@@ -195,7 +195,6 @@ export default function Map({ navigation }) {
         >
           {/* Create an array of randomly generated instuctors and then .map through each one */}
           <MapView.Marker
-            onPress={onPress}
             coordinate={{
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
@@ -210,7 +209,8 @@ export default function Map({ navigation }) {
 
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((eachInstructor) => (
-            <MapView.Marker
+
+            <MapView.Marker onPress={onPress}
               key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
                 latitude: eachInstructor.latitude,
