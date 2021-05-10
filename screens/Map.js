@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, clearInterval } from 'react';
 import {
   Platform,
   Text,
@@ -16,26 +16,60 @@ import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
+import io from 'socket.io-client';
+
 
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 
+let instructorTracker = [];
+let currentInsTriggerUseEffect = true
+let currentInsTriggerForLoop = true
+
 export default function Map({ navigation }) {
-  const targetRadius = 150;
+
+  //SOCKET STUFF
+  socket = io.connect('https://55e15375c658.ngrok.io');
+
+  io.on('connection', (socket) => {
+    io.clients((error, clients) => {
+      if (error) throw error;
+      console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
+    });
+
+    socket.on('position', (position) => {
+      // console.log('position with id -----------------\n', position)
+      socket.broadcast.emit('otherPositions', position);
+    })
+
+    socket.on('disconnect', () => {
+      // console.log(`Connection ${socket.id} has left the building`)
+    })
+
+  });
+
+  //consts
+  const targetRadius = 250;
   const [location, setLocation] = useState(null);
+  const [locationForIns, setLocationForIns] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [userData, setUserData] = useState();
   const [allInstructors, setAllInstructors] = useState([]);
   const [instructors, setInstructors] = useState([]);
-
+  const [friends,setFriends] = useState({})
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
 
+
   const jakesDog = require('../imgs/jakedog.png');
-  const onPress = () => {
-    navigation.navigate('CaptureInt', { addInstructor, jakesDog });
+  const onPress = (eachInstructor) => {
+    navigation.navigate('CaptureInt', {
+      instructors,
+      jakesDog,
+      eachInstructor,
+    });
   };
 
   function rng() {
@@ -47,7 +81,6 @@ export default function Map({ navigation }) {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
-        // console.log('QUEREY--->', querySnapshot);
         items.push(doc.data());
       });
       setUserData(items);
@@ -55,7 +88,6 @@ export default function Map({ navigation }) {
   }
   function addInstructor(newInstructor) {
     if (instructors.length) {
-      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
       ref.doc('trainer1').update({
         instructors: [...instructors, newInstructor],
       });
@@ -86,25 +118,59 @@ export default function Map({ navigation }) {
   }
 
   useEffect(() => {
+    const interval = setInterval(() => {
     (async () => {
+        getAllInstructorData();
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+      let locationForIns = await Location.getCurrentPositionAsync({});
+      setLocationForIns(locationForIns);
+      if (currentInsTriggerUseEffect === true) {
+          currentInsTriggerUseEffect = false
+      } else {
+        currentInsTriggerUseEffect = true
+      }
+    })()
+    }, 10000)
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+    (async () => {
+        getTrainerData();
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-      // need to refresh this entire thing frequently, e.g. something like below ---
-      // let location = await Location.watchPositionAsync({timeInterval: 1000})
       setLocation(location);
-    })();
+      socket.emit('position', {
+        data: location,
+        id: email,
+      });
+      socket.on('otherPositions', positionsData => {
+        // console.log('positionsData from server broadcast')
+        let tempFriends = { friends };
+        tempFriends[positionsData.id] = { ...positionsData };
+        console.log('tempFRIENDS----->', tempFriends)
+        setFriends({
+          friends: tempFriends,
+        });
+      });
 
-    getTrainerData();
-    getAllInstructorData();
+    })()
+    }, 500)
   }, []);
+
+
+
 
   useEffect(() => {
     if (userData) {
-      // console.log('USERDATA--->', userData);
       setInstructors(userData[0].instructors);
     }
   }, [userData]);
@@ -115,70 +181,88 @@ export default function Map({ navigation }) {
   } else if (location) {
     text = JSON.stringify(location);
   }
-  if (location === null || location === undefined) {
+  if (location === null || location === undefined || locationForIns === null || locationForIns === undefined) {
     return loading();
   } else {
 
-
-    const userLocation = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
+    const userLocationForIns = {
+      latitude: locationForIns.coords.latitude,
+      longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
       longtitudeDelta: 2 / 300,
     };
 
-    let instructorTracker = [];
-
-    for (let i = 0; i < 15; i++) {
-      const randomInstructorNumber = Math.floor(Math.random() * 3);
-      const instructorLocation = generateRandomPoint(
-        userLocation,
-        targetRadius,
-        1
-      );
+    const userLocation = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 1 / 300,
+        longtitudeDelta: 2 / 300,
+      };
 
 
-      //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
-      let urlHolder = '';
-      if (
-        allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
-      ) {
-        urlHolder =
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
-      } else if (
-        allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
-      ) {
-        urlHolder =
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
-      } else {
-        urlHolder =
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
-      }
+    if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
+        if (currentInsTriggerForLoop === true) {
+            currentInsTriggerForLoop = false
+        } else  {
+            currentInsTriggerForLoop = true
+        }
+        while (instructorTracker.length > 0) {instructorTracker.pop()}
+        for (let i = 0; i < 5; i++) {
+            const randomInstructorNumber = Math.floor(Math.random() * 3);
+            const instructorLocation = generateRandomPoint(
+              userLocationForIns,
+              targetRadius,
+              1
+            );
 
-      let newObjToPush = {};
+            //temp image pin URLs to use due to exceeding quotas w/ Firebase
+            let urlHolder = '';
+            if (
+              allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
+            ) {
+              urlHolder =
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
+            } else if (
+              allInstructors[randomInstructorNumber].instructorName === 'Jon Dagdagan'
+            ) {
+              urlHolder =
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
+            } else {
+              urlHolder =
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
+            }
 
-      newObjToPush.instructorDexID =
-        allInstructors[randomInstructorNumber].instructorDexID;
-      newObjToPush.instructorName =
-        allInstructors[randomInstructorNumber].instructorName;
-    //   newObjToPush.instructorUrl = urlHolder;
-      newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
-      newObjToPush.longitude = instructorLocation.longitude;
-      newObjToPush.latitude = instructorLocation.latitude;
+            let newObjToPush = {};
 
-    //   console.log('newObjToPush is...', newObjToPush)
-      instructorTracker.push(newObjToPush);
+            newObjToPush.instructorDexID =
+              allInstructors[randomInstructorNumber].instructorDexID;
+            newObjToPush.instructorName =
+              allInstructors[randomInstructorNumber].instructorName;
+
+            //use 'urlHolder' to use static images not from Firebase (due to quota issues)
+            newObjToPush.instructorUrl = urlHolder;
+            // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
+            newObjToPush.longitude = instructorLocation.longitude;
+            newObjToPush.latitude = instructorLocation.latitude;
+
+            instructorTracker.push(newObjToPush);
+          }
+
     }
 
-    return (
+    // console.log(instructorTracker);
 
+    return (
       <View style={styles.container}>
         <MapView
+          //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
+          //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
+          customMapStyle={require('../assets/map-design.json')}
+          provider={PROVIDER_GOOGLE}
           showsBuildings
           ref={(ref) => {
             this.map = ref;
           }}
-          userInterfaceStyle='dark'
           onLayout={() => {
             this.map.animateToBearing(125);
             this.map.animateToViewingAngle(45);
@@ -189,11 +273,9 @@ export default function Map({ navigation }) {
             latitudeDelta: 1 / 300,
             longitudeDelta: 2 / 300,
           }}
-          // provider={PROVIDER_GOOGLE}
-          // customMapStyle={MapStyle}
           style={styles.mapStyle}
         >
-          {/* Create an array of randomly generated instuctors and then .map through each one */}
+
           <MapView.Marker
             coordinate={{
               latitude: userLocation.latitude,
@@ -207,20 +289,19 @@ export default function Map({ navigation }) {
             />
           </MapView.Marker>
 
-          {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((eachInstructor) => (
-
-            <MapView.Marker onPress={onPress}
+            <MapView.Marker
+              //modify props passed here to be RNG'ed
+              onPress={() => onPress(eachInstructor)}
               key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
                 latitude: eachInstructor.latitude,
-                longitude: eachInstructor.longitude
+                longitude: eachInstructor.longitude,
               }}
             >
               <Image
                 source={{
-                  uri:
-                    eachInstructor.instructorUrl
+                  uri: eachInstructor.instructorUrl,
                 }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
