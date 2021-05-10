@@ -26,7 +26,7 @@ let currentInsTriggerUseEffect = true
 let currentInsTriggerForLoop = true
 
 export default function Map({ navigation }) {
-  const targetRadius = 150;
+  const targetRadius = 250;
   const [location, setLocation] = useState(null);
   const [locationForIns, setLocationForIns] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -43,11 +43,6 @@ export default function Map({ navigation }) {
     navigation.navigate('CaptureInt', { addInstructor, jakesDog });
   };
 
-
-//   console.log('checking to see how often this runs')
-//   let instructorTracker = [];
-  //let secondCurrentInsLocator = {}
-
   function rng() {
     const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
     return randomInstructorNumber;
@@ -57,7 +52,6 @@ export default function Map({ navigation }) {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
-        // console.log('QUEREY--->', querySnapshot);
         items.push(doc.data());
       });
       setUserData(items);
@@ -65,7 +59,6 @@ export default function Map({ navigation }) {
   }
   function addInstructor(newInstructor) {
     if (instructors.length) {
-      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
       ref.doc('trainer1').update({
         instructors: [...instructors, newInstructor],
       });
@@ -98,7 +91,6 @@ export default function Map({ navigation }) {
   useEffect(() => {
     const interval = setInterval(() => {
     (async () => {
-        // getTrainerData();
         getAllInstructorData();
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -107,24 +99,19 @@ export default function Map({ navigation }) {
       }
       let locationForIns = await Location.getCurrentPositionAsync({});
       setLocationForIns(locationForIns);
-    //   console.log(locationForIns)
-    //   console.log('useEffect statement for location INSTRUCTORs triggered')
       if (currentInsTriggerUseEffect === true) {
           currentInsTriggerUseEffect = false
-      } else if (currentInsTriggerUseEffect === false) {
+      } else {
         currentInsTriggerUseEffect = true
       }
-    //   console.log('currentInsTriggerUseEffect is ....', currentInsTriggerUseEffect)
     })()
-    }, 5000)
-    // return () => clearInterval(interval)
+    }, 10000)
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
     (async () => {
         getTrainerData();
-        // getAllInstructorData();
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
@@ -132,30 +119,13 @@ export default function Map({ navigation }) {
       }
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-    //   console.log('useEffect statement for YOUR location triggered')
     })()
     }, 500)
-    // const intervalIns = setInterval(() => {
-    // (async () => {
-    //     // getTrainerData();
-    //     getAllInstructorData();
-    //     let { status } = await Location.requestForegroundPermissionsAsync();
-    //     if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //     }
-    //     let locationForIns = await Location.getCurrentPositionAsync({});
-    //     setLocationForIns(locationForIns);
-    //     console.log('locationForIns in the useeffect statement is...', locationForIns)
-    // })()
-    // }, 10000)
-    // return () => clearInterval(interval)
   }, []);
 
 
   useEffect(() => {
     if (userData) {
-      // console.log('USERDATA--->', userData);
       setInstructors(userData[0].instructors);
     }
   }, [userData]);
@@ -169,11 +139,6 @@ export default function Map({ navigation }) {
   if (location === null || location === undefined || locationForIns === null || locationForIns === undefined) {
     return loading();
   } else {
-
-    // console.log('useeffect is triggered')
-    // console.log('location is...', location, 'locationForIns is ....', locationForIns)
-    // console.log('location in the else statement is...', location)
-    // console.log('locationForIns in the else statement is...', locationForIns)
 
     const userLocationForIns = {
       latitude: locationForIns.coords.latitude,
@@ -189,18 +154,15 @@ export default function Map({ navigation }) {
         longtitudeDelta: 2 / 300,
       };
 
-    // let instructorTracker = [];
-
-
 
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
         if (currentInsTriggerForLoop === true) {
             currentInsTriggerForLoop = false
-        } else if (currentInsTriggerForLoop === false) {
+        } else  {
             currentInsTriggerForLoop = true
         }
         while (instructorTracker.length > 0) {instructorTracker.pop()}
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             const randomInstructorNumber = Math.floor(Math.random() * 3);
             const instructorLocation = generateRandomPoint(
               userLocationForIns,
@@ -208,8 +170,7 @@ export default function Map({ navigation }) {
               1
             );
 
-
-            //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
+            //temp image pin URLs to use due to exceeding quotas w/ Firebase
             let urlHolder = '';
             if (
               allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
@@ -233,10 +194,9 @@ export default function Map({ navigation }) {
             newObjToPush.instructorName =
               allInstructors[randomInstructorNumber].instructorName;
 
-            //use 'urlHolder' to use static images not from Firebase
+            //use 'urlHolder' to use static images not from Firebase (due to quota issues)
             newObjToPush.instructorUrl = urlHolder;
             // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
-
             newObjToPush.longitude = instructorLocation.longitude;
             newObjToPush.latitude = instructorLocation.latitude;
 
@@ -249,11 +209,14 @@ export default function Map({ navigation }) {
 
       <View style={styles.container}>
         <MapView
+          //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
+          //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
+          customMapStyle={require('../assets/map-design.json')}
+          provider={PROVIDER_GOOGLE}
           showsBuildings
           ref={(ref) => {
             this.map = ref;
           }}
-          userInterfaceStyle='dark'
           onLayout={() => {
             this.map.animateToBearing(125);
             this.map.animateToViewingAngle(45);
@@ -264,11 +227,9 @@ export default function Map({ navigation }) {
             latitudeDelta: 1 / 300,
             longitudeDelta: 2 / 300,
           }}
-          // provider={PROVIDER_GOOGLE}
-          // customMapStyle={MapStyle}
           style={styles.mapStyle}
         >
-          {/* Create an array of randomly generated instuctors and then .map through each one */}
+
           <MapView.Marker
             coordinate={{
               latitude: userLocation.latitude,
@@ -282,7 +243,6 @@ export default function Map({ navigation }) {
             />
           </MapView.Marker>
 
-          {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((eachInstructor) => (
             <MapView.Marker
             onPress={onPress}
