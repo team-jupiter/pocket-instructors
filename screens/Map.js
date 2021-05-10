@@ -39,8 +39,12 @@ export default function Map({ navigation }) {
   const email = navigation.getParam('email');
 
   const jakesDog = require('../imgs/jakedog.png');
-  const onPress = () => {
-    navigation.navigate('CaptureInt', { addInstructor, jakesDog });
+  const onPress = (eachInstructor) => {
+    navigation.navigate('CaptureInt', {
+      instructors,
+      jakesDog,
+      eachInstructor,
+    });
   };
 
   function rng() {
@@ -205,8 +209,9 @@ export default function Map({ navigation }) {
 
     }
 
-    return (
+    // console.log(instructorTracker);
 
+    return (
       <View style={styles.container}>
         <MapView
           //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
@@ -245,17 +250,17 @@ export default function Map({ navigation }) {
 
           {instructorTracker.map((eachInstructor) => (
             <MapView.Marker
-            onPress={onPress}
+              //modify props passed here to be RNG'ed
+              onPress={() => onPress(eachInstructor)}
               key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
                 latitude: eachInstructor.latitude,
-                longitude: eachInstructor.longitude
+                longitude: eachInstructor.longitude,
               }}
             >
               <Image
                 source={{
-                  uri:
-                    eachInstructor.instructorUrl
+                  uri: eachInstructor.instructorUrl,
                 }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
