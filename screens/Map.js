@@ -34,8 +34,12 @@ export default function Map({ navigation }) {
   const email = navigation.getParam('email');
 
   const jakesDog = require('../imgs/jakedog.png');
-  const onPress = () => {
-    navigation.navigate('CaptureInt', { addInstructor, jakesDog });
+  const onPress = (eachInstructor) => {
+    navigation.navigate('CaptureInt', {
+      instructors,
+      jakesDog,
+      eachInstructor,
+    });
   };
 
   function rng() {
@@ -118,8 +122,6 @@ export default function Map({ navigation }) {
   if (location === null || location === undefined) {
     return loading();
   } else {
-
-
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
@@ -136,7 +138,6 @@ export default function Map({ navigation }) {
         targetRadius,
         1
       );
-
 
       //temp URLs due to exceeding quotas w/ firebase ... look into this further ...
       let urlHolder = '';
@@ -161,17 +162,18 @@ export default function Map({ navigation }) {
         allInstructors[randomInstructorNumber].instructorDexID;
       newObjToPush.instructorName =
         allInstructors[randomInstructorNumber].instructorName;
-    //   newObjToPush.instructorUrl = urlHolder;
+      //   newObjToPush.instructorUrl = urlHolder;
       newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
       newObjToPush.longitude = instructorLocation.longitude;
       newObjToPush.latitude = instructorLocation.latitude;
 
-    //   console.log('newObjToPush is...', newObjToPush)
+      //   console.log('newObjToPush is...', newObjToPush)
       instructorTracker.push(newObjToPush);
     }
 
-    return (
+    console.log(instructorTracker);
 
+    return (
       <View style={styles.container}>
         <MapView
           showsBuildings
@@ -195,7 +197,6 @@ export default function Map({ navigation }) {
         >
           {/* Create an array of randomly generated instuctors and then .map through each one */}
           <MapView.Marker
-            onPress={onPress}
             coordinate={{
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
@@ -211,16 +212,16 @@ export default function Map({ navigation }) {
           {/* THE THING BELOW IS THE ONLY THING THAT WORKS DONT FORGET!!!! */}
           {instructorTracker.map((eachInstructor) => (
             <MapView.Marker
+              onPress={() => onPress(eachInstructor)}
               key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
               coordinate={{
                 latitude: eachInstructor.latitude,
-                longitude: eachInstructor.longitude
+                longitude: eachInstructor.longitude,
               }}
             >
               <Image
                 source={{
-                  uri:
-                    eachInstructor.instructorUrl
+                  uri: eachInstructor.instructorUrl,
                 }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
