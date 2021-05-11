@@ -32,24 +32,7 @@ export default function Map({ navigation }) {
   //SOCKET STUFF
   socket = io.connect('https://55e15375c658.ngrok.io');
 
-  io.on('connection', (socket) => {
-    io.clients((error, clients) => {
-      if (error) throw error;
-      console.log(clients); // => [6em3d4TJP8Et9EMNAAAA, G5p55dHhGgUnLUctAAAB]
-    });
 
-    socket.on('position', (position) => {
-      // console.log('position with id -----------------\n', position)
-      socket.broadcast.emit('otherPositions', position);
-    })
-
-    socket.on('disconnect', () => {
-      // console.log(`Connection ${socket.id} has left the building`)
-    })
-
-  });
-
-  //consts
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
   const [locationForIns, setLocationForIns] = useState(null);
@@ -57,7 +40,7 @@ export default function Map({ navigation }) {
   const [userData, setUserData] = useState();
   const [allInstructors, setAllInstructors] = useState([]);
   const [instructors, setInstructors] = useState([]);
-  const [friends,setFriends] = useState({})
+  const [friends, setFriends] = useState({})
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
@@ -154,6 +137,7 @@ export default function Map({ navigation }) {
       });
       socket.on('otherPositions', positionsData => {
         // console.log('positionsData from server broadcast')
+        console.log('test socket console log')
         let tempFriends = { friends };
         tempFriends[positionsData.id] = { ...positionsData };
         console.log('tempFRIENDS----->', tempFriends)
