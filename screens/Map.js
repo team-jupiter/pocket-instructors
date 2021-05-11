@@ -27,11 +27,14 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true
 let currentInsTriggerForLoop = true
 
+//change this to ngrok later on ....
+let socket = io.connect('http://192.168.1.251:3000');
+
 export default function Map({ navigation }) {
 
   //SOCKET STUFF
-  socket = io.connect('https://55e15375c658.ngrok.io');
-
+  // socket = io.connect('http://192.168.1.251:3000');
+  // const SocketEndpoint = 'https://socket-io-expo-backend-dtyxsdtzxb.now.sh';
 
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
@@ -100,11 +103,13 @@ export default function Map({ navigation }) {
     return asyncOutput;
   }
 
-  useEffect(() => {
+
+  useEffect(async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
     (async () => {
         getAllInstructorData();
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      // let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
@@ -120,11 +125,12 @@ export default function Map({ navigation }) {
     }, 10000)
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
     (async () => {
         getTrainerData();
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      // let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
@@ -149,8 +155,6 @@ export default function Map({ navigation }) {
     })()
     }, 500)
   }, []);
-
-
 
 
   useEffect(() => {
@@ -218,6 +222,7 @@ export default function Map({ navigation }) {
 
             let newObjToPush = {};
 
+            // console.log('allinstructors check ...', allInstructors[randomInstructorNumber])
             newObjToPush.instructorDexID =
               allInstructors[randomInstructorNumber].instructorDexID;
             newObjToPush.instructorName =
