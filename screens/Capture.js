@@ -14,6 +14,9 @@ import {
     SpotLight,
 } from 'three';
 import { Asset } from 'expo-asset';
+import { Button, View } from 'react-native';
+import { Touchable } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 if (!global.btoa) {
     global.btoa = encode;
@@ -33,6 +36,7 @@ export default function App() {
     }, []);
 
     return (
+        // <View>
         <GLView
             style={{ flex: 1 }}
             onContextCreate={async (gl: ExpoWebGLRenderingContext) => {
@@ -73,7 +77,7 @@ export default function App() {
 
                 const loader = new GLTFLoader();
                 loader.load(
-                    asset.uri || '',
+                    asset.localUri || '',
                     (gltf) => {
                         model = gltf.scene;
                         scene.add(model);
@@ -101,5 +105,6 @@ export default function App() {
                 render();
             }}
         />
+        // </View>
     );
 }
