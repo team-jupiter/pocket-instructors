@@ -16,15 +16,18 @@ import LottieView from "lottie-react-native";
 import * as firebase from "firebase";
 import FirebaseConfig from "../constants/ApiKey";
 import loading from "../screens/loading";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
+let tempFriends = {};
+console.log("TEST STATEMENT");
 //change this to ngrok later on ....
-let socket = io.connect("http://192.168.1.251:3000");
+const io = require("socket.io-client");
+let socket = io.connect("http://e975181cfb03.ngrok.io");
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -125,19 +128,23 @@ export default function Map({ navigation }) {
           data: location,
           id: email,
         });
-        socket.on("otherPositions", (positionsData) => {
-          // console.log('positionsData from server broadcast')
-          console.log("test socket console log");
-          let tempFriends = { friends };
-          tempFriends[positionsData.id] = { ...positionsData };
-          console.log("tempFRIENDS----->", tempFriends);
-          setFriends({
-            friends: tempFriends,
-          });
-        });
       })();
-    }, 500);
+    }, 2000);
   }, []);
+  socket.on("otherPositions", (positionsData) => {
+    // console.log('positionsData from server broadcast')
+    tempFriends[positionsData.id] = { ...positionsData };
+    setFriends({
+      friends: tempFriends,
+    });
+  });
+  let friendsPositionsArr = Object.values(friends);
+  //console.log("FRIENDS---->", friends.id);
+  let friendsArr = friendsPositionsArr.map((eachthing) =>{
+    return Object.values(eachthing);
+  })
+  //console.log("PLS FUCKIGN WORK JESUS----->", friendsArr);
+
   useEffect(() => {
     if (userData) {
       setInstructors(userData[0].instructors);
@@ -217,7 +224,8 @@ export default function Map({ navigation }) {
       }
     }
     // console.log(instructorTracker);
-    return (
+    if(friendsArr[0] !== undefined){
+      return (
       <View style={styles.container}>
         <MapView
           //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
@@ -271,9 +279,87 @@ export default function Map({ navigation }) {
               />
             </MapView.Marker>
           ))}
+          {friendsArr[0].map((eachPlayer) => (
+            <MapView.Marker
+              //modify props passed here to be RNG'ed
+              // onPress={() => onPress(eachPlayer)}
+
+              key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
+              coordinate={{
+                latitude: eachPlayer.data.coords.latitude,
+                longitude: eachPlayer.data.coords.longitude,
+              }}
+            >
+              <Image
+              source={require("../imgs/pic.png")}
+              style={{ width: 40, height: 42 }}
+              resizeMode="contain"
+            />
+            </MapView.Marker>
+          ))}
         </MapView>
       </View>
     );
+    }else{
+      return (
+        <View style={styles.container}>
+          <MapView
+            //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
+            //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
+            customMapStyle={require("../assets/map-design.json")}
+            provider={PROVIDER_GOOGLE}
+            showsBuildings
+            ref={(ref) => {
+              this.map = ref;
+            }}
+            onLayout={() => {
+              this.map.animateToBearing(125);
+              this.map.animateToViewingAngle(45);
+            }}
+            initialRegion={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+              latitudeDelta: 1 / 300,
+              longitudeDelta: 2 / 300,
+            }}
+            style={styles.mapStyle}
+          >
+            <MapView.Marker
+              coordinate={{
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+              }}
+            >
+              <Image
+                source={require("../imgs/pic.png")}
+                style={{ width: 40, height: 42 }}
+                resizeMode="contain"
+              />
+            </MapView.Marker>
+            {instructorTracker.map((eachInstructor) => (
+              <MapView.Marker
+                //modify props passed here to be RNG'ed
+                onPress={() => onPress(eachInstructor)}
+                key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
+                coordinate={{
+                  latitude: eachInstructor.latitude,
+                  longitude: eachInstructor.longitude,
+                }}
+              >
+                <Image
+                  source={{
+                    uri: eachInstructor.instructorUrl,
+                  }}
+                  style={{ width: 40, height: 42 }}
+                  resizeMode="contain"
+                />
+              </MapView.Marker>
+            ))}
+          </MapView>
+        </View>
+      );
+    }
+
   }
 }
 const styles = StyleSheet.create({
