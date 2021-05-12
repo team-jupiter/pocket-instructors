@@ -6,7 +6,7 @@ const compression = require('compression')
 
 const PORT = process.env.PORT || 3000
 const app = express();
-const server = require('http').Server(app);
+const server = require('https').Server(app);
 const io = require('socket.io')(server);
 
 // if (process.env.NODE_ENV !== 'production') require('../secrets')
@@ -24,7 +24,7 @@ app.use(compression())
 
 app.use((req, res, next) => {
   if (path.extname(req.path).length) {
-    const err = new Error('Not found')
+    const err = new Error('Not founddd')
     err.status = 404
     next(err)
   } else {
@@ -40,16 +40,29 @@ app.use((err, req, res, next) => {
 })
 
 
-server.listen(3000, () => console.log(`Mixing it up on port ${PORT}`));
+server.listen(19002, () => console.log(`Mixing it up on port ${PORT}`));
 
 // The event will be called when a client is connected.
+io.on('connection', function(socket) {
+
+  console.log('Client connected.');
+
+  // Disconnect listener
+  socket.on('disconnect', function() {
+      console.log('Client disconnected.');
+  });
+});
+
+
+
 io.on('connection', (socket) => {
   io.clients((error, clients) => {
     if (error) throw error;
-    console.log(clients);
+    console.log('Clients--->',clients);
   });
 
   socket.on('position', (position) => {
+    console.log('POSITION BEING CAUGHT----->',position)
     socket.broadcast.emit('otherPositions', position);
   })
 
