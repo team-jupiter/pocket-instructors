@@ -95,17 +95,21 @@ export default function Map({ navigation }) {
         });
         return asyncOutput;
     }
-
+    let count = 0;
+    useEffect(async () => {
+        if (count === 0) {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            count++;
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+        }
+    }, []);
     useEffect(() => {
         const interval = setInterval(() => {
             (async () => {
                 getAllInstructorData();
-                let { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== 'granted') {
-                    setErrorMsg('Permission to access location was denied');
-                    return;
-                }
                 let locationForIns = await Location.getCurrentPositionAsync({});
                 setLocationForIns(locationForIns);
                 if (currentInsTriggerUseEffect === true) {

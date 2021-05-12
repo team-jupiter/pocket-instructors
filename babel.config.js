@@ -6,9 +6,9 @@ module.exports = function (api) {
             [
                 'babel-plugin-module-resolver',
                 // {
-                //   alias: {
-                //     'expo-three': './build',
-                //   },
+                //     alias: {
+                //         'expo-three': './build',
+                //     },
                 // },
             ],
         ],
