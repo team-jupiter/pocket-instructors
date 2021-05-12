@@ -16,23 +16,19 @@ import LottieView from "lottie-react-native";
 import * as firebase from "firebase";
 import FirebaseConfig from "../constants/ApiKey";
 import loading from "../screens/loading";
-// import io from "socket.io-client";
-//   //SOCKET STUFF
-// const socket = io.connect("http://85bf26664465.ngrok.io");
-// socket.on('connect', function(socket) {
-//   console.log('Connected!');
-// });
-
-
-
+import io from "socket.io-client";
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
 let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
+//change this to ngrok later on ....
+let socket = io.connect("http://192.168.1.251:3000");
 export default function Map({ navigation }) {
-
+  //SOCKET STUFF
+  // socket = io.connect('http://192.168.1.251:3000');
+  // const SocketEndpoint = 'https://socket-io-expo-backend-dtyxsdtzxb.now.sh';
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
   const [locationForIns, setLocationForIns] = useState(null);
@@ -93,11 +89,12 @@ export default function Map({ navigation }) {
     });
     return asyncOutput;
   }
-  useEffect(() => {
+  useEffect(async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
       (async () => {
         getAllInstructorData();
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        // let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("Permission to access location was denied");
           return;
@@ -112,32 +109,32 @@ export default function Map({ navigation }) {
       })();
     }, 10000);
   }, []);
-  useEffect(() => {
+  useEffect(async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
       (async () => {
         getTrainerData();
-        let { status } = await Location.requestForegroundPermissionsAsync();
+        // let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("Permission to access location was denied");
           return;
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
-        // socket.emit("position", {
-        //   data: location,
-        //   id: email,
-        // });
-        // // console.log(socket.on("position"));
-        // socket.on("otherPositions", (positionsData) => {
-        //   // console.log('positionsData from server broadcast')
-        //   console.log("test socket console log");
-        //   let tempFriends = { friends };
-        //   tempFriends[positionsData.id] = { ...positionsData };
-        //   console.log("tempFRIENDS----->", tempFriends);
-        //   setFriends({
-        //     friends: tempFriends,
-        //   });
-        // });
+        socket.emit("position", {
+          data: location,
+          id: email,
+        });
+        socket.on("otherPositions", (positionsData) => {
+          // console.log('positionsData from server broadcast')
+          console.log("test socket console log");
+          let tempFriends = { friends };
+          tempFriends[positionsData.id] = { ...positionsData };
+          console.log("tempFRIENDS----->", tempFriends);
+          setFriends({
+            friends: tempFriends,
+          });
+        });
       })();
     }, 500);
   }, []);
@@ -206,6 +203,7 @@ export default function Map({ navigation }) {
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU";
         }
         let newObjToPush = {};
+        // console.log('allinstructors check ...', allInstructors[randomInstructorNumber])
         newObjToPush.instructorDexID =
           allInstructors[randomInstructorNumber].instructorDexID;
         newObjToPush.instructorName =

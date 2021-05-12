@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const compression = require('compression')
 
-const PORT = process.env.PORT || 3000
+const PORT = 3000
 const app = express();
 const server = require('https').Server(app);
 const io = require('socket.io')(server);
@@ -40,7 +40,7 @@ app.use((err, req, res, next) => {
 })
 
 
-server.listen(19002, () => console.log(`Mixing it up on port ${PORT}`));
+server.listen(3000, () => console.log(`Mixing it up on port ${PORT}`));
 
 // The event will be called when a client is connected.
 io.on('connection', function(socket) {
@@ -56,19 +56,23 @@ io.on('connection', function(socket) {
 
 
 io.on('connection', (socket) => {
-  io.clients((error, clients) => {
-    if (error) throw error;
-    console.log('Clients--->',clients);
-  });
+  console.log('user has connected', socket.id)
+  // io.clients((error, clientsn) => {
+  //   if (error) throw error;
+  //   console.log(clients);
+  // });
 
   socket.on('position', (position) => {
-    console.log('POSITION BEING CAUGHT----->',position)
+    console.log('emitting this bad boy ....', position)
     socket.broadcast.emit('otherPositions', position);
+    co
   })
 
   socket.on('disconnect', () => {
+    console.log('this has disconnected ....')
   })
 
 });
 
 module.exports = app;
+
