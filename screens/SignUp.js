@@ -9,10 +9,14 @@ import {
     View,
     StyleSheet,
 } from 'react-native';
-import firebase from 'firebase/app';
-//import Navigator from 'routes/homeStack'
+import * as firebase from 'firebase';
 import Navigator from '../routes/homeStack';
 import FirebaseConfig from '../constants/ApiKey';
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(FirebaseConfig.FirebaseConfig);
+    console.log(FirebaseConfig);
+}
+const ref = firebase.firestore().collection('Trainer');
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -33,7 +37,7 @@ export default class SignUp extends Component {
                 .createUserWithEmailAndPassword(email, password);
             this.props.navigation.navigate('Map', { email });
             this.props.navigation.navigate('Map');
-
+            ref.doc(email).set({ email });
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
