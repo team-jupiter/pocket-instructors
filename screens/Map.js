@@ -27,7 +27,7 @@ let tempFriends = {};
 console.log("TEST STATEMENT");
 //change this to ngrok later on ....
 const io = require("socket.io-client");
-let socket = io.connect("http://e975181cfb03.ngrok.io");
+let socket = io.connect("http://4ca040c1a521.ngrok.io");
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -92,8 +92,10 @@ export default function Map({ navigation }) {
     });
     return asyncOutput;
   }
-  useEffect(async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+  useEffect(() => {
+
+    async function getIntLocations(){
+      let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
       (async () => {
         getAllInstructorData();
@@ -110,10 +112,16 @@ export default function Map({ navigation }) {
           currentInsTriggerUseEffect = true;
         }
       })();
-    }, 10000);
+    }, 3000);
+    }
+    getIntLocations();
+
   }, []);
-  useEffect(async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+
+  useEffect( () => {
+
+    async function getLocations(){
+      let { status } = await Location.requestForegroundPermissionsAsync();
     const interval = setInterval(() => {
       (async () => {
         getTrainerData();
@@ -129,21 +137,33 @@ export default function Map({ navigation }) {
           id: email,
         });
       })();
-    }, 2000);
+    }, 5000);
+    }
+    getLocations();
+
   }, []);
-  socket.on("otherPositions", (positionsData) => {
-    // console.log('positionsData from server broadcast')
-    tempFriends[positionsData.id] = { ...positionsData };
-    setFriends({
-      friends: tempFriends,
-    });
-  });
+
+
+  useEffect( () => {
+
+    const interval = setInterval(() => {
+        socket.on("otherPositions", (positionsData) => {
+          // console.log('positionsData from server broadcast')
+          tempFriends[positionsData.id] = { ...positionsData };
+          setFriends({
+            friends: tempFriends,
+          });
+        });
+      ;
+    }, 5000);
+  }, []);
   let friendsPositionsArr = Object.values(friends);
-  //console.log("FRIENDS---->", friends.id);
-  let friendsArr = friendsPositionsArr.map((eachthing) =>{
-    return Object.values(eachthing);
-  })
-  //console.log("PLS FUCKIGN WORK JESUS----->", friendsArr);
+        //console.log("FRIENDS---->", friends.id);
+        let friendsArr = friendsPositionsArr.map((eachthing) =>{
+          return Object.values(eachthing);
+        })
+        console.log("PLS FUCKIGN WORK JESUS----->", friendsArr);
+
 
   useEffect(() => {
     if (userData) {
