@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
@@ -50,13 +50,14 @@ export default function Map({ navigation }) {
     navigation.navigate('CaptureInt', {
       instructors,
       jakesDog,
-      eachInstructor
+      eachInstructor,
+      email,
     });
   };
 
   const onPressUserDex = (userEmail) => {
     navigation.navigate('Pokedex', {
-      userEmail
+      userEmail,
     });
   };
 
@@ -88,6 +89,8 @@ export default function Map({ navigation }) {
   //     });
   //   }
   // }
+  //calls all instructors
+  // - pulls everything from table
   function getAllInstructorData() {
     const items2 = [];
     ref4.onSnapshot((querySnapshot) => {
@@ -148,7 +151,7 @@ export default function Map({ navigation }) {
           setLocation(location);
           socket.emit('position', {
             data: location,
-            id: email
+            id: email,
           });
         })();
       }, 2000);
@@ -162,7 +165,7 @@ export default function Map({ navigation }) {
         // console.log('positionsData from server broadcast')
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
-          friends: tempFriends
+          friends: tempFriends,
         });
       });
     }, 2000);
@@ -197,13 +200,13 @@ export default function Map({ navigation }) {
       latitude: locationForIns.coords.latitude,
       longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
       if (currentInsTriggerForLoop === true) {
@@ -240,19 +243,29 @@ export default function Map({ navigation }) {
           urlHolder =
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
         }
-        let newObjToPush = {};
+
+        //grab all instruct
+        // grab their fields and put into new obj
+
+        let newObjToPush = {}; // takes array and shoves into obj
         newObjToPush.instructorDexID =
           allInstructors[randomInstructorNumber].instructorDexID;
         newObjToPush.instructorName =
           allInstructors[randomInstructorNumber].instructorName;
         //use 'urlHolder' to use static images not from Firebase (due to quota issues)
-        newObjToPush.instructorUrl = urlHolder;
+        // newObjToPush.instructorUrl = urlHolder;
+
+        // img for capture
+        newObjToPush.imgUrl = allInstructors[randomInstructorNumber].imgUrl;
+        // img for smol map
+        newObjToPush.smlImg = allInstructors[randomInstructorNumber].smlImg;
         // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
+
         //Math.floor(Math.random() * 3)
         newObjToPush.attack = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1 //rng from 0.8*max - max
+          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1
         );
         newObjToPush.defense = Math.floor(
           Math.random() * allInstructors[randomInstructorNumber].maxDefense + 1
@@ -265,7 +278,6 @@ export default function Map({ navigation }) {
       }
     }
     if (friendsArr[0] !== undefined) {
-      // console.log('friendsArr is .....', friendsArr[0]);
       return (
         <View style={styles.container}>
           <MapView
@@ -285,7 +297,7 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
@@ -297,7 +309,7 @@ export default function Map({ navigation }) {
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
@@ -313,12 +325,12 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.instructorUrl
+                    uri: eachInstructor.smlImg,
                   }}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
@@ -333,11 +345,11 @@ export default function Map({ navigation }) {
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
-                  longitude: eachPlayer.data.coords.longitude
+                  longitude: eachPlayer.data.coords.longitude,
                 }}
               >
                 <Image
-                  source={require('../imgs/jake.png')}
+                  source={require('../imgs/pic.png')}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
                 />
@@ -366,7 +378,7 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
@@ -378,7 +390,7 @@ export default function Map({ navigation }) {
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
@@ -394,12 +406,12 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.instructorUrl
+                    uri: eachInstructor.smlImg,
                   }}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
@@ -418,17 +430,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
-    padding: 8
+    padding: 8,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    height: Dimensions.get('window').height,
   },
   overlay: {
     position: 'absolute',
@@ -436,6 +448,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
