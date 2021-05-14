@@ -37,7 +37,7 @@ export default class SignUp extends Component {
                 .createUserWithEmailAndPassword(email, password);
             this.props.navigation.navigate('Map', { email });
             this.props.navigation.navigate('Map');
-            ref.doc(email).set({ email });
+            ref.doc(email).set({ email, instructors: [] });
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
