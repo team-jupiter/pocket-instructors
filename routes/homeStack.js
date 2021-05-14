@@ -7,6 +7,7 @@ import SignUp from "../screens/SignUp";
 import Map from "../screens/Map";
 import CaptureInt from "../screens/CaptureInt";
 import loading from "../screens/loading";
+import Pokedex from "../screens/Pokedex"
 
 const screens = {
   // name of screen: {
@@ -18,12 +19,18 @@ const screens = {
   SignUp: {
     screen: SignUp,
   },
+  // Pokedex: {
+  //   screen: Pokedex
+  // },
   Map: {
     screen: Map,
   },
   CaptureInt: {
     screen: CaptureInt,
   },
+  Pokedex: {
+    screen: Pokedex
+  }
 };
 
 const homeStack = createStackNavigator(screens);

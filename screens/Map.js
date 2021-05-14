@@ -1,4 +1,4 @@
-import React, { useState, useEffect, clearInterval } from "react";
+import React, { useState, useEffect, clearInterval } from 'react';
 import {
   Platform,
   Text,
@@ -6,16 +6,16 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  TouchableOpacity,
-} from "react-native";
-import Constants from "expo-constants";
-import * as Location from "expo-location";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { generateRandomPoint } from "../Utilities/locationGenerator";
-import LottieView from "lottie-react-native";
-import * as firebase from "firebase";
-import FirebaseConfig from "../constants/ApiKey";
-import loading from "../screens/loading";
+  TouchableOpacity
+} from 'react-native';
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { generateRandomPoint } from '../Utilities/locationGenerator';
+import LottieView from 'lottie-react-native';
+import * as firebase from 'firebase';
+import FirebaseConfig from '../constants/ApiKey';
+import loading from '../screens/loading';
 // import io from "socket.io-client";
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -24,10 +24,10 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
 let tempFriends = {};
-console.log("TEST STATEMENT");
+console.log('TEST STATEMENT');
 //change this to ngrok later on ....
-const io = require("socket.io-client");
-let socket = io.connect("http://e975181cfb03.ngrok.io");
+const io = require('socket.io-client');
+let socket = io.connect('http://db55e688164b.ngrok.io');
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -40,23 +40,41 @@ export default function Map({ navigation }) {
   const [allInstructors, setAllInstructors] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [friends, setFriends] = useState({});
-  const ref = firebase.firestore().collection("Trainer");
-  const ref4 = firebase.firestore().collection("Instructors");
-  const email = navigation.getParam("email");
-  const jakesDog = require("../imgs/jakedog.png");
+  const ref = firebase.firestore().collection('Trainer');
+  const ref4 = firebase.firestore().collection('Instructors');
+  const email = navigation.getParam('email');
+  const jakesDog = require('../imgs/jakedog.png');
+
+  //need a second onPress function here passing trainer ID/email to the Pokedex component >>>>
+
   const onPress = (eachInstructor) => {
-    navigation.navigate("CaptureInt", {
+    navigation.navigate('CaptureInt', {
       instructors,
       jakesDog,
-      eachInstructor,
+      eachInstructor
     });
   };
+
+  const onPressUserDex = (userEmail) => {
+    navigation.navigate('Pokedex', {
+      userEmail
+    });
+  };
+
+  const onPressOtherUserDex = (eachInstructor) => {
+    navigation.navigate('Pokedex', {
+      instructors,
+      jakesDog,
+      eachInstructor
+    });
+  };
+
   function rng() {
     const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
     return randomInstructorNumber;
   }
   function getTrainerData() {
-    ref.where("email", "==", email).onSnapshot((querySnapshot) => {
+    ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -64,10 +82,12 @@ export default function Map({ navigation }) {
       setUserData(items);
     });
   }
+
+  //this is hardcoded .... need to fix this .....
   function addInstructor(newInstructor) {
     if (instructors.length) {
-      ref.doc("trainer1").update({
-        instructors: [...instructors, newInstructor],
+      ref.doc('trainer1').update({
+        instructors: [...instructors, newInstructor]
       });
     }
   }
@@ -85,7 +105,7 @@ export default function Map({ navigation }) {
     const asyncOutput = [];
     const randomInstructorNumber = rng();
     const asyncResults = await ref4
-      .where("instructorDexID", "==", randomInstructorNumber)
+      .where('instructorDexID', '==', randomInstructorNumber)
       .get();
     asyncResults.forEach((doc) => {
       asyncOutput.push(doc.data());
@@ -98,8 +118,8 @@ export default function Map({ navigation }) {
       (async () => {
         getAllInstructorData();
         // let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
           return;
         }
         let locationForIns = await Location.getCurrentPositionAsync({});
@@ -118,31 +138,31 @@ export default function Map({ navigation }) {
       (async () => {
         getTrainerData();
         // let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
           return;
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
-        socket.emit("position", {
+        socket.emit('position', {
           data: location,
-          id: email,
+          id: email
         });
       })();
     }, 2000);
   }, []);
-  socket.on("otherPositions", (positionsData) => {
+  socket.on('otherPositions', (positionsData) => {
     // console.log('positionsData from server broadcast')
     tempFriends[positionsData.id] = { ...positionsData };
     setFriends({
-      friends: tempFriends,
+      friends: tempFriends
     });
   });
   let friendsPositionsArr = Object.values(friends);
   //console.log("FRIENDS---->", friends.id);
-  let friendsArr = friendsPositionsArr.map((eachthing) =>{
+  let friendsArr = friendsPositionsArr.map((eachthing) => {
     return Object.values(eachthing);
-  })
+  });
   //console.log("PLS FUCKIGN WORK JESUS----->", friendsArr);
 
   useEffect(() => {
@@ -168,13 +188,13 @@ export default function Map({ navigation }) {
       latitude: locationForIns.coords.latitude,
       longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300,
+      longtitudeDelta: 2 / 300
     };
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300,
+      longtitudeDelta: 2 / 300
     };
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
       if (currentInsTriggerForLoop === true) {
@@ -193,24 +213,23 @@ export default function Map({ navigation }) {
           1
         );
         //temp image pin URLs to use due to exceeding quotas w/ Firebase
-        let urlHolder = "";
+        let urlHolder = '';
         if (
-          allInstructors[randomInstructorNumber].instructorName === "Eric Katz"
+          allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
         ) {
           urlHolder =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU";
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
         } else if (
           allInstructors[randomInstructorNumber].instructorName ===
-          "Jon Dagdagan"
+          'Jon Dagdagan'
         ) {
           urlHolder =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU";
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
         } else {
           urlHolder =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU";
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
         }
         let newObjToPush = {};
-        // console.log('allinstructors check ...', allInstructors[randomInstructorNumber])
         newObjToPush.instructorDexID =
           allInstructors[randomInstructorNumber].instructorDexID;
         newObjToPush.instructorName =
@@ -220,93 +239,23 @@ export default function Map({ navigation }) {
         // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
+        //Math.floor(Math.random() * 3)
+        newObjToPush.attack = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxAttack) + 1)
+        newObjToPush.defense = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxDefense) + 1)
+        newObjToPush.hp = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxHP) + 1)
+        newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet
         instructorTracker.push(newObjToPush);
       }
     }
     // console.log(instructorTracker);
-    if(friendsArr[0] !== undefined){
-      return (
-      <View style={styles.container}>
-        <MapView
-          //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
-          //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-          customMapStyle={require("../assets/map-design.json")}
-          provider={PROVIDER_GOOGLE}
-          showsBuildings
-          ref={(ref) => {
-            this.map = ref;
-          }}
-          onLayout={() => {
-            this.map.animateToBearing(125);
-            this.map.animateToViewingAngle(45);
-          }}
-          initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 1 / 300,
-            longitudeDelta: 2 / 300,
-          }}
-          style={styles.mapStyle}
-        >
-          <MapView.Marker
-            coordinate={{
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
-            }}
-          >
-            <Image
-              source={require("../imgs/pic.png")}
-              style={{ width: 40, height: 42 }}
-              resizeMode="contain"
-            />
-          </MapView.Marker>
-          {instructorTracker.map((eachInstructor) => (
-            <MapView.Marker
-              //modify props passed here to be RNG'ed
-              onPress={() => onPress(eachInstructor)}
-              key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
-              coordinate={{
-                latitude: eachInstructor.latitude,
-                longitude: eachInstructor.longitude,
-              }}
-            >
-              <Image
-                source={{
-                  uri: eachInstructor.instructorUrl,
-                }}
-                style={{ width: 40, height: 42 }}
-                resizeMode="contain"
-              />
-            </MapView.Marker>
-          ))}
-          {friendsArr[0].map((eachPlayer) => (
-            <MapView.Marker
-              //modify props passed here to be RNG'ed
-              // onPress={() => onPress(eachPlayer)}
-
-              key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
-              coordinate={{
-                latitude: eachPlayer.data.coords.latitude,
-                longitude: eachPlayer.data.coords.longitude,
-              }}
-            >
-              <Image
-              source={require("../imgs/pic.png")}
-              style={{ width: 40, height: 42 }}
-              resizeMode="contain"
-            />
-            </MapView.Marker>
-          ))}
-        </MapView>
-      </View>
-    );
-    }else{
+    if (friendsArr[0] !== undefined) {
+      console.log('friendsArr is .....', friendsArr[0]);
       return (
         <View style={styles.container}>
           <MapView
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
             //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-            customMapStyle={require("../assets/map-design.json")}
+            // customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             ref={(ref) => {
@@ -320,20 +269,25 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300,
+              longitudeDelta: 2 / 300
             }}
             style={styles.mapStyle}
           >
+            <View style={styles.overlay}>
+            <TouchableOpacity onPress={() => onPressUserDex(email)}>
+                <Image source={require('../img/pokemon/pokeball.png')} />
+              </TouchableOpacity>
+            </View>
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
+                longitude: userLocation.longitude
               }}
             >
               <Image
-                source={require("../imgs/pic.png")}
+                source={require('../imgs/pic.png')}
                 style={{ width: 40, height: 42 }}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </MapView.Marker>
             {instructorTracker.map((eachInstructor) => (
@@ -343,15 +297,96 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude,
+                  longitude: eachInstructor.longitude
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.instructorUrl,
+                    uri: eachInstructor.instructorUrl
                   }}
                   style={{ width: 40, height: 42 }}
-                  resizeMode="contain"
+                  resizeMode='contain'
+                />
+              </MapView.Marker>
+            ))}
+            {friendsArr[0].map((eachPlayer) => (
+              <MapView.Marker
+                // onPress=
+                // onPress={() => onPress(eachPlayer)}
+
+                key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
+                coordinate={{
+                  latitude: eachPlayer.data.coords.latitude,
+                  longitude: eachPlayer.data.coords.longitude
+                }}
+              >
+                <Image
+                  source={require('../imgs/pic.png')}
+                  style={{ width: 40, height: 42 }}
+                  resizeMode='contain'
+                />
+              </MapView.Marker>
+            ))}
+          </MapView>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <MapView
+            //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
+            //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
+            // customMapStyle={require("../assets/map-design.json")}
+            provider={PROVIDER_GOOGLE}
+            showsBuildings
+            ref={(ref) => {
+              this.map = ref;
+            }}
+            onLayout={() => {
+              this.map.animateToBearing(125);
+              this.map.animateToViewingAngle(45);
+            }}
+            initialRegion={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+              latitudeDelta: 1 / 300,
+              longitudeDelta: 2 / 300
+            }}
+            style={styles.mapStyle}
+          >
+            <View style={styles.overlay}>
+              <TouchableOpacity onPress={() => onPressUserDex(email)}>
+                <Image source={require('../img/pokemon/pokeball.png')} />
+              </TouchableOpacity>
+            </View>
+            <MapView.Marker
+              coordinate={{
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude
+              }}
+            >
+              <Image
+                source={require('../imgs/pic.png')}
+                style={{ width: 40, height: 42 }}
+                resizeMode='contain'
+              />
+            </MapView.Marker>
+            {instructorTracker.map((eachInstructor) => (
+              <MapView.Marker
+                //modify props passed here to be RNG'ed
+                onPress={() => onPress(eachInstructor)}
+                key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
+                coordinate={{
+                  latitude: eachInstructor.latitude,
+                  longitude: eachInstructor.longitude
+                }}
+              >
+                <Image
+                  source={{
+                    uri: eachInstructor.instructorUrl
+                  }}
+                  style={{ width: 40, height: 42 }}
+                  resizeMode='contain'
                 />
               </MapView.Marker>
             ))}
@@ -359,25 +394,32 @@ export default function Map({ navigation }) {
         </View>
       );
     }
-
   }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#ecf0f1",
-    padding: 8,
+    backgroundColor: '#ecf0f1',
+    padding: 8
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
   },
+  overlay: {
+    position: 'absolute',
+    padding: 16,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    alignItems: 'center'
+  }
 });
