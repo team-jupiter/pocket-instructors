@@ -22,6 +22,13 @@ export default function CaptureInt(props) {
     const ref = firebase.firestore().collection('Trainer');
     const ref4 = firebase.firestore().collection('Instructors');
 
+    //bringing in addInstructor from props
+
+    const { eachInstructor } = props.navigation.state.params;
+    const { instructorUrl } = props.navigation.state.params.eachInstructor;
+    const { instructors } = props.navigation.state.params;
+    const { email } = props.navigation.state.params;
+    console.log('EMAIL -->>>>', email);
     function addInstructor(newInstructor) {
         if (instructors.length) {
             // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
@@ -31,13 +38,6 @@ export default function CaptureInt(props) {
             });
         }
     }
-
-    //bringing in addInstructor from props
-
-    const { eachInstructor } = props.navigation.state.params;
-    const { instructorUrl } = props.navigation.state.params.eachInstructor;
-    const { instructors } = props.navigation.state.params;
-
     //Set up refs
     const gyroTracker = null;
 

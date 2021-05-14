@@ -51,6 +51,7 @@ export default function Map({ navigation }) {
             instructors,
             jakesDog,
             eachInstructor,
+            email,
         });
     };
 
@@ -275,7 +276,7 @@ export default function Map({ navigation }) {
             }
         }
         if (friendsArr[0] !== undefined) {
-            console.log('friendsArr is .....', friendsArr[0]);
+            // console.log('friendsArr is .....', friendsArr[0]);
             return (
                 <View style={styles.container}>
                     <MapView
