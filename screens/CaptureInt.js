@@ -25,6 +25,7 @@ export default function CaptureInt(props) {
   function addInstructor(newInstructor) {
     if (instructors.length) {
       // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
+      //this is hardcoded, this needs to be adjusted
       ref.doc('trainer1').update({
         instructors: [...instructors, newInstructor],
       });

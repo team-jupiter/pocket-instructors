@@ -30,6 +30,7 @@ export default class Login extends Component {
                 .auth()
                 .signInWithEmailAndPassword(email, password);
             console.log('LOGGED IN');
+            // this.props.navigation.navigate('Pokedex', { email });
             this.props.navigation.navigate('Map', { email });
             //changing above to test page before merge
         } catch (error) {
