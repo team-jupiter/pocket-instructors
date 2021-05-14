@@ -48,7 +48,7 @@ export default function OtherPokedex(props) {
             <Text style={styles.cancelText}>X</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}> Owned Instructors </Text>
+        <Text style={styles.title}> Their Owned Instructors </Text>
         <Button
           //redirect to battle screen
           title="Battle this fool!"
