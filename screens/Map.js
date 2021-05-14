@@ -60,8 +60,8 @@ export default function Map({ navigation }) {
     });
   };
 
-  const onPressOtherUserDex = (eachInstructor) => {
-    navigation.navigate('Pokedex', {
+  const onPressOtherUserDex = (userEmail) => {
+    navigation.navigate('OtherPokedex', {
       userEmail
     });
   };
@@ -252,7 +252,7 @@ export default function Map({ navigation }) {
         newObjToPush.latitude = instructorLocation.latitude;
         //Math.floor(Math.random() * 3)
         newObjToPush.attack = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1
+          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1 //rng from 0.8*max - max
         );
         newObjToPush.defense = Math.floor(
           Math.random() * allInstructors[randomInstructorNumber].maxDefense + 1
@@ -265,7 +265,7 @@ export default function Map({ navigation }) {
       }
     }
     if (friendsArr[0] !== undefined) {
-      console.log('friendsArr is .....', friendsArr[0]);
+      // console.log('friendsArr is .....', friendsArr[0]);
       return (
         <View style={styles.container}>
           <MapView
@@ -329,7 +329,7 @@ export default function Map({ navigation }) {
               <MapView.Marker
                 //this marker needs onpress component to it, it should pass the user's email as
                 //a prop to the Pokedex component
-
+                onPress={() => onPressOtherUserDex(eachPlayer.id)}
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
@@ -337,7 +337,7 @@ export default function Map({ navigation }) {
                 }}
               >
                 <Image
-                  source={require('../imgs/pic.png')}
+                  source={require('../imgs/jake.png')}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
                 />

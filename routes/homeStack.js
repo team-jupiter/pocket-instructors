@@ -7,7 +7,8 @@ import SignUp from "../screens/SignUp";
 import Map from "../screens/Map";
 import CaptureInt from "../screens/CaptureInt";
 import loading from "../screens/loading";
-import Pokedex from "../screens/Pokedex"
+import Pokedex from "../screens/Pokedex";
+import OtherPokedex from "../screens/OtherPokedex"
 
 const screens = {
   // name of screen: {
@@ -30,6 +31,9 @@ const screens = {
   },
   Pokedex: {
     screen: Pokedex
+  },
+  OtherPokedex: {
+    screen: OtherPokedex
   }
 };
 
