@@ -24,10 +24,9 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
 let tempFriends = {};
-console.log('TEST STATEMENT');
-//change this to ngrok later on ....
+
 const io = require('socket.io-client');
-let socket = io.connect('http://db55e688164b.ngrok.io');
+let socket = io.connect('http://0a74398d6a2e.ngrok.io');
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -63,16 +62,14 @@ export default function Map({ navigation }) {
 
   const onPressOtherUserDex = (eachInstructor) => {
     navigation.navigate('Pokedex', {
-      instructors,
-      jakesDog,
-      eachInstructor
+      userEmail
     });
   };
 
-  function rng() {
-    const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
-    return randomInstructorNumber;
-  }
+  // function rng() {
+  //   const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
+  //   return randomInstructorNumber;
+  // }
   function getTrainerData() {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
@@ -84,13 +81,13 @@ export default function Map({ navigation }) {
   }
 
   //this is hardcoded .... need to fix this .....
-  function addInstructor(newInstructor) {
-    if (instructors.length) {
-      ref.doc('trainer1').update({
-        instructors: [...instructors, newInstructor]
-      });
-    }
-  }
+  // function addInstructor(newInstructor) {
+  //   if (instructors.length) {
+  //     ref.doc('trainer1').update({
+  //       instructors: [...instructors, newInstructor]
+  //     });
+  //   }
+  // }
   function getAllInstructorData() {
     const items2 = [];
     ref4.onSnapshot((querySnapshot) => {
@@ -101,69 +98,81 @@ export default function Map({ navigation }) {
       setAllInstructors(items2);
     });
   }
-  async function getInstructorDataAsync() {
-    const asyncOutput = [];
-    const randomInstructorNumber = rng();
-    const asyncResults = await ref4
-      .where('instructorDexID', '==', randomInstructorNumber)
-      .get();
-    asyncResults.forEach((doc) => {
-      asyncOutput.push(doc.data());
-    });
-    return asyncOutput;
-  }
-  useEffect(async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    const interval = setInterval(() => {
-      (async () => {
-        getAllInstructorData();
-        // let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-        let locationForIns = await Location.getCurrentPositionAsync({});
-        setLocationForIns(locationForIns);
-        if (currentInsTriggerUseEffect === true) {
-          currentInsTriggerUseEffect = false;
-        } else {
-          currentInsTriggerUseEffect = true;
-        }
-      })();
-    }, 10000);
+  // async function getInstructorDataAsync() {
+  //   const asyncOutput = [];
+  //   const randomInstructorNumber = rng();
+  //   const asyncResults = await ref4
+  //     .where('instructorDexID', '==', randomInstructorNumber)
+  //     .get();
+  //   asyncResults.forEach((doc) => {
+  //     asyncOutput.push(doc.data());
+  //   });
+  //   return asyncOutput;
+  // }
+  useEffect(() => {
+    async function getIntLocations() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      const interval = setInterval(() => {
+        (async () => {
+          getAllInstructorData();
+          // let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+          let locationForIns = await Location.getCurrentPositionAsync({});
+          setLocationForIns(locationForIns);
+          if (currentInsTriggerUseEffect === true) {
+            currentInsTriggerUseEffect = false;
+          } else {
+            currentInsTriggerUseEffect = true;
+          }
+        })();
+      }, 5000);
+    }
+    getIntLocations();
   }, []);
-  useEffect(async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+
+  useEffect(() => {
+    async function getLocations() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      const interval = setInterval(() => {
+        (async () => {
+          getTrainerData();
+          // let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+          socket.emit('position', {
+            data: location,
+            id: email
+          });
+        })();
+      }, 2000);
+    }
+    getLocations();
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      (async () => {
-        getTrainerData();
-        // let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-        socket.emit('position', {
-          data: location,
-          id: email
+      socket.on('otherPositions', (positionsData) => {
+        // console.log('positionsData from server broadcast')
+        tempFriends[positionsData.id] = { ...positionsData };
+        setFriends({
+          friends: tempFriends
         });
-      })();
+      });
     }, 2000);
   }, []);
-  socket.on('otherPositions', (positionsData) => {
-    // console.log('positionsData from server broadcast')
-    tempFriends[positionsData.id] = { ...positionsData };
-    setFriends({
-      friends: tempFriends
-    });
-  });
+
   let friendsPositionsArr = Object.values(friends);
   //console.log("FRIENDS---->", friends.id);
   let friendsArr = friendsPositionsArr.map((eachthing) => {
     return Object.values(eachthing);
   });
-  //console.log("PLS FUCKIGN WORK JESUS----->", friendsArr);
 
   useEffect(() => {
     if (userData) {
@@ -205,6 +214,8 @@ export default function Map({ navigation }) {
       while (instructorTracker.length > 0) {
         instructorTracker.pop();
       }
+
+      //this needs to be changed based on how many instructors are seeded into the DB ...
       for (let i = 0; i < 5; i++) {
         const randomInstructorNumber = Math.floor(Math.random() * 3);
         const instructorLocation = generateRandomPoint(
@@ -240,14 +251,19 @@ export default function Map({ navigation }) {
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
         //Math.floor(Math.random() * 3)
-        newObjToPush.attack = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxAttack) + 1)
-        newObjToPush.defense = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxDefense) + 1)
-        newObjToPush.hp = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxHP) + 1)
-        newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet
+        newObjToPush.attack = Math.floor(
+          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1
+        );
+        newObjToPush.defense = Math.floor(
+          Math.random() * allInstructors[randomInstructorNumber].maxDefense + 1
+        );
+        newObjToPush.hp = Math.floor(
+          Math.random() * allInstructors[randomInstructorNumber].maxHP + 1
+        );
+        newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
         instructorTracker.push(newObjToPush);
       }
     }
-    // console.log(instructorTracker);
     if (friendsArr[0] !== undefined) {
       console.log('friendsArr is .....', friendsArr[0]);
       return (
@@ -274,7 +290,7 @@ export default function Map({ navigation }) {
             style={styles.mapStyle}
           >
             <View style={styles.overlay}>
-            <TouchableOpacity onPress={() => onPressUserDex(email)}>
+              <TouchableOpacity onPress={() => onPressUserDex(email)}>
                 <Image source={require('../img/pokemon/pokeball.png')} />
               </TouchableOpacity>
             </View>
@@ -311,8 +327,8 @@ export default function Map({ navigation }) {
             ))}
             {friendsArr[0].map((eachPlayer) => (
               <MapView.Marker
-                // onPress=
-                // onPress={() => onPress(eachPlayer)}
+                //this marker needs onpress component to it, it should pass the user's email as
+                //a prop to the Pokedex component
 
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
