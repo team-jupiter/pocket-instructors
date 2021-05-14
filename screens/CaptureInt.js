@@ -19,25 +19,26 @@ export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(false);
+
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
+
+  const { eachInstructor } = props.navigation.state.params;
+  const { instructorUrl } = props.navigation.state.params.eachInstructor;
+  const { instructors } = props.navigation.state.params;
+  const { instructorDexID } = props.navigation.state.params.instructors;
+  const { imgUrl } = props.navigation.state.params.eachInstructor;
+  const { email } = props.navigation.state.params;
 
   function addInstructor(newInstructor) {
     if (instructors.length) {
       // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
       //this is hardcoded, this needs to be adjusted
-      ref.doc('trainer1').update({
+      ref.doc(email).update({
         instructors: [...instructors, newInstructor],
       });
     }
   }
-
-  //bringing in addInstructor from props
-
-  const { eachInstructor } = props.navigation.state.params;
-  const { instructorUrl } = props.navigation.state.params.eachInstructor;
-  const { instructors } = props.navigation.state.params;
-
   //Set up refs
   const gyroTracker = null;
 
@@ -157,7 +158,7 @@ export default function CaptureInt(props) {
         </View>
       ) : (
         <Animated.Image
-          source={{ uri: instructorUrl }}
+          source={{ uri: imgUrl }}
           style={[
             styles.pokemon,
             {

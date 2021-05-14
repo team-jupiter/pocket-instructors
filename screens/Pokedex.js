@@ -5,7 +5,7 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
@@ -13,13 +13,14 @@ import { useEffect } from 'react';
 // const testEmail = 'b@b.com'
 
 export default function Pokedex(props) {
-  const [ownedInstructors, setOwnedInstructors] = useState()
+  const [ownedInstructors, setOwnedInstructors] = useState();
   const ref = firebase.firestore().collection('Trainer');
-  const emailImport = props.navigation.state.params.userEmail
+  const emailImport = props.navigation.state.params.userEmail;
   // console.log('emailImport is ...', emailImport)
 
+  //
   function getOneTrainerData() {
-    ref.where("email", "==", emailImport).onSnapshot((querySnapshot) => {
+    ref.where('email', '==', emailImport).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -33,49 +34,51 @@ export default function Pokedex(props) {
   };
 
   useEffect(() => {
-    getOneTrainerData()
-  }, [])
-
+    getOneTrainerData();
+  }, []);
 
   if (ownedInstructors !== undefined) {
-    console.log('ownedInstructors is ...', ownedInstructors)
+    console.log('ownedInstructors is ...', ownedInstructors);
     return (
       <ScrollView>
-      <View style={styles.masterContainer}>
-        <View style={[styles.overlay, styles.topOverlay]}>
-          <TouchableOpacity style={styles.cancelButton} onPress={goBack}>
-            <Text style={styles.cancelText}>X</Text>
-          </TouchableOpacity>
+        <View style={styles.masterContainer}>
+          <View style={[styles.overlay, styles.topOverlay]}>
+            <TouchableOpacity style={styles.cancelButton} onPress={goBack}>
+              <Text style={styles.cancelText}>X</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.title}>Your Team</Text>
+          <View style={styles.container}>
+            {ownedInstructors[0].instructors.map((eachInstructor) => (
+              <View
+                style={styles.eachPokemonContainer}
+                key={eachInstructor.instructorDexID}
+              >
+                <Text>Instructor: {eachInstructor.instructorName} </Text>
+                <Text>Instructor Dex #: {eachInstructor.instructorDexID} </Text>
+                <Text>HP: {eachInstructor.hp} </Text>
+                <Text>Attack: {eachInstructor.attack}</Text>
+                <Text>Defense: {eachInstructor.defense}</Text>
+                {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
+                <Image
+                  source={require('../imgs/pic.png')}
+                  style={{ width: 300, height: 320 }}
+                  // source={{
+                  //   uri: eachInstructor.instructorUrl,
+                  // }}
+                />
+              </View>
+            ))}
+            {/* <Text> Hello, it's loaded </Text> */}
+          </View>
         </View>
-        <Text style={styles.title}>Your Team</Text>
-        <View style={styles.container}>
-          {ownedInstructors[0].instructors.map((eachInstructor) => (
-            <View style={styles.eachPokemonContainer} key={eachInstructor.instructorDexID}>
-              <Text>Instructor: {eachInstructor.instructorName} </Text>
-              <Text>Instructor Dex #: {eachInstructor.instructorDexID} </Text>
-              <Text>HP: {eachInstructor.hp} </Text>
-              <Text>Attack: {eachInstructor.attack}</Text>
-              <Text>Defense: {eachInstructor.defense}</Text>
-              {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
-              <Image
-                source={require("../imgs/pic.png")}
-                style={{ width: 300, height: 320 }}
-                // source={{
-                //   uri: eachInstructor.instructorUrl,
-                // }}
-              />
-            </View>
-          ))}
-          {/* <Text> Hello, it's loaded </Text> */}
-        </View>
-      </View>
       </ScrollView>
     );
   }
 
   return (
     <View>
-        <Text> Loading ... </Text>
+      <Text> Loading ... </Text>
     </View>
   );
 }
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10
+    margin: 10,
   },
   eachPokemonContainer: {
     backgroundColor: '#FFF',
