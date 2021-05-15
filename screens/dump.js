@@ -1,3 +1,39 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+
+@anlee914
+team-jupiter
+/
+pocket-instructors
+0
+0
+0
+Code
+Issues
+16
+Pull requests
+2
+Actions
+Projects
+1
+Wiki
+Security
+Insights
+Settings
+pocket-instructors/screens/CaptureInt.js /
+@kthanesjesdapong
+kthanesjesdapong CaptureInt Comp, now properly adds Instructors to Users on capture. L…
+…
+Latest commit 74410f3 6 days ago
+ History
+ 1 contributor
+241 lines (217 sloc)  6.02 KB
+
 import React, { useEffect, useState } from 'react';
 import {
   Animated,
@@ -19,33 +55,24 @@ export default function CaptureInt(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [captured, setCaptured] = useState(false);
-
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
-
-  const { eachInstructor } = props.navigation.state.params;
-  const { instructorUrl } = props.navigation.state.params.eachInstructor;
-  const { instructors } = props.navigation.state.params;
-  const { instructorDexID } = props.navigation.state.params.instructors;
-  const { imgUrl } = props.navigation.state.params.eachInstructor;
-  const { email } = props.navigation.state.params;
-
-  console.log('eachInstructor is ...', eachInstructor)
-  console.log('instructors is ...', instructors.length)
 
   function addInstructor(newInstructor) {
     if (instructors.length) {
       // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
-      //this is hardcoded, this needs to be adjusted
-      // let testInstructors = [...instructors, newInstructor]
-      // console.log('testInstructors is....', testInstructors)
-      ref.doc(email).update({
+      ref.doc('trainer1').update({
         instructors: [...instructors, newInstructor],
       });
-
-
     }
   }
+
+  //bringing in addInstructor from props
+
+  const { eachInstructor } = props.navigation.state.params;
+  const { instructorUrl } = props.navigation.state.params.eachInstructor;
+  const { instructors } = props.navigation.state.params;
+
   //Set up refs
   const gyroTracker = null;
 
@@ -165,7 +192,7 @@ export default function CaptureInt(props) {
         </View>
       ) : (
         <Animated.Image
-          source={{ uri: imgUrl }}
+          source={{ uri: instructorUrl }}
           style={[
             styles.pokemon,
             {
@@ -248,3 +275,16 @@ const styles = StyleSheet.create({
     left: width / 3,
   },
 });
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete

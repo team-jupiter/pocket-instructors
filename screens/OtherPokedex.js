@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 
 // const testEmail = 'b@b.com'
 
-export default function Pokedex(props) {
+export default function OtherPokedex(props) {
   const [ownedInstructors, setOwnedInstructors] = useState()
   const ref = firebase.firestore().collection('Trainer');
   const emailImport = props.navigation.state.params.userEmail
@@ -48,7 +48,12 @@ export default function Pokedex(props) {
             <Text style={styles.cancelText}>X</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}> Owned Instructors </Text>
+        <Text style={styles.title}> Their Owned Instructors </Text>
+        <Button
+          //redirect to battle screen
+          title="Battle this fool!"
+          color="#f194ff"
+        />
         <View style={styles.container}>
           {ownedInstructors[0].instructors.map((eachInstructor) => (
             <View style={styles.eachPokemonContainer} key={eachInstructor.instructorDexID}>
@@ -59,8 +64,7 @@ export default function Pokedex(props) {
               <Text>Defense: {eachInstructor.defense}</Text>
               {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
               <Image
-                // source={require("../imgs/pic.png")}
-                source={{ uri: eachInstructor.imgUrl }}
+                source={require("../imgs/pic.png")}
                 style={{ width: 300, height: 320 }}
                 // source={{
                 //   uri: eachInstructor.instructorUrl,

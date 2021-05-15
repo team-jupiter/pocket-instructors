@@ -61,9 +61,9 @@ export default function Map({ navigation }) {
     });
   };
 
-  const onPressOtherUserDex = (eachInstructor) => {
-    navigation.navigate('Pokedex', {
-      userEmail,
+  const onPressOtherUserDex = (userEmail) => {
+    navigation.navigate('OtherPokedex', {
+      userEmail
     });
   };
 
@@ -263,17 +263,21 @@ export default function Map({ navigation }) {
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
 
+
+        // function randomIntFromInterval(min, max) { // min and max included
+        //   return Math.floor(Math.random() * (max - min + 1) + min);
+        // }
         //Math.floor(Math.random() * 3)
-        newObjToPush.attack = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1
-        );
-        newObjToPush.defense = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxDefense + 1
-        );
-        newObjToPush.hp = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxHP + 1
-        );
-        newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
+        // newObjToPush.attack = Math.floor(
+        //   Math.random() * (allInstructors[randomInstructorNumber].maxAttack - 0.8 * allInstructors[randomInstructorNumber].maxAttack) + (0.8 * allInstructors[randomInstructorNumber].maxAttack)
+        // );
+        newObjToPush.attack = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxAttack - 0.8 * allInstructors[randomInstructorNumber].maxAttack)) + (0.8 * allInstructors[randomInstructorNumber].maxAttack)
+        ;
+        newObjToPush.defense = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxDefense - 0.8 * allInstructors[randomInstructorNumber].maxDefense)) + (0.8 * allInstructors[randomInstructorNumber].maxDefense)
+        ;
+        newObjToPush.hp = Math.floor(Math.random() * (allInstructors[randomInstructorNumber].maxHP - 0.8 * allInstructors[randomInstructorNumber].maxHP)) + (0.8 * allInstructors[randomInstructorNumber].maxHP)
+        ;
+        // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
         instructorTracker.push(newObjToPush);
       }
     }
@@ -341,7 +345,7 @@ export default function Map({ navigation }) {
               <MapView.Marker
                 //this marker needs onpress component to it, it should pass the user's email as
                 //a prop to the Pokedex component
-
+                onPress={() => onPressOtherUserDex(eachPlayer.id)}
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
