@@ -59,7 +59,8 @@ export default function Pokedex(props) {
               <Text>Defense: {eachInstructor.defense}</Text>
               {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
               <Image
-                source={require("../imgs/pic.png")}
+                // source={require("../imgs/pic.png")}
+                source={{ uri: eachInstructor.imgUrl }}
                 style={{ width: 300, height: 320 }}
                 // source={{
                 //   uri: eachInstructor.instructorUrl,
