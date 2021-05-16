@@ -52,6 +52,13 @@ export default function AnimatedInstructors(props) {
 
   //this determines which direction the pokemon will be facing
   // where is orientation coming from?
+
+  //call pokemonId
+  // get your back sprite, front sprite, make
+  // from the opp screen on click pass the props,
+  //choose random pokemon
+  // choose your pokemon you want to fight with them
+  // choose the opponent's pokemon at random, and select yours
   let sprite = orientation == 'front' ? spriteFront : spriteBack;
 
   pokemon_moveY = sprite_translateY.interpolate({
