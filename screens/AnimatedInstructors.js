@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Animated, Easing } from 'react-native';
+import {
+  View,
+  Image,
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import HealthBar from './HealthBar';
 
 export default function AnimatedInstructors(props) {
-  let sprite_translateY = new Animated.Value(0);
+  let sprite_translateY = new Animated.Value(0); //
   let sprite_scale = new Animated.Value(0);
 
   let pokemon_opacity = new Animated.Value(0);
   let punch_opacity = new Animated.Value(0);
   let punch_translateY = new Animated.Value(0);
 
+  const tapToBattle = () => {
+    console.log('taptaptap');
+  };
+
+  const [oppHealth, setOppHealth] = useState(100);
+  const [playerHealth, setPlayerHealth] = useState(100);
   const animateDamagePokemon = () => {
     punch_opacity.setValue(0);
     punch_translateY.setValue(0);
@@ -38,15 +53,15 @@ export default function AnimatedInstructors(props) {
       }),
     ]).start();
   };
-  useEffect((prevProps, prevState) => {
-    // if the pokemon gets damage or its health is changed is what this is saying
-    if (
-      prevProps.pokemon === props.pokemon &&
-      prevProps.currentHealth !== props.currentHealth
-    ) {
-      animateDamagePokemon();
-    }
-  }, []);
+  // useEffect((prevProps, prevState) => {
+  //   // if the pokemon gets damage or its health is changed is what this is saying
+  //   if (
+  //     prevProps.pokemon === props.pokemon &&
+  //     prevProps.currentHealth !== props.currentHealth
+  //   ) {
+  //     animateDamagePokemon();
+  //   }
+  // }, []);
 
   // upload the sprite front/ back/ create an orientation prop for the pokemon
 
@@ -59,53 +74,92 @@ export default function AnimatedInstructors(props) {
   //choose random pokemon
   // choose your pokemon you want to fight with them
   // choose the opponent's pokemon at random, and select yours
-  let sprite = orientation == 'front' ? spriteFront : spriteBack;
+  let spriteBack = require('../imgs/abomasnow-back.gif');
+  let spriteFront = require('../imgs/abomasnow.gif');
 
-  pokemon_moveY = sprite_translateY.interpolate({
+  // let sprite = orientation == 'front' ? spriteFront : spriteBack;
+
+  const pokemon_moveY = sprite_translateY.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 1000],
   });
 
-  pokemon_scale = sprite_scale.interpolate({
+  const pokemon_scale = sprite_scale.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: [0, 0.5, 1],
   });
 
-  punch_opacity = punch_opacity.interpolate({
+  const punchopacity = punch_opacity.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
 
-  punch_moveY = punch_translateY.interpolate({
+  const punch_moveY = punch_translateY.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -130],
   });
 
-  pokemon_opacity = pokemon_opacity.interpolate({
+  const pokemonopacity = pokemon_opacity.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: [1, 0.2, 1],
   });
 
   return (
-    <View>
-      <Animated.Image
-        source={sprite}
-        resizeMode={'contain'}
-        style={[
-          styles.image,
-          {
-            transform: [
+    <View style={styles.container}>
+      <Text style={styles.headerText}>battleGround</Text>
+      <View style={styles.battleGround}>
+        <View style={styles.opponent}>
+          <HealthBar
+            currentHealth={oppHealth}
+            totalHealth={100}
+            label={`Pkmn Name`}
+          />
+          <Animated.Image
+            source={spriteFront}
+            resizeMode={'contain'}
+            style={[
+              styles.image,
               {
-                translateY: pokemon_moveY,
+                // transform: [
+                //   {
+                //     translateY: pokemon_moveY,
+                //   },
+                //   {
+                //     scale: pokemon_scale,
+                //   },
+                // ],
+                opacity: pokemonopacity,
               },
+            ]}
+          />
+        </View>
+
+        <View style={styles.currentPlayer}>
+          <HealthBar
+            currentHealth={playerHealth}
+            totalHealth={100}
+            label={`Pkmn Player`}
+          />
+          <Animated.Image
+            source={spriteBack}
+            resizeMode={'contain'}
+            style={[
+              styles.image,
               {
-                scale: pokemon_scale,
+                // transform: [
+                //   {
+                //     translateY: pokemon_moveY,
+                //   },
+                //   {
+                //     scale: pokemon_scale,
+                //   },
+                // ],
+                opacity: pokemonopacity,
               },
-            ],
-            opacity: pokemon_opacity,
-          },
-        ]}
-      />
+            ]}
+          />
+        </View>
+      </View>
 
       <Animated.Image
         source={require('../imgs/fist.png')}
@@ -121,13 +175,20 @@ export default function AnimatedInstructors(props) {
           },
         ]}
       />
+
+      <View>
+        <TouchableOpacity onPress={tapToBattle} style={styles.roundButton1}>
+          <Text>TapTapTap</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     paddingBottom: 20,
+    flex: 1,
   },
   image: {
     width: 150,
@@ -137,4 +198,32 @@ const styles = {
     bottom: -40,
     left: 50,
   },
-};
+  battleGround: {
+    flex: 8,
+    padding: 12,
+    flexDirection: 'column',
+  },
+  currentPlayer: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+  },
+  opponent: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 20,
+    marginTop: 50,
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  roundButton1: {
+    height: 150,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 50,
+    backgroundColor: 'orange',
+  },
+});
