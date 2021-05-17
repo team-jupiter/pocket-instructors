@@ -39,6 +39,7 @@ export default function CaptureInt(props) {
       });
     }
   }
+
   //Set up refs
   const gyroTracker = null;
 
@@ -134,7 +135,11 @@ export default function CaptureInt(props) {
   return (
     <View style={styles.container}>
       <StatusBar animated hidden />
-      <Camera style={styles.camera} type={type}>
+      <Animated.Image
+        source={require('../imgs/image.png')}
+        styles={styles.background}
+      />
+      {/* <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
@@ -149,7 +154,7 @@ export default function CaptureInt(props) {
             <Text style={styles.text}> Flip </Text>
           </TouchableOpacity>
         </View>
-      </Camera>
+      </Camera> */}
 
       {captured ? (
         <View style={[styles.overlay, styles.captureOverlay]}>
@@ -198,6 +203,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   camera: {
     flex: 1,
     justifyContent: 'flex-end',
