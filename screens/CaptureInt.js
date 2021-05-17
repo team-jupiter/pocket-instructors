@@ -48,6 +48,7 @@ export default function CaptureInt(props) {
 
     }
   }
+
   //Set up refs
   const gyroTracker = null;
 
@@ -143,7 +144,11 @@ export default function CaptureInt(props) {
   return (
     <View style={styles.container}>
       <StatusBar animated hidden />
-      <Camera style={styles.camera} type={type}>
+      <Animated.Image
+        source={require('../imgs/image.png')}
+        styles={styles.background}
+      />
+      {/* <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
@@ -158,7 +163,7 @@ export default function CaptureInt(props) {
             <Text style={styles.text}> Flip </Text>
           </TouchableOpacity>
         </View>
-      </Camera>
+      </Camera> */}
 
       {captured ? (
         <View style={[styles.overlay, styles.captureOverlay]}>
@@ -207,6 +212,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   camera: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -244,9 +250,13 @@ const styles = StyleSheet.create({
   },
   pokemon: {
     position: 'absolute',
-    top: height / 3,
-    bottom: height / 3,
-    right: width / 3,
-    left: width / 3,
+    top: height / 5,
+    bottom: height / 5,
+    right: width / 5,
+    left: width / 5,
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'contain',
   },
 });
