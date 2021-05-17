@@ -21,6 +21,9 @@ const ref = firebase.firestore().collection('Trainer');
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loginError: null,
+        };
     }
 
     state = {
@@ -41,6 +44,7 @@ export default class SignUp extends Component {
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
+            this.setState({ loginError: error });
             console.log(FirebaseConfig.FirebaseConfig);
         }
     }
@@ -84,6 +88,11 @@ export default class SignUp extends Component {
                     <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableOpacity>
                 <Button title="Login" onPress={() => this.pressHandler()} />
+                {this.state.loginError ? (
+                    <Text>{this.state.loginError.message}</Text>
+                ) : (
+                    console.log('login')
+                )}
             </View>
         );
     }
