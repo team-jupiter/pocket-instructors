@@ -8,10 +8,12 @@ import {
   View,
   Text,
   Dimensions,
+  Image
 } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
 import * as firebase from 'firebase';
+import { Audio } from 'expo-av';
 
 const { height, width } = Dimensions.get('window');
 
@@ -30,8 +32,8 @@ export default function CaptureInt(props) {
   const { imgUrl } = props.navigation.state.params.eachInstructor;
   const { email } = props.navigation.state.params;
 
-  console.log('eachInstructor is ...', eachInstructor)
-  console.log('instructors is ...', instructors.length)
+  // console.log('eachInstructor is ...', eachInstructor)
+  // console.log('instructors is ...', instructors.length)
 
   function addInstructor(newInstructor) {
     if (instructors.length) {
