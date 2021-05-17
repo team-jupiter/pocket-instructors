@@ -9,6 +9,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import firebase from 'firebase/app';
+console.ignoredYellowBox = ['Warning:'];
 
 export default class Login extends Component {
     constructor(props) {
