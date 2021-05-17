@@ -8,6 +8,7 @@ import Map from '../screens/Map';
 import CaptureInt from '../screens/CaptureInt';
 import loading from '../screens/loading';
 import Pokedex from '../screens/Pokedex';
+import OtherPokedex from '../screens/OtherPokedex';
 import AnimatedInstructors from '../screens/AnimatedInstructors';
 
 const screens = {
@@ -33,6 +34,9 @@ const screens = {
   },
   Pokedex: {
     screen: Pokedex,
+  },
+  OtherPokedex: {
+    screen: OtherPokedex,
   },
 };
 

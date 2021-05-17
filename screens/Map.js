@@ -7,7 +7,9 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Button
 } from 'react-native';
+import { Audio } from 'expo-av';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -16,6 +18,7 @@ import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
+import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 // import io from "socket.io-client";
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -24,9 +27,10 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
 let tempFriends = {};
+let musicPlayer = 0
 
 const io = require('socket.io-client');
-let socket = io.connect('http://0a74398d6a2e.ngrok.io');
+let socket = io.connect('http://1c10060d57bb.ngrok.io');
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -39,10 +43,14 @@ export default function Map({ navigation }) {
   const [allInstructors, setAllInstructors] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [friends, setFriends] = useState({});
+  const [sound, setSound] = useState();
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
   const jakesDog = require('../imgs/jakedog.png');
+  const music = new Audio.Sound()
+
+  //file = '../audio/tonghua.mp3'
 
   //need a second onPress function here passing trainer ID/email to the Pokedex component >>>>
 
@@ -51,26 +59,22 @@ export default function Map({ navigation }) {
       instructors,
       jakesDog,
       eachInstructor,
-      email,
+      email
     });
   };
 
   const onPressUserDex = (userEmail) => {
     navigation.navigate('Pokedex', {
-      userEmail,
+      userEmail
     });
   };
 
-  const onPressOtherUserDex = (eachInstructor) => {
-    navigation.navigate('Pokedex', {
-      userEmail,
+  const onPressOtherUserDex = (userEmail) => {
+    navigation.navigate('OtherPokedex', {
+      userEmail
     });
   };
 
-  // function rng() {
-  //   const randomInstructorNumber = Math.floor(Math.random() * 2) + 1;
-  //   return randomInstructorNumber;
-  // }
   function getTrainerData() {
     ref.where('email', '==', email).onSnapshot((querySnapshot) => {
       const items = [];
@@ -81,16 +85,6 @@ export default function Map({ navigation }) {
     });
   }
 
-  //this is hardcoded .... need to fix this .....
-  // function addInstructor(newInstructor) {
-  //   if (instructors.length) {
-  //     ref.doc('trainer1').update({
-  //       instructors: [...instructors, newInstructor]
-  //     });
-  //   }
-  // }
-  //calls all instructors
-  // - pulls everything from table
   function getAllInstructorData() {
     const items2 = [];
     ref4.onSnapshot((querySnapshot) => {
@@ -101,17 +95,26 @@ export default function Map({ navigation }) {
       setAllInstructors(items2);
     });
   }
-  // async function getInstructorDataAsync() {
-  //   const asyncOutput = [];
-  //   const randomInstructorNumber = rng();
-  //   const asyncResults = await ref4
-  //     .where('instructorDexID', '==', randomInstructorNumber)
-  //     .get();
-  //   asyncResults.forEach((doc) => {
-  //     asyncOutput.push(doc.data());
-  //   });
-  //   return asyncOutput;
-  // }
+
+  useEffect(() => {
+    async function loadSound() {
+        console.log("Sound Initialized")
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+        })
+        await music.loadAsync(require('../audio/tonghua.mp3'), {
+            shouldPlay: true,
+            isLooping: true,
+        })
+        music.setOnPlaybackStatusUpdate()
+    }
+    if (musicPlayer === 0) {
+      setSound('Placeholder variable')
+      musicPlayer ++
+      loadSound()
+    }
+  }, [])
+
   useEffect(() => {
     async function getIntLocations() {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -151,7 +154,7 @@ export default function Map({ navigation }) {
           setLocation(location);
           socket.emit('position', {
             data: location,
-            id: email,
+            id: email
           });
         })();
       }, 2000);
@@ -165,7 +168,7 @@ export default function Map({ navigation }) {
         // console.log('positionsData from server broadcast')
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
-          friends: tempFriends,
+          friends: tempFriends
         });
       });
     }, 2000);
@@ -200,13 +203,13 @@ export default function Map({ navigation }) {
       latitude: locationForIns.coords.latitude,
       longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300,
+      longtitudeDelta: 2 / 300
     };
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300,
+      longtitudeDelta: 2 / 300
     };
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
       if (currentInsTriggerForLoop === true) {
@@ -263,17 +266,28 @@ export default function Map({ navigation }) {
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
 
-        //Math.floor(Math.random() * 3)
-        newObjToPush.attack = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxAttack + 1
-        );
-        newObjToPush.defense = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxDefense + 1
-        );
-        newObjToPush.hp = Math.floor(
-          Math.random() * allInstructors[randomInstructorNumber].maxHP + 1
-        );
-        newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
+        newObjToPush.attack =
+          Math.floor(
+            Math.random() *
+              (allInstructors[randomInstructorNumber].maxAttack -
+                0.8 * allInstructors[randomInstructorNumber].maxAttack)
+          ) +
+          0.8 * allInstructors[randomInstructorNumber].maxAttack;
+        newObjToPush.defense =
+          Math.floor(
+            Math.random() *
+              (allInstructors[randomInstructorNumber].maxDefense -
+                0.8 * allInstructors[randomInstructorNumber].maxDefense)
+          ) +
+          0.8 * allInstructors[randomInstructorNumber].maxDefense;
+        newObjToPush.hp =
+          Math.floor(
+            Math.random() *
+              (allInstructors[randomInstructorNumber].maxHP -
+                0.8 * allInstructors[randomInstructorNumber].maxHP)
+          ) +
+          0.8 * allInstructors[randomInstructorNumber].maxHP;
+        // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
         instructorTracker.push(newObjToPush);
       }
     }
@@ -286,18 +300,18 @@ export default function Map({ navigation }) {
             // customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
-            ref={(ref) => {
-              this.map = ref;
-            }}
-            onLayout={() => {
-              this.map.animateToBearing(125);
-              this.map.animateToViewingAngle(45);
-            }}
+            // ref={(ref) => {
+            //   this.map = ref;
+            // }}
+            // onLayout={() => {
+            //   this.map.animateToBearing(125);
+            //   this.map.animateToViewingAngle(45);
+            // }}
             initialRegion={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300,
+              longitudeDelta: 2 / 300
             }}
             style={styles.mapStyle}
           >
@@ -309,7 +323,7 @@ export default function Map({ navigation }) {
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
+                longitude: userLocation.longitude
               }}
             >
               <Image
@@ -325,12 +339,12 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude,
+                  longitude: eachInstructor.longitude
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg,
+                    uri: eachInstructor.smlImg
                   }}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
@@ -341,11 +355,11 @@ export default function Map({ navigation }) {
               <MapView.Marker
                 //this marker needs onpress component to it, it should pass the user's email as
                 //a prop to the Pokedex component
-
+                onPress={() => onPressOtherUserDex(eachPlayer.id)}
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
-                  longitude: eachPlayer.data.coords.longitude,
+                  longitude: eachPlayer.data.coords.longitude
                 }}
               >
                 <Image
@@ -361,36 +375,45 @@ export default function Map({ navigation }) {
     } else {
       return (
         <View style={styles.container}>
+          {/* <Button title='Play Sound' onPress={playSound} /> */}
           <MapView
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
             //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-            // customMapStyle={require("../assets/map-design.json")}
+            customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
-            ref={(ref) => {
-              this.map = ref;
-            }}
-            onLayout={() => {
-              this.map.animateToBearing(125);
-              this.map.animateToViewingAngle(45);
-            }}
+            // ref={(ref) => {
+            //   this.map = ref;
+            // }}
+            // onLayout={() => {
+            //   this.map.animateToBearing(125);
+            //   this.map.animateToViewingAngle(45);
+            // }}
             initialRegion={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300,
+              longitudeDelta: 2 / 300
             }}
             style={styles.mapStyle}
           >
-            <View style={styles.overlay}>
+            {/* <View style={styles.overlay}>
+              <TouchableOpacity onPress={() => playMusic()}>
+                <Image source={require('../img/pokemon/deeezN.png')} />
+              </TouchableOpacity>
+            </View> */}
+
+            <View style={[styles.overlay, styles.bottomOverlay]}>
               <TouchableOpacity onPress={() => onPressUserDex(email)}>
-                <Image source={require('../img/pokemon/pokeball.png')} />
+                <Image source={require('../img/pokemon/pokeball.png')}
+                style={{width: 55, height: 55}}/>
               </TouchableOpacity>
             </View>
+
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
+                longitude: userLocation.longitude
               }}
             >
               <Image
@@ -406,12 +429,12 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude,
+                  longitude: eachInstructor.longitude
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg,
+                    uri: eachInstructor.smlImg
                   }}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
@@ -427,27 +450,32 @@ export default function Map({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
+    // justifyContent: 'center',
+    // paddingTop: Constants.statusBarHeight,
+    // backgroundColor: '#ecf0f1',
+    backgroundColor: '#000000',
+    // padding: 8
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height
   },
   overlay: {
     position: 'absolute',
     padding: 16,
     right: 0,
     left: 0,
-    bottom: 0,
     alignItems: 'center',
+  },
+  bottomOverlay: {
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
