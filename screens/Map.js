@@ -20,6 +20,7 @@ import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
 import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 // import io from "socket.io-client";
+console.ignoredYellowBox = ['Warning:'];
 if (firebase.app.length === 0) {
     firebase.initializeApp(FirebaseConfig);
 }
@@ -328,7 +329,7 @@ export default function Map({ navigation }) {
                         }}
                         style={styles.mapStyle}
                     >
-                        <View style={styles.overlay}>
+                        <View style={[styles.overlay, styles.bottomOverlay]}>
                             <TouchableOpacity
                                 onPress={() => onPressUserDex(email)}
                             >
@@ -459,7 +460,7 @@ export default function Map({ navigation }) {
                                     source={{
                                         uri: eachInstructor.smlImg,
                                     }}
-                                    style={{ width: 40, height: 42 }}
+                                    style={{ width: 75, height: 90 }}
                                     resizeMode="contain"
                                 />
                             </MapView.Marker>
@@ -492,8 +493,8 @@ const styles = StyleSheet.create({
     overlay: {
         position: 'absolute',
         padding: 16,
-        right: 0,
-        left: 0,
+        right: 10,
+        left: 10,
         alignItems: 'center',
     },
     bottomOverlay: {

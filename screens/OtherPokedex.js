@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import {
-    StyleSheet,
-    Image,
-    Text,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    Button,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
-
-// const testEmail = 'b@b.com'
+console.ignoredYellowBox = ['Warning:'];
 
 export default function OtherPokedex(props) {
     const [ownedInstructors, setOwnedInstructors] = useState();

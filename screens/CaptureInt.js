@@ -13,7 +13,7 @@ import {
 import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
 import * as firebase from 'firebase';
-import { Audio } from 'expo-av';
+console.ignoredYellowBox = ['Warning:'];
 
 const { height, width } = Dimensions.get('window');
 
@@ -100,13 +100,13 @@ export default function CaptureInt(props) {
         const pokeballX = gesture.moveX;
         const pokeballY = gesture.moveY;
 
-        const pokemonX = width / 2 + pokemonPosition.x;
-        const pokemonY = height / 3 + pokemonPosition.y;
+        const pokemonX = width / 5 + pokemonPosition.x;
+        const pokemonY = height / 5 + pokemonPosition.y;
 
         //only returns if both these absolute vals under 50
         return (
-            Math.abs(pokeballX - pokemonX) < 50 &&
-            Math.abs(pokeballY - pokemonY) < 50
+            Math.abs(pokeballX - pokemonX) < 300 &&
+            Math.abs(pokeballY - pokemonY) < 300
         );
     };
 
@@ -148,23 +148,6 @@ export default function CaptureInt(props) {
                 source={require('../imgs/image.png')}
                 styles={styles.background}
             />
-            {/* <Camera style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}
-          >
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera> */}
-
             {captured ? (
                 <View style={[styles.overlay, styles.captureOverlay]}>
                     <Text style={styles.cancelText}>Pokemon Captured!</Text>
@@ -229,6 +212,12 @@ const styles = StyleSheet.create({
         top: 0,
         flexDirection: 'row',
         alignItems: 'flex-end',
+    },
+    background: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'center',
     },
     bottomOverlay: {
         bottom: 0,

@@ -16,22 +16,27 @@ if (firebase.apps.length === 0) {
     firebase.initializeApp(FirebaseConfig.FirebaseConfig);
     console.log(FirebaseConfig);
 }
+
+console.ignoredYellowBox = ['Warning:'];
+
 const ref = firebase.firestore().collection('Trainer');
 
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loginError: null,
+        };
     }
 
     state = {
         email: '',
         password: '',
-        name: '',
     };
 
     async onSignUp() {
         try {
-            const { email, password, name } = this.state;
+            const { email, password } = this.state;
             const result = await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
@@ -41,6 +46,7 @@ export default class SignUp extends Component {
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
+            this.setState({ loginError: error });
             console.log(FirebaseConfig.FirebaseConfig);
         }
     }
@@ -68,14 +74,6 @@ export default class SignUp extends Component {
                     placeholderTextColor="white"
                     style={styles.input}
                 />
-                <TextInput
-                    value={this.state.name}
-                    onChangeText={(name) => this.setState({ name })}
-                    placeholder={'name'}
-                    secureTextEntry={true}
-                    placeholderTextColor="white"
-                    style={styles.input}
-                />
 
                 <TouchableOpacity
                     style={styles.button}
@@ -84,6 +82,11 @@ export default class SignUp extends Component {
                     <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableOpacity>
                 <Button title="Login" onPress={() => this.pressHandler()} />
+                {this.state.loginError ? (
+                    <Text>{this.state.loginError.message}</Text>
+                ) : (
+                    console.log('login')
+                )}
             </View>
         );
     }
