@@ -241,9 +241,13 @@ const styles = StyleSheet.create({
   },
   pokemon: {
     position: 'absolute',
-    top: height / 3,
-    bottom: height / 3,
-    right: width / 3,
-    left: width / 3,
+    top: height / 5,
+    bottom: height / 5,
+    right: width / 5,
+    left: width / 5,
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'contain',
   },
 });

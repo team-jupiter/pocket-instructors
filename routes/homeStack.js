@@ -13,9 +13,9 @@ import AnimatedInstructors from '../screens/AnimatedInstructors';
 const screens = {
   // name of screen: {
   //   screen: screenName }
-  AnimatedInstructors: {
-    screen: AnimatedInstructors,
-  },
+  // AnimatedInstructors: {
+  //   screen: AnimatedInstructors,
+  // },
   Login: {
     screen: Login,
   },
