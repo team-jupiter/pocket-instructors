@@ -34,7 +34,7 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://1c10060d57bb.ngrok.io');
+let socket = io.connect('http://300a3d8ff009.ngrok.io');
 export default function Map({ navigation }) {
     //SOCKET STUFF
     // socket = io.connect('http://192.168.1.251:3000');
@@ -333,12 +333,14 @@ export default function Map({ navigation }) {
                         }}
                         style={styles.mapStyle}
                     >
-                        <View style={styles.overlay}>
+                        <View>
                             <TouchableOpacity
+                                style={styles.overlay}
                                 onPress={() => onPressUserDex(email)}
                             >
                                 <Image
                                     source={require('../img/pokemon/pokeball.png')}
+                                    style={{ width: 55, height: 55 }}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -371,7 +373,7 @@ export default function Map({ navigation }) {
                                     source={{
                                         uri: eachInstructor.smlImg,
                                     }}
-                                    style={{ width: 40, height: 42 }}
+                                    style={{ width: 75, height: 90 }}
                                     resizeMode="contain"
                                 />
                             </MapView.Marker>
