@@ -6,6 +6,7 @@ import Map from '../screens/Map';
 import CaptureInt from '../screens/CaptureInt';
 import Pokedex from '../screens/Pokedex';
 import OtherPokedex from '../screens/OtherPokedex';
+import JakeAvatar from "../screens/JakeAvatar"
 
 const screens = {
     Login: {
@@ -40,6 +41,9 @@ const screens = {
     },
     OtherPokedex: {
         screen: OtherPokedex,
+    },
+    JakeAvatar: {
+      screen: JakeAvatar
     },
 };
 
