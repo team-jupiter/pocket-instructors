@@ -40,9 +40,10 @@ export default class SignUp extends Component {
             const result = await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
-            this.props.navigation.navigate('Map', { email });
-            this.props.navigation.navigate('Map');
-            ref.doc(email).set({ email, instructors: [] });
+            this.props.navigation.navigate('JakeAvatar', { email });
+            //this.props.navigation.navigate('Map', { email });
+            //this.props.navigation.navigate('Map');
+            ref.doc(email).set({ email, instructors: []});
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
@@ -57,7 +58,7 @@ export default class SignUp extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.titleText}>Sing up</Text>
+                <Text style={styles.titleText}>Sign up</Text>
                 <TextInput
                     value={this.state.email}
                     keyboardType="email-address"
