@@ -13,12 +13,15 @@ import { Audio } from 'expo-av';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { generateRandomPoint } from '../Utilities/locationGenerator';
+import { generateRandomPoint } from '../utilities/locationGenerator';
 import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
 import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 // import io from "socket.io-client";
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
@@ -49,6 +52,7 @@ export default function Map({ navigation }) {
   const email = navigation.getParam('email');
   const jakesDog = require('../imgs/jakedog.png');
   const music = new Audio.Sound()
+
 
   //file = '../audio/tonghua.mp3'
 
@@ -327,7 +331,10 @@ export default function Map({ navigation }) {
               }}
             >
               <Image
-                source={require('../imgs/pic.png')}
+                // source={require('../imgs/pic.png')}
+                source={{
+                  uri: userData[0].jakeUrl
+                }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
               />
@@ -373,6 +380,7 @@ export default function Map({ navigation }) {
         </View>
       );
     } else {
+      // console.log('userData is ....', userData)
       return (
         <View style={styles.container}>
           {/* <Button title='Play Sound' onPress={playSound} /> */}
@@ -403,8 +411,8 @@ export default function Map({ navigation }) {
               </TouchableOpacity>
             </View> */}
 
-            <View style={[styles.overlay, styles.bottomOverlay]}>
-              <TouchableOpacity onPress={() => onPressUserDex(email)}>
+            <View>
+              <TouchableOpacity style={styles.overlay} onPress={() => onPressUserDex(email)}>
                 <Image source={require('../img/pokemon/pokeball.png')}
                 style={{width: 55, height: 55}}/>
               </TouchableOpacity>
@@ -417,7 +425,13 @@ export default function Map({ navigation }) {
               }}
             >
               <Image
-                source={require('../imgs/pic.png')}
+                // source={require('../imgs/pic.png')}
+                source={{
+                  uri: userData[0].jakeUrl
+                }}
+                // source={{
+                //   uri: eachInstructor.smlImg
+                // }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
               />
@@ -468,14 +482,16 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: 'absolute',
-    padding: 16,
-    right: 0,
-    left: 0,
-    alignItems: 'center',
+    padding: 36,
+    margin: 20,
+    top: 10,
+    right: 10,
+    left: 10,
+    // alignItems: 'center',
   },
-  bottomOverlay: {
-    bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
+  // bottomOverlay: {
+  //   bottom: 0,
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  // },
 });

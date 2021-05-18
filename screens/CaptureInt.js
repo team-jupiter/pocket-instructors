@@ -36,18 +36,10 @@ export default function CaptureInt(props) {
   // console.log('instructors is ...', instructors.length)
 
   function addInstructor(newInstructor) {
-    if (instructors.length) {
-      // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
-      //this is hardcoded, this needs to be adjusted
-      // let testInstructors = [...instructors, newInstructor]
-      // console.log('testInstructors is....', testInstructors)
-      ref.doc(email).update({
+    ref.doc(email).update({
         instructors: [...instructors, newInstructor],
-      });
-
-
-    }
-  }
+    });
+}
   //Set up refs
   const gyroTracker = null;
 

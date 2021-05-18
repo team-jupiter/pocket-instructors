@@ -21,6 +21,9 @@ const ref = firebase.firestore().collection('Trainer');
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loginError: null,
+        };
     }
 
     state = {
@@ -35,12 +38,14 @@ export default class SignUp extends Component {
             const result = await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
-            this.props.navigation.navigate('Map', { email });
-            this.props.navigation.navigate('Map');
-            ref.doc(email).set({ email });
+            this.props.navigation.navigate('JakeAvatar', { email });
+            //this.props.navigation.navigate('Map', { email });
+            //this.props.navigation.navigate('Map');
+            ref.doc(email).set({ email, instructors: []});
             console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
+            this.setState({ loginError: error });
             console.log(FirebaseConfig.FirebaseConfig);
         }
     }
@@ -51,7 +56,7 @@ export default class SignUp extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.titleText}>Sing up</Text>
+                <Text style={styles.titleText}>Sign up</Text>
                 <TextInput
                     value={this.state.email}
                     keyboardType="email-address"
@@ -84,6 +89,11 @@ export default class SignUp extends Component {
                     <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableOpacity>
                 <Button title="Login" onPress={() => this.pressHandler()} />
+                {this.state.loginError ? (
+                    <Text>{this.state.loginError.message}</Text>
+                ) : (
+                    console.log('login')
+                )}
             </View>
         );
     }

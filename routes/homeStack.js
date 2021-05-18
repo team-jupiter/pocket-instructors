@@ -9,11 +9,11 @@ import CaptureInt from "../screens/CaptureInt";
 import loading from "../screens/loading";
 import Pokedex from "../screens/Pokedex";
 import OtherPokedex from "../screens/OtherPokedex"
+import JakeAvatar from "../screens/JakeAvatar"
 
 const screens = {
   // name of screen: {
   //   screen: screenName }
-
   Login: {
     screen: Login,
   },
@@ -23,8 +23,14 @@ const screens = {
   // Pokedex: {
   //   screen: Pokedex
   // },
+  JakeAvatar: {
+    screen: JakeAvatar
+  },
   Map: {
     screen: Map,
+    navigationOptions: {
+      header: null,
+    }
   },
   CaptureInt: {
     screen: CaptureInt,
@@ -34,7 +40,8 @@ const screens = {
   },
   OtherPokedex: {
     screen: OtherPokedex
-  }
+  },
+
 };
 
 const homeStack = createStackNavigator(screens);
