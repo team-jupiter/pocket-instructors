@@ -16,6 +16,9 @@ if (firebase.apps.length === 0) {
     firebase.initializeApp(FirebaseConfig.FirebaseConfig);
     console.log(FirebaseConfig);
 }
+
+console.ignoredYellowBox = ['Warning:'];
+
 const ref = firebase.firestore().collection('Trainer');
 
 export default class SignUp extends Component {
@@ -29,12 +32,11 @@ export default class SignUp extends Component {
     state = {
         email: '',
         password: '',
-        name: '',
     };
 
     async onSignUp() {
         try {
-            const { email, password, name } = this.state;
+            const { email, password } = this.state;
             const result = await firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password);
@@ -69,14 +71,6 @@ export default class SignUp extends Component {
                     value={this.state.password}
                     onChangeText={(password) => this.setState({ password })}
                     placeholder={'password'}
-                    secureTextEntry={true}
-                    placeholderTextColor="white"
-                    style={styles.input}
-                />
-                <TextInput
-                    value={this.state.name}
-                    onChangeText={(name) => this.setState({ name })}
-                    placeholder={'name'}
                     secureTextEntry={true}
                     placeholderTextColor="white"
                     style={styles.input}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import {
-    Alert,
     Button,
     Text,
     TouchableOpacity,
@@ -9,13 +8,15 @@ import {
     View,
     StyleSheet,
 } from 'react-native';
-import FirebaseConfig from '../constants/ApiKey';
 import firebase from 'firebase/app';
-import Navigator from '../routes/homeStack';
+console.ignoredYellowBox = ['Warning:'];
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loginError: null,
+        };
     }
     state = {
         email: '',
@@ -34,6 +35,7 @@ export default class Login extends Component {
             this.props.navigation.navigate('Map', { email });
             //changing above to test page before merge
         } catch (error) {
+            this.setState({ loginError: error });
             console.log('LOGIN PAGE ERROR', error);
         }
     }
@@ -73,6 +75,11 @@ export default class Login extends Component {
                     title="SignUp"
                     onPress={() => this.pressSignUpHandler()}
                 />
+                {this.state.loginError ? (
+                    <Text>{this.state.loginError.message}</Text>
+                ) : (
+                    console.log('login')
+                )}
             </View>
         );
     }

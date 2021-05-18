@@ -269,6 +269,8 @@ export default function Map({ navigation }) {
         // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
+        newObjToPush.level = 1;
+        newObjToPush.xp = 0;
 
         newObjToPush.attack =
           Math.floor(
