@@ -8,7 +8,7 @@ import {
   View,
   Text,
   Dimensions,
-  Image
+  Image,
 } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 import { Camera } from 'expo-camera';
@@ -44,8 +44,6 @@ export default function CaptureInt(props) {
       ref.doc(email).update({
         instructors: [...instructors, newInstructor],
       });
-
-
     }
   }
 
@@ -104,12 +102,13 @@ export default function CaptureInt(props) {
     const pokeballX = gesture.moveX;
     const pokeballY = gesture.moveY;
 
-    const pokemonX = width / 2 + pokemonPosition.x;
-    const pokemonY = height / 3 + pokemonPosition.y;
+    const pokemonX = width / 5 + pokemonPosition.x;
+    const pokemonY = height / 5 + pokemonPosition.y;
 
     //only returns if both these absolute vals under 50
     return (
-      Math.abs(pokeballX - pokemonX) < 50 && Math.abs(pokeballY - pokemonY) < 50
+      Math.abs(pokeballX - pokemonX) < 300 &&
+      Math.abs(pokeballY - pokemonY) < 300
     );
   };
 

@@ -7,7 +7,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Button
+  Button,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import Constants from 'expo-constants';
@@ -27,10 +27,10 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
 let tempFriends = {};
-let musicPlayer = 0
+let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://1c10060d57bb.ngrok.io');
+let socket = io.connect('http://e97edc28b74f.ngrok.io');
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
@@ -48,7 +48,7 @@ export default function Map({ navigation }) {
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
   const jakesDog = require('../imgs/jakedog.png');
-  const music = new Audio.Sound()
+  const music = new Audio.Sound();
 
   //file = '../audio/tonghua.mp3'
 
@@ -59,19 +59,19 @@ export default function Map({ navigation }) {
       instructors,
       jakesDog,
       eachInstructor,
-      email
+      email,
     });
   };
 
   const onPressUserDex = (userEmail) => {
     navigation.navigate('Pokedex', {
-      userEmail
+      userEmail,
     });
   };
 
   const onPressOtherUserDex = (userEmail) => {
     navigation.navigate('OtherPokedex', {
-      userEmail
+      userEmail,
     });
   };
 
@@ -98,22 +98,22 @@ export default function Map({ navigation }) {
 
   useEffect(() => {
     async function loadSound() {
-        console.log("Sound Initialized")
-        await Audio.setAudioModeAsync({
-          playsInSilentModeIOS: true,
-        })
-        await music.loadAsync(require('../audio/tonghua.mp3'), {
-            shouldPlay: true,
-            isLooping: true,
-        })
-        music.setOnPlaybackStatusUpdate()
+      console.log('Sound Initialized');
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+      });
+      await music.loadAsync(require('../audio/tonghua.mp3'), {
+        shouldPlay: true,
+        isLooping: true,
+      });
+      music.setOnPlaybackStatusUpdate();
     }
     if (musicPlayer === 0) {
-      setSound('Placeholder variable')
-      musicPlayer ++
-      loadSound()
+      setSound('Placeholder variable');
+      musicPlayer++;
+      loadSound();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     async function getIntLocations() {
@@ -154,7 +154,7 @@ export default function Map({ navigation }) {
           setLocation(location);
           socket.emit('position', {
             data: location,
-            id: email
+            id: email,
           });
         })();
       }, 2000);
@@ -168,7 +168,7 @@ export default function Map({ navigation }) {
         // console.log('positionsData from server broadcast')
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
-          friends: tempFriends
+          friends: tempFriends,
         });
       });
     }, 2000);
@@ -203,13 +203,13 @@ export default function Map({ navigation }) {
       latitude: locationForIns.coords.latitude,
       longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
       if (currentInsTriggerForLoop === true) {
@@ -311,7 +311,7 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
@@ -323,7 +323,7 @@ export default function Map({ navigation }) {
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
@@ -339,14 +339,14 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg
+                    uri: eachInstructor.smlImg,
                   }}
-                  style={{ width: 40, height: 42 }}
+                  style={{ width: 100, height: 110 }}
                   resizeMode='contain'
                 />
               </MapView.Marker>
@@ -359,7 +359,7 @@ export default function Map({ navigation }) {
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
-                  longitude: eachPlayer.data.coords.longitude
+                  longitude: eachPlayer.data.coords.longitude,
                 }}
               >
                 <Image
@@ -379,7 +379,7 @@ export default function Map({ navigation }) {
           <MapView
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
             //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-            customMapStyle={require("../assets/map-design.json")}
+            customMapStyle={require('../assets/map-design.json')}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             // ref={(ref) => {
@@ -393,7 +393,7 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
@@ -405,15 +405,17 @@ export default function Map({ navigation }) {
 
             <View style={[styles.overlay, styles.bottomOverlay]}>
               <TouchableOpacity onPress={() => onPressUserDex(email)}>
-                <Image source={require('../img/pokemon/pokeball.png')}
-                style={{width: 55, height: 55}}/>
+                <Image
+                  source={require('../img/pokemon/pokeball.png')}
+                  style={{ width: 55, height: 55 }}
+                />
               </TouchableOpacity>
             </View>
 
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
@@ -429,14 +431,14 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg
+                    uri: eachInstructor.smlImg,
                   }}
-                  style={{ width: 40, height: 42 }}
+                  style={{ width: 75, height: 90 }}
                   resizeMode='contain'
                 />
               </MapView.Marker>
@@ -460,11 +462,11 @@ const styles = StyleSheet.create({
     margin: 24,
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    height: Dimensions.get('window').height,
   },
   overlay: {
     position: 'absolute',
