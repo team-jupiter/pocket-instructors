@@ -8,6 +8,7 @@ import {
     Image,
     TouchableOpacity,
     Button,
+    Alert,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import Constants from 'expo-constants';
@@ -150,6 +151,7 @@ export default function Map({ navigation }) {
                     getTrainerData();
                     // let { status } = await Location.requestForegroundPermissionsAsync();
                     if (status !== 'granted') {
+                        Alert.alert('Please enable location services');
                         setErrorMsg('Permission to access location was denied');
                         return;
                     }
