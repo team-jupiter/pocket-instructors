@@ -230,7 +230,7 @@ export default function Map({ navigation }) {
 
             //this needs to be changed based on how many instructors are seeded into the DB ...
             for (let i = 0; i < 5; i++) {
-                const randomInstructorNumber = Math.floor(Math.random() * 3);
+                const randomInstructorNumber = Math.floor(Math.random() * 9);
                 const instructorLocation = generateRandomPoint(
                     userLocationForIns,
                     targetRadius,
@@ -316,6 +316,7 @@ export default function Map({ navigation }) {
                         //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
                         //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
                         // customMapStyle={require("../assets/map-design.json")}
+                        customMapStyle={require("../assets/map-design.json")}
                         provider={PROVIDER_GOOGLE}
                         showsBuildings
                         // ref={(ref) => {
