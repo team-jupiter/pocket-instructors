@@ -1,11 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Audio } from 'expo-av';
+import * as Location from 'expo-location';
 
 import LottieView from 'lottie-react-native';
+import { useState } from 'react';
 console.ignoredYellowBox = ['Warning:'];
 
+async function locationStaus() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        Alert.alert('Please enable Location Services!');
+    }
+}
+let globalVar = 0;
+
 const loading = () => {
+    if (globalVar < 1) {
+        locationStaus();
+        globalVar++;
+    }
+
     return (
         <View
             style={{
@@ -26,5 +41,13 @@ const loading = () => {
         </View>
     );
 };
+const styles = StyleSheet.create({
+    titleText: {
+        fontFamily: 'Baskerville',
+        fontSize: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 
 export default loading;

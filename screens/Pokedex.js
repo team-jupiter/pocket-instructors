@@ -46,7 +46,7 @@ export default function Pokedex(props) {
     }, []);
 
     if (ownedInstructors !== undefined) {
-        console.log('ownedInstructors is ...', ownedInstructors);
+        // console.log('ownedInstructors is ...', ownedInstructors);
         return (
             <ScrollView>
                 <View style={styles.masterContainer}>
@@ -72,6 +72,10 @@ export default function Pokedex(props) {
                                     </Text>
                                     <Text>
                                         Instructor Dex #:{' '}
+                                        {eachInstructor.instructorDexID}{' '}
+                                    </Text>
+                                    <Text>
+                                        Description #:{' '}
                                         {eachInstructor.instructorDexID}{' '}
                                     </Text>
                                     <Text>HP: {eachInstructor.hp} </Text>

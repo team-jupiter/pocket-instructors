@@ -9,7 +9,8 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import firebase from "firebase/app";
 console.ignoredYellowBox = ["Warning:"];
@@ -25,20 +26,28 @@ export default class Login extends Component {
     email: "",
     password: "",
     userData: [],
+    trainerData: [],
   };
 
   async onLogin() {
     try {
       const { email, password } = this.state;
+      const ref = await firebase.firestore().collection("Trainer");
+      ref.where("email", "==", email).onSnapshot((querySnapshot) => {
+        const items = [];
+        querySnapshot.forEach((doc) => {
+          items.push(doc.data());
+        });
+        this.state.trainerData = items;
+      });
+
       const result = await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
-      console.log("LOGGED IN");
-      // this.props.navigation.navigate('JakeAvatar', { email });
-      this.props.navigation.navigate("Map", { email });
-      //changing above to test page before merge
+      this.props.navigation.navigate("Map", this.state);
     } catch (error) {
       this.setState({ loginError: error });
+      Alert.alert("Invalid Email/Password");
       console.log("LOGIN PAGE ERROR", error);
     }
   }
@@ -78,26 +87,22 @@ export default class Login extends Component {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.writeTaskWrapper}
         >
-        <TouchableOpacity
-          style={styles.button}
-          onPress={this.onLogin.bind(this)}
-        >
-          <Text style={styles.buttonText}> Login </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.pressSignUpHandler()}
-        >
-          <Text style={styles.buttonText}> SignUp </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.onLogin.bind(this)}
+          >
+            <Text style={styles.buttonText}> Login </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.pressSignUpHandler()}
+          >
+            <Text style={styles.buttonText}> SignUp </Text>
+          </TouchableOpacity>
+
+
+
         </KeyboardAvoidingView>
-
-
-        {this.state.loginError ? (
-          <Text>{this.state.loginError.message}</Text>
-        ) : (
-          console.log("login")
-        )}
       </View>
     );
   }
@@ -165,11 +170,11 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   writeTaskWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 60,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });

@@ -18,7 +18,6 @@ export default function BattlePokeDex(props) {
     const ref = firebase.firestore().collection('Trainer');
     const playerEmail = props.navigation.state.params.playerEmail;
     const battleData = props.navigation.state.params.randomInstructor;
-    console.log('randominstructor ===>>>', battleData);
 
     const getOneTrainerData = () => {
         ref.where('email', '==', playerEmail).onSnapshot((querySnapshot) => {
@@ -46,7 +45,6 @@ export default function BattlePokeDex(props) {
     }, []);
 
     if (ownedInstructors !== undefined) {
-        console.log('ownedInstructors is ...', ownedInstructors);
         return (
             <ScrollView>
                 <View style={styles.masterContainer}>
