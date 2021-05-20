@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import {
+    StyleSheet,
+    Image,
+    Text,
+    View,
+    ScrollView,
+    TouchableOpacity,
+    Button,
+} from 'react-native';
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
 console.ignoredYellowBox = ['Warning:'];

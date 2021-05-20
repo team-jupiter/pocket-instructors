@@ -8,9 +8,7 @@ import {
     View,
     StyleSheet,
 } from 'react-native';
-import * as firebase from 'firebase'
-// import firebase from 'firebase/app';
-// import * as firebaseAll from 'firebase';
+import firebase from 'firebase/app';
 console.ignoredYellowBox = ['Warning:'];
 
 export default class Login extends Component {
@@ -24,49 +22,17 @@ export default class Login extends Component {
         email: '',
         password: '',
         userData: [],
-        trainerData: []
     };
-
-    // async getOneTrainerData(passedEmail) {
-    //     console.log('passedEmail is ...', passedEmail)
-    //     const ref = await firebase.firestore().collection('Trainer');
-    //     ref.where('email', '==', passedEmail).onSnapshot((querySnapshot) => {
-    //         const items = [];
-    //         querySnapshot.forEach((doc) => {
-    //             items.push(doc.data());
-    //         });
-    //         // console.log('items is ...', items)
-    //         // // setOwnedInstructors(items);
-    //         this.state.trainerData = items
-    //         // console.log('state.trainerData2 is ...', this.state.trainerData)
-    //     });
-    // }
 
     async onLogin() {
         try {
             const { email, password } = this.state;
-            const ref = await firebase.firestore().collection('Trainer');
-            ref.where('email', '==', email).onSnapshot((querySnapshot) => {
-                const items = [];
-                querySnapshot.forEach((doc) => {
-                    items.push(doc.data());
-                });
-                // console.log('items is ...', items)
-                // // setOwnedInstructors(items);
-                this.state.trainerData = items
-                // console.log('state.trainerData2 is ...', this.state.trainerData)
-            })
-
             const result = await firebase
                 .auth()
-                .signInWithEmailAndPassword(email, password)
-            // console.log('LOGGED IN')
-            // this.getOneTrainerData(email)
-            //this.getOneTrainerData('B@n.com')
-            // console.log('state trainerData is ....', this.state.trainerData)
+                .signInWithEmailAndPassword(email, password);
+            console.log('LOGGED IN');
             // this.props.navigation.navigate('JakeAvatar', { email });
-            // this.props.navigation.navigate('Map', { email });
-            this.props.navigation.navigate('Map', this.state);
+            this.props.navigation.navigate('Map', { email });
             //changing above to test page before merge
         } catch (error) {
             this.setState({ loginError: error });

@@ -12,6 +12,9 @@ import * as firebase from 'firebase';
 import { useEffect } from 'react';
 
 // const testEmail = 'b@b.com'
+let objsToPassArr = []
+let objsToPass = {}
+
 
 export default function JakeAvatar({ navigation }) {
   const [jakesState, setJakes] = useState()
@@ -30,10 +33,27 @@ export default function JakeAvatar({ navigation }) {
   }
 
   function setJakePic(email, jakeUrlValue) {
+
+    // let objsToPass = []
+
     ref.doc(email).set({ email, instructors: [], jakeUrl: jakeUrlValue });
-    navigation.navigate('Map', {
-      email
-    });
+    // ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+    //     const items = [];
+    //     querySnapshot.forEach((doc) => {
+    //         items.push(doc.data());
+    //     });
+    //     // console.log('items is ...', items)
+    //     // // setOwnedInstructors(items);
+    //     objsToPassArr = items
+    //     // console.log('state.trainerData2 is ...', this.state.trainerData)
+    //     objsToPass.email = objsToPassArr[0].email
+    //     objsToPass.jakeUrl =
+    //     console.log('objsToPass is ...', objsToPass)
+    // })
+
+    navigation.navigate('Login'
+    // ,objsToPass
+    );
   }
 
   useEffect(() => {
@@ -42,11 +62,11 @@ export default function JakeAvatar({ navigation }) {
 
 
   if (jakesState !== undefined) {
-    console.log('Your Jakes are ...', jakesState)
+    // console.log('Your Jakes are ...', jakesState)
     return (
       <ScrollView>
       <View style={styles.masterContainer}>
-        <Text style={styles.title}> Which of these self provided pictures of Jake is the cutest? </Text>
+        <Text style={styles.title}> Select the cutest picture of Jake to complete registration and be redirected to Log-In </Text>
         <View style={styles.container}>
           {jakesState.map((eachJake) => (
             <View style={styles.eachPokemonContainer} key={eachJake.description}>

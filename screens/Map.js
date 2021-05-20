@@ -33,11 +33,14 @@ let tempFriends = {};
 let musicPlayer = 0
 
 const io = require('socket.io-client');
-let socket = io.connect('http://1c10060d57bb.ngrok.io');
+let socket = io.connect('http://7508d2bacb47.ngrok.io');
+
+
 export default function Map({ navigation }) {
   //SOCKET STUFF
   // socket = io.connect('http://192.168.1.251:3000');
   // const SocketEndpoint = 'https://socket-io-expo-backend-dtyxsdtzxb.now.sh';
+
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
   const [locationForIns, setLocationForIns] = useState(null);
@@ -50,8 +53,11 @@ export default function Map({ navigation }) {
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
+  const globalJake = navigation.state.params.trainerData[0].jakeUrl
   const jakesDog = require('../imgs/jakedog.png');
   const music = new Audio.Sound()
+
+//  console.log('navigation is...', navigation)
 
 
   //file = '../audio/tonghua.mp3'
@@ -158,7 +164,8 @@ export default function Map({ navigation }) {
           setLocation(location);
           socket.emit('position', {
             data: location,
-            id: email
+            id: email,
+            globalJake: globalJake
           });
         })();
       }, 2000);
@@ -169,7 +176,7 @@ export default function Map({ navigation }) {
   useEffect(() => {
     const interval = setInterval(() => {
       socket.on('otherPositions', (positionsData) => {
-        // console.log('positionsData from server broadcast')
+        // console.log('positionsData from server broadcast', positionsData)
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
           friends: tempFriends
@@ -262,6 +269,8 @@ export default function Map({ navigation }) {
         //use 'urlHolder' to use static images not from Firebase (due to quota issues)
         // newObjToPush.instructorUrl = urlHolder;
 
+        newObjToPush.description = allInstructors[randomInstructorNumber].description
+
         // img for capture
         newObjToPush.imgUrl = allInstructors[randomInstructorNumber].imgUrl;
         // img for smol map
@@ -304,6 +313,7 @@ export default function Map({ navigation }) {
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
             //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
             // customMapStyle={require("../assets/map-design.json")}
+            customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             // ref={(ref) => {
@@ -333,6 +343,7 @@ export default function Map({ navigation }) {
               }}
             >
               <Image
+              //THIS THING RIGHT HERE
                 // source={require('../imgs/pic.png')}
                 source={{
                   uri: userData[0].jakeUrl
@@ -372,7 +383,11 @@ export default function Map({ navigation }) {
                 }}
               >
                 <Image
-                  source={require('../imgs/pic.png')}
+                  //modify this line here
+                  source={{
+                    uri: eachPlayer.globalJake
+                  }}
+                  // source={require('../imgs/pic.png')}
                   style={{ width: 40, height: 42 }}
                   resizeMode='contain'
                 />
