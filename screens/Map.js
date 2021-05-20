@@ -1,4 +1,4 @@
-import React, { useState, useEffect, clearInterval } from 'react';
+import React, { useState, useEffect, clearInterval } from "react";
 import {
   Platform,
   Text,
@@ -7,20 +7,20 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  Button
-} from 'react-native';
-import { Audio } from 'expo-av';
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { generateRandomPoint } from '../utilities/locationGenerator';
-import LottieView from 'lottie-react-native';
-import * as firebase from 'firebase';
-import FirebaseConfig from '../constants/ApiKey';
-import loading from '../screens/loading';
-import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  Button,
+} from "react-native";
+import { Audio } from "expo-av";
+import Constants from "expo-constants";
+import * as Location from "expo-location";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import { generateRandomPoint } from "../utilities/locationGenerator";
+import LottieView from "lottie-react-native";
+import * as firebase from "firebase";
+import FirebaseConfig from "../constants/ApiKey";
+import loading from "../screens/loading";
+import { getPixelSizeForLayoutSize } from "react-native/Libraries/Utilities/PixelRatio";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 if (firebase.app.length === 0) {
@@ -32,11 +32,10 @@ let currentInsTriggerForLoop = true;
 let tempFriends = {};
 let musicPlayer = 0;
 
-const io = require('socket.io-client');
-let socket = io.connect('http://7508d2bacb47.ngrok.io');
+const io = require("socket.io-client");
+let socket = io.connect("http://7508d2bacb47.ngrok.io");
 
 export default function Map({ navigation }) {
-
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
   const [locationForIns, setLocationForIns] = useState(null);
@@ -46,36 +45,37 @@ export default function Map({ navigation }) {
   const [instructors, setInstructors] = useState([]);
   const [friends, setFriends] = useState({});
   const [sound, setSound] = useState();
-  const ref = firebase.firestore().collection('Trainer');
-  const ref4 = firebase.firestore().collection('Instructors');
-  const email = navigation.getParam('email');
+  const ref = firebase.firestore().collection("Trainer");
+  const ref4 = firebase.firestore().collection("Instructors");
+  const email = navigation.getParam("email");
+  console.log('NAVVVV--->',navigation.state.params)
   const globalJake = navigation.state.params.trainerData[0].jakeUrl;
-  const jakesDog = require('../imgs/jakedog.png');
+  const jakesDog = require("../imgs/jakedog.png");
   const music = new Audio.Sound();
 
   const onPress = (eachInstructor) => {
-    navigation.navigate('CaptureInt', {
+    navigation.navigate("CaptureInt", {
       instructors,
       jakesDog,
       eachInstructor,
-      email
+      email,
     });
   };
 
   const onPressUserDex = (userEmail) => {
-    navigation.navigate('Pokedex', {
-      emailImport: userEmail
+    navigation.navigate("Pokedex", {
+      emailImport: userEmail,
     });
   };
 
   const onPressOtherUserDex = (userEmail) => {
-    navigation.navigate('OtherPokedex', {
-      emailImport: userEmail
+    navigation.navigate("OtherPokedex", {
+      emailImport: userEmail,
     });
   };
 
   function getTrainerData() {
-    ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+    ref.where("email", "==", email).onSnapshot((querySnapshot) => {
       const items = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -96,18 +96,18 @@ export default function Map({ navigation }) {
 
   useEffect(() => {
     async function loadSound() {
-      console.log('Sound Initialized');
+      console.log("Sound Initialized");
       await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true
+        playsInSilentModeIOS: true,
       });
-      await music.loadAsync(require('../audio/tonghua.mp3'), {
+      await music.loadAsync(require("../audio/tonghua.mp3"), {
         shouldPlay: true,
-        isLooping: true
+        isLooping: true,
       });
       music.setOnPlaybackStatusUpdate();
     }
     if (musicPlayer === 0) {
-      setSound('Placeholder variable');
+      setSound("Placeholder variable");
       musicPlayer++;
       loadSound();
     }
@@ -119,10 +119,7 @@ export default function Map({ navigation }) {
       const interval = setInterval(() => {
         (async () => {
           getAllInstructorData();
-          if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-          }
+          // let { status } = await Location.requestForegroundPermissionsAsync();
           let locationForIns = await Location.getCurrentPositionAsync({});
           setLocationForIns(locationForIns);
           if (currentInsTriggerUseEffect === true) {
@@ -142,16 +139,16 @@ export default function Map({ navigation }) {
       const interval = setInterval(() => {
         (async () => {
           getTrainerData();
-          if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied');
-            return;
-          }
+          // if (status !== "granted") {
+          //   setErrorMsg("Permission to access location was denied");
+          //   return;
+          // }
           let location = await Location.getCurrentPositionAsync({});
           setLocation(location);
-          socket.emit('position', {
+          socket.emit("position", {
             data: location,
             id: email,
-            globalJake: globalJake
+            globalJake: globalJake,
           });
         })();
       }, 2000);
@@ -161,10 +158,10 @@ export default function Map({ navigation }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      socket.on('otherPositions', (positionsData) => {
+      socket.on("otherPositions", (positionsData) => {
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
-          friends: tempFriends
+          friends: tempFriends,
         });
       });
     }, 2000);
@@ -198,13 +195,13 @@ export default function Map({ navigation }) {
       latitude: locationForIns.coords.latitude,
       longitude: locationForIns.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     const userLocation = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 1 / 300,
-      longtitudeDelta: 2 / 300
+      longtitudeDelta: 2 / 300,
     };
     if (currentInsTriggerUseEffect !== currentInsTriggerForLoop) {
       if (currentInsTriggerForLoop === true) {
@@ -272,7 +269,7 @@ export default function Map({ navigation }) {
         <View style={styles.container}>
           <MapView
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
-            customMapStyle={require('../assets/map-design.json')}
+            customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             // ref={(ref) => {
@@ -286,28 +283,33 @@ export default function Map({ navigation }) {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
             <View style={styles.overlay}>
-              <TouchableOpacity style={styles.overlay} onPress={() => onPressUserDex(email)}>
-                <Image source={require('../img/pokemon/pokeball.png')}
-                style={{ width: 55, height: 55 }}/>
+              <TouchableOpacity
+                style={styles.overlay}
+                onPress={() => onPressUserDex(email)}
+              >
+                <Image
+                  source={require("../img/pokemon/pokeball.png")}
+                  style={{ width: 55, height: 55 }}
+                />
               </TouchableOpacity>
             </View>
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
                 source={{
-                  uri: userData[0].jakeUrl
+                  uri: userData[0].jakeUrl,
                 }}
                 style={{ width: 40, height: 42 }}
-                resizeMode='contain'
+                resizeMode="contain"
               />
             </MapView.Marker>
             {instructorTracker.map((eachInstructor) => (
@@ -316,15 +318,15 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg
+                    uri: eachInstructor.smlImg,
                   }}
                   style={{ width: 40, height: 42 }}
-                  resizeMode='contain'
+                  resizeMode="contain"
                 />
               </MapView.Marker>
             ))}
@@ -334,17 +336,17 @@ export default function Map({ navigation }) {
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
                   latitude: eachPlayer.data.coords.latitude,
-                  longitude: eachPlayer.data.coords.longitude
+                  longitude: eachPlayer.data.coords.longitude,
                 }}
               >
                 <Image
                   //modify this line here
                   source={{
-                    uri: eachPlayer.globalJake
+                    uri: eachPlayer.globalJake,
                   }}
                   // source={require('../imgs/pic.png')}
                   style={{ width: 40, height: 42 }}
-                  resizeMode='contain'
+                  resizeMode="contain"
                 />
               </MapView.Marker>
             ))}
@@ -355,26 +357,24 @@ export default function Map({ navigation }) {
       return (
         <View style={styles.container}>
           <MapView
-            customMapStyle={require('../assets/map-design.json')}
+            customMapStyle={require("../assets/map-design.json")}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             initialRegion={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               latitudeDelta: 1 / 300,
-              longitudeDelta: 2 / 300
+              longitudeDelta: 2 / 300,
             }}
             style={styles.mapStyle}
           >
-
-
             <View>
               <TouchableOpacity
                 style={styles.overlay}
                 onPress={() => onPressUserDex(email)}
               >
                 <Image
-                  source={require('../img/pokemon/pokeball.png')}
+                  source={require("../img/pokemon/pokeball.png")}
                   style={{ width: 55, height: 55 }}
                 />
               </TouchableOpacity>
@@ -383,15 +383,15 @@ export default function Map({ navigation }) {
             <MapView.Marker
               coordinate={{
                 latitude: userLocation.latitude,
-                longitude: userLocation.longitude
+                longitude: userLocation.longitude,
               }}
             >
               <Image
                 source={{
-                  uri: userData[0].jakeUrl
+                  uri: userData[0].jakeUrl,
                 }}
                 style={{ width: 40, height: 42 }}
-                resizeMode='contain'
+                resizeMode="contain"
               />
             </MapView.Marker>
             {instructorTracker.map((eachInstructor) => (
@@ -400,15 +400,15 @@ export default function Map({ navigation }) {
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
                   latitude: eachInstructor.latitude,
-                  longitude: eachInstructor.longitude
+                  longitude: eachInstructor.longitude,
                 }}
               >
                 <Image
                   source={{
-                    uri: eachInstructor.smlImg
+                    uri: eachInstructor.smlImg,
                   }}
                   style={{ width: 40, height: 42 }}
-                  resizeMode='contain'
+                  resizeMode="contain"
                 />
               </MapView.Marker>
             ))}
@@ -421,24 +421,24 @@ export default function Map({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000'
+    backgroundColor: "#000000",
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center",
   },
   mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     padding: 36,
     margin: 20,
     top: 10,
     right: 10,
-    left: 10
-  }
+    left: 10,
+  },
 });

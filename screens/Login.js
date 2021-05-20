@@ -99,6 +99,9 @@ export default class Login extends Component {
           >
             <Text style={styles.buttonText}> SignUp </Text>
           </TouchableOpacity>
+
+
+
         </KeyboardAvoidingView>
       </View>
     );
