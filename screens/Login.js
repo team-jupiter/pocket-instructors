@@ -1,57 +1,56 @@
 import React, { Component } from "react";
 
 import {
-    Button,
-    Text,
-    TouchableOpacity,
-    TextInput,
-    View,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Image
-} from 'react-native';
-import * as firebase from 'firebase'
-console.ignoredYellowBox = ['Warning:'];
+  Button,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  View,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Alert,
+} from "react-native";
+import firebase from "firebase/app";
+console.ignoredYellowBox = ["Warning:"];
 
 export default class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loginError: null,
-        };
-    }
-    state = {
-        email: '',
-        password: '',
-        userData: [],
-        trainerData: []
+  constructor(props) {
+    super(props);
+    this.state = {
+      loginError: null,
     };
+  }
+  state = {
+    email: "",
+    password: "",
+    userData: [],
+    trainerData: [],
+  };
 
-    async onLogin() {
-        try {
-            const { email, password } = this.state;
-            const ref = await firebase.firestore().collection('Trainer');
-            ref.where('email', '==', email).onSnapshot((querySnapshot) => {
-                const items = [];
-                querySnapshot.forEach((doc) => {
-                    items.push(doc.data());
-                });
-                this.state.trainerData = items
-            })
+  async onLogin() {
+    try {
+      const { email, password } = this.state;
+      const ref = await firebase.firestore().collection("Trainer");
+      ref.where("email", "==", email).onSnapshot((querySnapshot) => {
+        const items = [];
+        querySnapshot.forEach((doc) => {
+          items.push(doc.data());
+        });
+        this.state.trainerData = items;
+      });
 
-            const result = await firebase
-                .auth()
-                .signInWithEmailAndPassword(email, password)
-            this.props.navigation.navigate('Map', this.state);
-        } catch (error) {
-            this.setState({ loginError: error });
-            console.log('LOGIN PAGE ERROR', error);
-        }
+      const result = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      this.props.navigation.navigate("Map", this.state);
+    } catch (error) {
+      this.setState({ loginError: error });
+      Alert.alert("Invalid Email/Password");
+      console.log("LOGIN PAGE ERROR", error);
     }
-    pressSignUpHandler() {
-        this.props.navigation.navigate('SignUp');
-    }
-
+  }
   pressSignUpHandler() {
     this.props.navigation.navigate("SignUp");
   }
@@ -88,26 +87,22 @@ export default class Login extends Component {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.writeTaskWrapper}
         >
-        <TouchableOpacity
-          style={styles.button}
-          onPress={this.onLogin.bind(this)}
-        >
-          <Text style={styles.buttonText}> Login </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.pressSignUpHandler()}
-        >
-          <Text style={styles.buttonText}> SignUp </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.onLogin.bind(this)}
+          >
+            <Text style={styles.buttonText}> Login </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.pressSignUpHandler()}
+          >
+            <Text style={styles.buttonText}> SignUp </Text>
+          </TouchableOpacity>
+
+
+
         </KeyboardAvoidingView>
-
-
-        {this.state.loginError ? (
-          <Text>{this.state.loginError.message}</Text>
-        ) : (
-          console.log("login")
-        )}
       </View>
     );
   }
@@ -175,11 +170,11 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   writeTaskWrapper: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 60,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });
