@@ -9,8 +9,8 @@
 */
 
 export function generateRandomPoints(center, radius, count) {
-  var points = [];
-  for (var i=0; i<count; i++) {
+  let points = [];
+  for (let i=0; i<count; i++) {
     points.push(generateRandomPoint(center, radius));
   }
   return points;

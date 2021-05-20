@@ -21,8 +21,8 @@ import loading from '../screens/loading';
 import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
-// import io from "socket.io-client";
+LogBox.ignoreAllLogs(); //Ignore all log notifications
+
 if (firebase.app.length === 0) {
   firebase.initializeApp(FirebaseConfig);
 }
@@ -30,16 +30,12 @@ let instructorTracker = [];
 let currentInsTriggerUseEffect = true;
 let currentInsTriggerForLoop = true;
 let tempFriends = {};
-let musicPlayer = 0
+let musicPlayer = 0;
 
 const io = require('socket.io-client');
 let socket = io.connect('http://7508d2bacb47.ngrok.io');
 
-
 export default function Map({ navigation }) {
-  //SOCKET STUFF
-  // socket = io.connect('http://192.168.1.251:3000');
-  // const SocketEndpoint = 'https://socket-io-expo-backend-dtyxsdtzxb.now.sh';
 
   const targetRadius = 250;
   const [location, setLocation] = useState(null);
@@ -53,16 +49,9 @@ export default function Map({ navigation }) {
   const ref = firebase.firestore().collection('Trainer');
   const ref4 = firebase.firestore().collection('Instructors');
   const email = navigation.getParam('email');
-  const globalJake = navigation.state.params.trainerData[0].jakeUrl
+  const globalJake = navigation.state.params.trainerData[0].jakeUrl;
   const jakesDog = require('../imgs/jakedog.png');
-  const music = new Audio.Sound()
-
-//  console.log('navigation is...', navigation)
-
-
-  //file = '../audio/tonghua.mp3'
-
-  //need a second onPress function here passing trainer ID/email to the Pokedex component >>>>
+  const music = new Audio.Sound();
 
   const onPress = (eachInstructor) => {
     navigation.navigate('CaptureInt', {
@@ -75,13 +64,13 @@ export default function Map({ navigation }) {
 
   const onPressUserDex = (userEmail) => {
     navigation.navigate('Pokedex', {
-      userEmail
+      emailImport: userEmail
     });
   };
 
   const onPressOtherUserDex = (userEmail) => {
     navigation.navigate('OtherPokedex', {
-      userEmail
+      emailImport: userEmail
     });
   };
 
@@ -96,7 +85,6 @@ export default function Map({ navigation }) {
   }
 
   function getAllInstructorData() {
-    const items2 = [];
     ref4.onSnapshot((querySnapshot) => {
       const items2 = [];
       querySnapshot.forEach((doc) => {
@@ -108,22 +96,22 @@ export default function Map({ navigation }) {
 
   useEffect(() => {
     async function loadSound() {
-        console.log("Sound Initialized")
-        await Audio.setAudioModeAsync({
-          playsInSilentModeIOS: true,
-        })
-        await music.loadAsync(require('../audio/tonghua.mp3'), {
-            shouldPlay: true,
-            isLooping: true,
-        })
-        music.setOnPlaybackStatusUpdate()
+      console.log('Sound Initialized');
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true
+      });
+      await music.loadAsync(require('../audio/tonghua.mp3'), {
+        shouldPlay: true,
+        isLooping: true
+      });
+      music.setOnPlaybackStatusUpdate();
     }
     if (musicPlayer === 0) {
-      setSound('Placeholder variable')
-      musicPlayer ++
-      loadSound()
+      setSound('Placeholder variable');
+      musicPlayer++;
+      loadSound();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     async function getIntLocations() {
@@ -131,7 +119,6 @@ export default function Map({ navigation }) {
       const interval = setInterval(() => {
         (async () => {
           getAllInstructorData();
-          // let { status } = await Location.requestForegroundPermissionsAsync();
           if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied');
             return;
@@ -155,7 +142,6 @@ export default function Map({ navigation }) {
       const interval = setInterval(() => {
         (async () => {
           getTrainerData();
-          // let { status } = await Location.requestForegroundPermissionsAsync();
           if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied');
             return;
@@ -176,7 +162,6 @@ export default function Map({ navigation }) {
   useEffect(() => {
     const interval = setInterval(() => {
       socket.on('otherPositions', (positionsData) => {
-        // console.log('positionsData from server broadcast', positionsData)
         tempFriends[positionsData.id] = { ...positionsData };
         setFriends({
           friends: tempFriends
@@ -186,7 +171,6 @@ export default function Map({ navigation }) {
   }, []);
 
   let friendsPositionsArr = Object.values(friends);
-  //console.log("FRIENDS---->", friends.id);
   let friendsArr = friendsPositionsArr.map((eachthing) => {
     return Object.values(eachthing);
   });
@@ -232,52 +216,29 @@ export default function Map({ navigation }) {
         instructorTracker.pop();
       }
 
-      //this needs to be changed based on how many instructors are seeded into the DB ...
       for (let i = 0; i < 5; i++) {
-        const randomInstructorNumber = Math.floor(Math.random() * 3);
+        const randomInstructorNumber = Math.floor(Math.random() * 9);
         const instructorLocation = generateRandomPoint(
           userLocationForIns,
           targetRadius,
           1
         );
-        //temp image pin URLs to use due to exceeding quotas w/ Firebase
-        let urlHolder = '';
-        if (
-          allInstructors[randomInstructorNumber].instructorName === 'Eric Katz'
-        ) {
-          urlHolder =
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_GqsPdrWQPOnJ8Ki-cNjmv6I9pEHg-b_NBg&usqp=CAU';
-        } else if (
-          allInstructors[randomInstructorNumber].instructorName ===
-          'Jon Dagdagan'
-        ) {
-          urlHolder =
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyaPuU8pvL4Imk_mdW3A9vjsshrEPHpdebKg&usqp=CAU';
-        } else {
-          urlHolder =
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQT9xZHk5MbSDC0uAAPWIEv7tBkcA5YhtT7nw&usqp=CAU';
-        }
 
-        //grab all instruct
-        // grab their fields and put into new obj
-
-        let newObjToPush = {}; // takes array and shoves into obj
+        let newObjToPush = {};
         newObjToPush.instructorDexID =
           allInstructors[randomInstructorNumber].instructorDexID;
         newObjToPush.instructorName =
           allInstructors[randomInstructorNumber].instructorName;
-        //use 'urlHolder' to use static images not from Firebase (due to quota issues)
-        // newObjToPush.instructorUrl = urlHolder;
-
-        newObjToPush.description = allInstructors[randomInstructorNumber].description
-
+        // newObjToPush.description =
+        //   allInstructors[randomInstructorNumber].description;
         // img for capture
         newObjToPush.imgUrl = allInstructors[randomInstructorNumber].imgUrl;
         // img for smol map
         newObjToPush.smlImg = allInstructors[randomInstructorNumber].smlImg;
-        // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
         newObjToPush.longitude = instructorLocation.longitude;
         newObjToPush.latitude = instructorLocation.latitude;
+        newObjToPush.frontImg = allInstructors[randomInstructorNumber].frontImg;
+        newObjToPush.backImg = allInstructors[randomInstructorNumber].backImg;
         newObjToPush.level = 1;
         newObjToPush.xp = 0;
 
@@ -302,7 +263,7 @@ export default function Map({ navigation }) {
                 0.8 * allInstructors[randomInstructorNumber].maxHP)
           ) +
           0.8 * allInstructors[randomInstructorNumber].maxHP;
-        // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
+
         instructorTracker.push(newObjToPush);
       }
     }
@@ -311,9 +272,7 @@ export default function Map({ navigation }) {
         <View style={styles.container}>
           <MapView
             //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
-            //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-            // customMapStyle={require("../assets/map-design.json")}
-            customMapStyle={require("../assets/map-design.json")}
+            customMapStyle={require('../assets/map-design.json')}
             provider={PROVIDER_GOOGLE}
             showsBuildings
             // ref={(ref) => {
@@ -332,8 +291,9 @@ export default function Map({ navigation }) {
             style={styles.mapStyle}
           >
             <View style={styles.overlay}>
-              <TouchableOpacity onPress={() => onPressUserDex(email)}>
-                <Image source={require('../img/pokemon/pokeball.png')} />
+              <TouchableOpacity style={styles.overlay} onPress={() => onPressUserDex(email)}>
+                <Image source={require('../img/pokemon/pokeball.png')}
+                style={{ width: 55, height: 55 }}/>
               </TouchableOpacity>
             </View>
             <MapView.Marker
@@ -343,8 +303,6 @@ export default function Map({ navigation }) {
               }}
             >
               <Image
-              //THIS THING RIGHT HERE
-                // source={require('../imgs/pic.png')}
                 source={{
                   uri: userData[0].jakeUrl
                 }}
@@ -354,7 +312,6 @@ export default function Map({ navigation }) {
             </MapView.Marker>
             {instructorTracker.map((eachInstructor) => (
               <MapView.Marker
-                //modify props passed here to be RNG'ed
                 onPress={() => onPress(eachInstructor)}
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
@@ -373,8 +330,6 @@ export default function Map({ navigation }) {
             ))}
             {friendsArr[0].map((eachPlayer) => (
               <MapView.Marker
-                //this marker needs onpress component to it, it should pass the user's email as
-                //a prop to the Pokedex component
                 onPress={() => onPressOtherUserDex(eachPlayer.id)}
                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                 coordinate={{
@@ -397,23 +352,12 @@ export default function Map({ navigation }) {
         </View>
       );
     } else {
-      // console.log('userData is ....', userData)
       return (
         <View style={styles.container}>
-          {/* <Button title='Play Sound' onPress={playSound} /> */}
           <MapView
-            //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
-            //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
-            customMapStyle={require("../assets/map-design.json")}
+            customMapStyle={require('../assets/map-design.json')}
             provider={PROVIDER_GOOGLE}
             showsBuildings
-            // ref={(ref) => {
-            //   this.map = ref;
-            // }}
-            // onLayout={() => {
-            //   this.map.animateToBearing(125);
-            //   this.map.animateToViewingAngle(45);
-            // }}
             initialRegion={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
@@ -422,16 +366,17 @@ export default function Map({ navigation }) {
             }}
             style={styles.mapStyle}
           >
-            {/* <View style={styles.overlay}>
-              <TouchableOpacity onPress={() => playMusic()}>
-                <Image source={require('../img/pokemon/deeezN.png')} />
-              </TouchableOpacity>
-            </View> */}
+
 
             <View>
-              <TouchableOpacity style={styles.overlay} onPress={() => onPressUserDex(email)}>
-                <Image source={require('../img/pokemon/pokeball.png')}
-                style={{width: 55, height: 55}}/>
+              <TouchableOpacity
+                style={styles.overlay}
+                onPress={() => onPressUserDex(email)}
+              >
+                <Image
+                  source={require('../img/pokemon/pokeball.png')}
+                  style={{ width: 55, height: 55 }}
+                />
               </TouchableOpacity>
             </View>
 
@@ -442,20 +387,15 @@ export default function Map({ navigation }) {
               }}
             >
               <Image
-                // source={require('../imgs/pic.png')}
                 source={{
                   uri: userData[0].jakeUrl
                 }}
-                // source={{
-                //   uri: eachInstructor.smlImg
-                // }}
                 style={{ width: 40, height: 42 }}
                 resizeMode='contain'
               />
             </MapView.Marker>
             {instructorTracker.map((eachInstructor) => (
               <MapView.Marker
-                //modify props passed here to be RNG'ed
                 onPress={() => onPress(eachInstructor)}
                 key={`${eachInstructor.latitude}::${eachInstructor.longitude}`}
                 coordinate={{
@@ -481,11 +421,7 @@ export default function Map({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // paddingTop: Constants.statusBarHeight,
-    // backgroundColor: '#ecf0f1',
-    backgroundColor: '#000000',
-    // padding: 8
+    backgroundColor: '#000000'
   },
   paragraph: {
     margin: 24,
@@ -503,12 +439,6 @@ const styles = StyleSheet.create({
     margin: 20,
     top: 10,
     right: 10,
-    left: 10,
-    // alignItems: 'center',
-  },
-  // bottomOverlay: {
-  //   bottom: 0,
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  // },
+    left: 10
+  }
 });
