@@ -12,4 +12,8 @@ web-build/
 # macOS
 .DS_Store
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> c6ce4128706d60b7aae381e929f356621e5e986e
 constants/ApiKey.js

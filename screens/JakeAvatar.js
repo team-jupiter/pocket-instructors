@@ -11,7 +11,6 @@ import {
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
 
-// const testEmail = 'b@b.com'
 
 export default function JakeAvatar({ navigation }) {
   const [jakesState, setJakes] = useState()
@@ -31,9 +30,8 @@ export default function JakeAvatar({ navigation }) {
 
   function setJakePic(email, jakeUrlValue) {
     ref.doc(email).set({ email, instructors: [], jakeUrl: jakeUrlValue });
-    navigation.navigate('Map', {
-      email
-    });
+    navigation.navigate('Login'
+    );
   }
 
   useEffect(() => {
@@ -42,16 +40,14 @@ export default function JakeAvatar({ navigation }) {
 
 
   if (jakesState !== undefined) {
-    console.log('Your Jakes are ...', jakesState)
     return (
       <ScrollView>
       <View style={styles.masterContainer}>
-        <Text style={styles.title}> Which of these self provided pictures of Jake is the cutest? </Text>
+        <Text style={styles.title}>Select your favorite picture of Jake to complete registration and be redirected to Log-In </Text>
         <View style={styles.container}>
           {jakesState.map((eachJake) => (
             <View style={styles.eachPokemonContainer} key={eachJake.description}>
               <TouchableOpacity onPress={() => setJakePic(email, eachJake.jakeUrl)}>
-              {/* <TouchableOpacity> */}
                 <Image
                   source={{ uri: eachJake.jakeUrl }}
                   style={{ width: 300, height: 320 }}
@@ -74,36 +70,36 @@ export default function JakeAvatar({ navigation }) {
 
 //https://htmlcolorcodes.com/
 const styles = StyleSheet.create({
-  masterContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#EE82EE',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10
-  },
-  eachPokemonContainer: {
-    backgroundColor: '#ee82ee',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderStyle: 'solid',
-    borderColor: '#0F0503',
-    borderWidth: 10,
-  },
-  overlay: {
-    position: 'absolute',
-    padding: 16,
-    right: 0,
-    left: 0,
-    alignItems: 'center',
-  },
-  topOverlay: {
-    top: 0,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
+    masterContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#EE82EE',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 10,
+    },
+    eachPokemonContainer: {
+        backgroundColor: '#ee82ee',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderStyle: 'solid',
+        borderColor: '#0F0503',
+        borderWidth: 10,
+    },
+    overlay: {
+        position: 'absolute',
+        padding: 16,
+        right: 0,
+        left: 0,
+        alignItems: 'center',
+    },
+    topOverlay: {
+        top: 0,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
 });

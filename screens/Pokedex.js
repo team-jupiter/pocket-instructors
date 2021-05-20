@@ -16,10 +16,11 @@ import { useEffect } from 'react';
 export default function Pokedex(props) {
     const [ownedInstructors, setOwnedInstructors] = useState();
     const ref = firebase.firestore().collection('Trainer');
-    const emailImport = props.navigation.state.params.userEmail;
-    // console.log('emailImport is ...', emailImport)
+    const emailImport = props.navigation.state.params.emailImport;
+    const battleData = props.navigation.state.params.randomInstructor;
+    console.log('randominstructor ===>>>', battleData);
 
-    function getOneTrainerData() {
+    const getOneTrainerData = () => {
         ref.where('email', '==', emailImport).onSnapshot((querySnapshot) => {
             const items = [];
             querySnapshot.forEach((doc) => {
@@ -27,10 +28,17 @@ export default function Pokedex(props) {
             });
             setOwnedInstructors(items);
         });
-    }
+    };
 
     const goBack = () => {
         props.navigation.pop();
+    };
+
+    const onPressInstructor = (myInstructor) => {
+        props.navigation.navigate('BattleScreen', {
+            opponent: battleData,
+            myInstructor: myInstructor,
+        });
     };
 
     useEffect(() => {
@@ -38,7 +46,7 @@ export default function Pokedex(props) {
     }, []);
 
     if (ownedInstructors !== undefined) {
-        console.log('ownedInstructors is ...', ownedInstructors);
+        // console.log('ownedInstructors is ...', ownedInstructors);
         return (
             <ScrollView>
                 <View style={styles.masterContainer}>
@@ -66,6 +74,10 @@ export default function Pokedex(props) {
                                         Instructor Dex #:{' '}
                                         {eachInstructor.instructorDexID}{' '}
                                     </Text>
+                                    <Text>
+                                        Description #:{' '}
+                                        {eachInstructor.instructorDexID}{' '}
+                                    </Text>
                                     <Text>HP: {eachInstructor.hp} </Text>
                                     <Text>Attack: {eachInstructor.attack}</Text>
                                     <Text>
@@ -73,19 +85,21 @@ export default function Pokedex(props) {
                                     </Text>
                                     <Text>Level: {eachInstructor.level}</Text>
                                     <Text>Xp: {eachInstructor.xp}</Text>
-                                    {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
                                     <Image
-                                        // source={require("../imgs/pic.png")}
                                         source={{ uri: eachInstructor.imgUrl }}
                                         style={{ width: 300, height: 320 }}
-                                        // source={{
-                                        //   uri: eachInstructor.instructorUrl,
-                                        // }}
                                     />
+                                    <TouchableOpacity
+                                        style={styles.cancelButton}
+                                        onPress={() =>
+                                            onPressInstructor(eachInstructor)
+                                        }
+                                    >
+                                        <Text>Pick This Instructor </Text>
+                                    </TouchableOpacity>
                                 </View>
                             )
                         )}
-                        {/* <Text> Hello, it's loaded </Text> */}
                     </View>
                 </View>
             </ScrollView>
