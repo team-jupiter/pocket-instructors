@@ -9,7 +9,8 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
 import firebase from "firebase/app";
 console.ignoredYellowBox = ["Warning:"];
@@ -39,6 +40,7 @@ export default class Login extends Component {
       //changing above to test page before merge
     } catch (error) {
       this.setState({ loginError: error });
+      Alert.alert('Invalid Email/Password')
       console.log("LOGIN PAGE ERROR", error);
     }
   }
@@ -92,12 +94,6 @@ export default class Login extends Component {
         </TouchableOpacity>
         </KeyboardAvoidingView>
 
-
-        {this.state.loginError ? (
-          <Text>{this.state.loginError.message}</Text>
-        ) : (
-          console.log("login")
-        )}
       </View>
     );
   }

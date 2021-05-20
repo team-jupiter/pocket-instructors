@@ -10,6 +10,7 @@ import {
   ImageBackground,
   StyleSheet,
   KeyboardAvoidingView,
+  Alert
 } from "react-native";
 import * as firebase from "firebase";
 import Navigator from "../routes/homeStack";
@@ -50,7 +51,7 @@ export default class SignUp extends Component {
     } catch (error) {
       console.log("ERROR AT SIGNUP", error);
       this.setState({ loginError: error });
-      console.log(FirebaseConfig.FirebaseConfig);
+      Alert.alert('ERROR: Check email format and make sure password is at least 6 characters!')
     }
   }
   pressHandler() {
@@ -101,12 +102,6 @@ export default class SignUp extends Component {
           <Text style={styles.buttonText}> Back to Login </Text>
         </TouchableOpacity>
         </KeyboardAvoidingView>
-
-        {this.state.loginError ? (
-          <Text>{this.state.loginError.message}</Text>
-        ) : (
-          console.log("login")
-        )}
       </View>
     );
   }

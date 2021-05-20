@@ -126,11 +126,6 @@ export default function Map({ navigation }) {
                 (async () => {
                     getAllInstructorData();
                     // let { status } = await Location.requestForegroundPermissionsAsync();
-                    if (status !== 'granted') {
-                        Alert.alert('Please enable location permisions!');
-                        setErrorMsg('Permission to access location was denied');
-                        return;
-                    }
                     let locationForIns = await Location.getCurrentPositionAsync(
                         {}
                     );
