@@ -1,6 +1,6 @@
 export default {
     FirebaseConfig: {
-        apiKey: 'AIzaSyDnMXCW_LW7jjvWrY3i1peiaqxqNTVdTx4',
+        apiKey: 'AIzaSyAWCiOQiacZ3kd_jtIdGl5npTTHRBv_1bA',
         authDomain: 'pocket-instructor-87369.firebaseapp.com',
         databaseURL:
             'https://pocket-instructor-87369-default-rtdb.firebaseio.com',

@@ -34,11 +34,8 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://300a3d8ff009.ngrok.io');
+let socket = io.connect('http://a9c4ee081128.ngrok.io');
 export default function Map({ navigation }) {
-    //SOCKET STUFF
-    // socket = io.connect('http://192.168.1.251:3000');
-    // const SocketEndpoint = 'https://socket-io-expo-backend-dtyxsdtzxb.now.sh';
     const targetRadius = 250;
     const [location, setLocation] = useState(null);
     const [locationForIns, setLocationForIns] = useState(null);
@@ -54,10 +51,6 @@ export default function Map({ navigation }) {
     const jakesDog = require('../imgs/jakedog.png');
     const music = new Audio.Sound();
 
-    //file = '../audio/tonghua.mp3'
-
-    //need a second onPress function here passing trainer ID/email to the Pokedex component >>>>
-
     const onPress = (eachInstructor) => {
         navigation.navigate('CaptureInt', {
             instructors,
@@ -69,13 +62,13 @@ export default function Map({ navigation }) {
 
     const onPressUserDex = (userEmail) => {
         navigation.navigate('Pokedex', {
-            userEmail,
+            emailImport: userEmail,
         });
     };
 
     const onPressOtherUserDex = (userEmail) => {
         navigation.navigate('OtherPokedex', {
-            userEmail,
+            emailImport: userEmail,
         });
     };
 
@@ -102,7 +95,7 @@ export default function Map({ navigation }) {
 
     useEffect(() => {
         async function loadSound() {
-            console.log('Sound Initialized');
+            // console.log('Sound Initialized');
             await Audio.setAudioModeAsync({
                 playsInSilentModeIOS: true,
             });
@@ -152,6 +145,7 @@ export default function Map({ navigation }) {
             const interval = setInterval(() => {
                 (async () => {
                     getTrainerData();
+                    // console.log('THIS IS USERDATA --->', userData);
                     // let { status } = await Location.requestForegroundPermissionsAsync();
                     if (status !== 'granted') {
                         setErrorMsg('Permission to access location was denied');
@@ -169,10 +163,10 @@ export default function Map({ navigation }) {
         getLocations();
     }, []);
 
+    // console.log('USER DATA LENGTH', userData.length);
     useEffect(() => {
         const interval = setInterval(() => {
             socket.on('otherPositions', (positionsData) => {
-                // console.log('positionsData from server broadcast')
                 tempFriends[positionsData.id] = { ...positionsData };
                 setFriends({
                     friends: tempFriends,
@@ -182,7 +176,6 @@ export default function Map({ navigation }) {
     }, []);
 
     let friendsPositionsArr = Object.values(friends);
-    //console.log("FRIENDS---->", friends.id);
     let friendsArr = friendsPositionsArr.map((eachthing) => {
         return Object.values(eachthing);
     });
@@ -230,7 +223,7 @@ export default function Map({ navigation }) {
 
             //this needs to be changed based on how many instructors are seeded into the DB ...
             for (let i = 0; i < 5; i++) {
-                const randomInstructorNumber = Math.floor(Math.random() * 3);
+                const randomInstructorNumber = Math.floor(Math.random() * 9);
                 const instructorLocation = generateRandomPoint(
                     userLocationForIns,
                     targetRadius,
@@ -272,6 +265,10 @@ export default function Map({ navigation }) {
                 // img for smol map
                 newObjToPush.smlImg =
                     allInstructors[randomInstructorNumber].smlImg;
+                newObjToPush.backImg =
+                    allInstructors[randomInstructorNumber].backImg;
+                newObjToPush.frontImg =
+                    allInstructors[randomInstructorNumber].frontImg;
                 // newObjToPush.instructorUrl = allInstructors[randomInstructorNumber].url;
                 newObjToPush.longitude = instructorLocation.longitude;
                 newObjToPush.latitude = instructorLocation.latitude;
@@ -309,6 +306,9 @@ export default function Map({ navigation }) {
                 instructorTracker.push(newObjToPush);
             }
         }
+        // console.log('FRIENDS ===>>', friends);
+        // console.log('friendsArr ===>>', friendsArr);
+        // console.log('friendsPositionsArr ===>>', friendsPositionsArr);
         if (friendsArr[0] !== undefined) {
             return (
                 <View style={styles.container}>
@@ -317,14 +317,8 @@ export default function Map({ navigation }) {
                         //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
                         // customMapStyle={require("../assets/map-design.json")}
                         provider={PROVIDER_GOOGLE}
+                        customMapStyle={require('../assets/map-design.json')}
                         showsBuildings
-                        // ref={(ref) => {
-                        //   this.map = ref;
-                        // }}
-                        // onLayout={() => {
-                        //   this.map.animateToBearing(125);
-                        //   this.map.animateToViewingAngle(45);
-                        // }}
                         initialRegion={{
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
@@ -351,7 +345,6 @@ export default function Map({ navigation }) {
                             }}
                         >
                             <Image
-                                // source={require('../imgs/pic.png')}
                                 source={{
                                     uri: userData[0].jakeUrl,
                                 }}
@@ -402,23 +395,14 @@ export default function Map({ navigation }) {
                 </View>
             );
         } else {
-            // console.log('userData is ....', userData)
             return (
                 <View style={styles.container}>
-                    {/* <Button title='Play Sound' onPress={playSound} /> */}
                     <MapView
                         //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
                         //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
                         customMapStyle={require('../assets/map-design.json')}
                         provider={PROVIDER_GOOGLE}
                         showsBuildings
-                        // ref={(ref) => {
-                        //   this.map = ref;
-                        // }}
-                        // onLayout={() => {
-                        //   this.map.animateToBearing(125);
-                        //   this.map.animateToViewingAngle(45);
-                        // }}
                         initialRegion={{
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
@@ -427,12 +411,6 @@ export default function Map({ navigation }) {
                         }}
                         style={styles.mapStyle}
                     >
-                        {/* <View style={styles.overlay}>
-              <TouchableOpacity onPress={() => playMusic()}>
-                <Image source={require('../img/pokemon/deeezN.png')} />
-              </TouchableOpacity>
-            </View> */}
-
                         <View>
                             <TouchableOpacity
                                 style={styles.overlay}
@@ -477,7 +455,7 @@ export default function Map({ navigation }) {
                                     source={{
                                         uri: eachInstructor.smlImg,
                                     }}
-                                    style={{ width: 75, height: 90 }}
+                                    style={{ width: 50, height: 50 }}
                                     resizeMode="contain"
                                 />
                             </MapView.Marker>
@@ -491,11 +469,7 @@ export default function Map({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
-        // paddingTop: Constants.statusBarHeight,
-        // backgroundColor: '#ecf0f1',
         backgroundColor: '#000000',
-        // padding: 8
     },
     paragraph: {
         margin: 24,
@@ -514,11 +488,5 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         left: 10,
-        // alignItems: 'center',
     },
-    // bottomOverlay: {
-    //   bottom: 0,
-    //   flexDirection: 'row',
-    //   justifyContent: 'center',
-    // },
 });

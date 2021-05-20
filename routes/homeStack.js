@@ -6,7 +6,8 @@ import Map from '../screens/Map';
 import CaptureInt from '../screens/CaptureInt';
 import Pokedex from '../screens/Pokedex';
 import OtherPokedex from '../screens/OtherPokedex';
-import JakeAvatar from "../screens/JakeAvatar"
+import JakeAvatar from '../screens/JakeAvatar';
+import BattleScreen from '../screens/BattleScreen';
 
 const screens = {
     Login: {
@@ -21,9 +22,6 @@ const screens = {
             header: null,
         },
     },
-    // Pokedex: {
-    //   screen: Pokedex
-    // },
     Map: {
         screen: Map,
         navigationOptions: {
@@ -36,14 +34,17 @@ const screens = {
             header: null,
         },
     },
-    Pokedex: {
-        screen: Pokedex,
-    },
     OtherPokedex: {
         screen: OtherPokedex,
     },
+    Pokedex: {
+        screen: Pokedex,
+    },
+    BattleScreen: {
+        screen: BattleScreen,
+    },
     JakeAvatar: {
-      screen: JakeAvatar
+        screen: JakeAvatar,
     },
 };
 

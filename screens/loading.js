@@ -19,7 +19,7 @@ const loading = () => {
                 loop={true}
                 speed={1}
                 onAnimationFinish={() => {
-                    console.log('Animation Finished!');
+                    // console.log('Animation Finished!');
                     // this.props.navigation.replace('Home');
                 }}
             />
