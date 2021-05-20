@@ -10,111 +10,52 @@ import {
 } from 'react-native';
 import HealthBar from './HealthBar';
 
+//fucntion that runs every 1
+
 export default function BattleScreen(props) {
     const opponent = props.navigation.state.params.opponent;
     const myInstructor = props.navigation.state.params.myInstructor;
+    // const [playerHealth, setPlayerHealth] = useState(myInstructor.hp);
+    let playerHealth = myInstructor.hp;
+    let oppHealth = opponent.hp;
+    // const [oppHealth, setOppHealth] = useState(opponent.hp);
+    let winner = null;
+    const opponentImage = opponent.frontImg;
     // console.log('OPPONENT--->>>>>>', opponent);
     // console.log('MY INSTRUCTOR --->>>>', myInstructor);
-    const something = '../imgs/instructors/katz-back.gif';
-    const opponentImage = opponent.frontImg;
-    console.log('OPONENT IMAGE', typeof opponentImage);
     const myInstructorImage = myInstructor.backImg;
-    console.log('my IMAGE', typeof myInstructorImage);
 
-    let sprite_translateY = new Animated.Value(0);
-    let sprite_scale = new Animated.Value(0);
+    // CPU PLAYER
+    useEffect(() => {
+        let clicksPerSecond = opponent.level + 3;
+        const interval = setInterval(() => {
+            let damage =
+                (opponent.attack / myInstructor.defense) * clicksPerSecond;
+            playerHealth -= damage;
+            console.log('PLAYER HEALTH--->>>', playerHealth);
+            if (playerHealth <= 0 || winner) {
+                if (playerHealth <= 0) {
+                    winner = 'CPU';
+                    console.log('THE PLAYER HAS LOST');
+                }
+                clearInterval(interval);
+            }
+        }, 1000);
+    }, []);
 
-    let pokemon_opacity = new Animated.Value(0);
-    let punch_opacity = new Animated.Value(0);
-    let punch_translateY = new Animated.Value(0);
-
+    // REAL LIFE PLAYER
     const tapToBattle = () => {
-        console.log('taptaptap');
+        // if nobody has won yet you can continue to play
+        if (!winner) {
+            const damage = myInstructor.attack / opponent.defense;
+            oppHealth -= damage;
+            console.log(oppHealth);
+            if (oppHealth <= 0) {
+                console.log('YOUUUU  WINNNN');
+                winner = 'player';
+            }
+        }
     };
-
-    const [oppHealth, setOppHealth] = useState(100);
-    const [playerHealth, setPlayerHealth] = useState(100);
-    const animateDamagePokemon = () => {
-        punch_opacity.setValue(0);
-        punch_translateY.setValue(0);
-        pokemon_opacity.setValue(0);
-
-        //this will determine the sequence of the attack animation
-        Animated.sequence([
-            Animated.timing(punch_opacity, {
-                toValue: 1,
-                duration: 10,
-                easing: Easing.in,
-            }),
-            Animated.timing(punch_translateY, {
-                toValue: 1,
-                duration: 300,
-                easing: Easing.in,
-            }),
-            Animated.timing(punch_opacity, {
-                toValue: 0,
-                duration: 200,
-                easing: Easing.in,
-            }),
-            Animated.timing(pokemon_opacity, {
-                toValue: 1,
-                duration: 850,
-                easing: Easing.in,
-            }),
-        ]).start();
-    };
-    // useEffect((prevProps, prevState) => {
-    //   // if the pokemon gets damage or its health is changed is what this is saying
-    //   if (
-    //     prevProps.pokemon === props.pokemon &&
-    //     prevProps.currentHealth !== props.currentHealth
-    //   ) {
-    //     animateDamagePokemon();
-    //   }
-    // }, []);
-
-    // upload the sprite front/ back/ create an orientation prop for the pokemon
-
-    //this determines which direction the pokemon will be facing
-    // where is orientation coming from?
-
-    //call pokemonId
-    // get your back sprite, front sprite, make
-    // from the opp screen on click pass the props,
-    //choose random pokemon
-    // choose your pokemon you want to fight with them
-    // choose the opponent's pokemon at random, and select yours
-    // let spriteBack = myInstructor.frontImg;
-    // console.log('SPRITEBACK', spriteBack);
-    // let spriteFront = opponent.backImg;
-    // console.log('SPRITEFRONT', spriteFront);
-
-    // let sprite = orientation == 'front' ? spriteFront : spriteBack;
-
-    const pokemon_moveY = sprite_translateY.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1000],
-    });
-
-    const pokemon_scale = sprite_scale.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: [0, 0.5, 1],
-    });
-
-    const punchopacity = punch_opacity.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-    });
-
-    const punch_moveY = punch_translateY.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, -130],
-    });
-
-    const pokemonopacity = pokemon_opacity.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: [1, 0.2, 1],
-    });
 
     return (
         <View style={styles.container}>
@@ -123,7 +64,7 @@ export default function BattleScreen(props) {
                 <View style={styles.opponent}>
                     <HealthBar
                         currentHealth={oppHealth}
-                        totalHealth={100}
+                        totalHealth={opponent.hp}
                         label={`Pkmn Name`}
                     />
                     {opponentImage ? (
@@ -142,7 +83,7 @@ export default function BattleScreen(props) {
                 <View style={styles.currentPlayer}>
                     <HealthBar
                         currentHealth={playerHealth}
-                        totalHealth={100}
+                        totalHealth={myInstructor.hp}
                         label={`Pkmn Player`}
                     />
                     <Animated.Image
@@ -152,20 +93,6 @@ export default function BattleScreen(props) {
                     />
                 </View>
             </View>
-            {/* <Animated.Image
-                source={{ uri: opponent.imgUrl }}
-                style={[
-                    styles.punch,
-                    {
-                        transform: [
-                            {
-                                translateY: punch_moveY,
-                            },
-                        ],
-                        opacity: punch_opacity,
-                    },
-                ]}
-            /> */}
             <View>
                 <TouchableOpacity
                     onPress={tapToBattle}

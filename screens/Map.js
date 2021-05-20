@@ -34,7 +34,7 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://a9c4ee081128.ngrok.io');
+let socket = io.connect('http://ebdbd6d620b4.ngrok.io');
 export default function Map({ navigation }) {
     const targetRadius = 250;
     const [location, setLocation] = useState(null);
@@ -66,9 +66,10 @@ export default function Map({ navigation }) {
         });
     };
 
-    const onPressOtherUserDex = (userEmail) => {
+    const onPressOtherUserDex = (otherUserEmail) => {
         navigation.navigate('OtherPokedex', {
-            emailImport: userEmail,
+            emailImport: otherUserEmail,
+            playerEmail: email,
         });
     };
 
@@ -283,7 +284,9 @@ export default function Map({ navigation }) {
                                     allInstructors[randomInstructorNumber]
                                         .maxAttack)
                     ) +
-                    0.8 * allInstructors[randomInstructorNumber].maxAttack;
+                    Math.floor(
+                        0.8 * allInstructors[randomInstructorNumber].maxAttack
+                    );
                 newObjToPush.defense =
                     Math.floor(
                         Math.random() *
@@ -292,7 +295,9 @@ export default function Map({ navigation }) {
                                     allInstructors[randomInstructorNumber]
                                         .maxDefense)
                     ) +
-                    0.8 * allInstructors[randomInstructorNumber].maxDefense;
+                    Math.floor(
+                        0.8 * allInstructors[randomInstructorNumber].maxDefense
+                    );
                 newObjToPush.hp =
                     Math.floor(
                         Math.random() *
@@ -301,14 +306,13 @@ export default function Map({ navigation }) {
                                     allInstructors[randomInstructorNumber]
                                         .maxHP)
                     ) +
-                    0.8 * allInstructors[randomInstructorNumber].maxHP;
+                    Math.floor(
+                        0.8 * allInstructors[randomInstructorNumber].maxHP
+                    );
                 // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
                 instructorTracker.push(newObjToPush);
             }
         }
-        // console.log('FRIENDS ===>>', friends);
-        // console.log('friendsArr ===>>', friendsArr);
-        // console.log('friendsPositionsArr ===>>', friendsPositionsArr);
         if (friendsArr[0] !== undefined) {
             return (
                 <View style={styles.container}>
@@ -316,7 +320,7 @@ export default function Map({ navigation }) {
                         //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
                         //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
                         // customMapStyle={require("../assets/map-design.json")}
-                        customMapStyle={require("../assets/map-design.json")}
+                        customMapStyle={require('../assets/map-design.json')}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={require('../assets/map-design.json')}
                         showsBuildings
@@ -377,7 +381,7 @@ export default function Map({ navigation }) {
                                 //this marker needs onpress component to it, it should pass the user's email as
                                 //a prop to the Pokedex component
                                 onPress={() =>
-                                    onPressOtherUserDex(eachPlayer.id)
+                                    onPressOtherUserDex(eachPlayer.id, email)
                                 }
                                 key={`${eachPlayer.data.coords.latitude}::${eachPlayer.data.coords.longitude}`}
                                 coordinate={{
