@@ -1,47 +1,57 @@
 import React, { Component } from "react";
 
 import {
-  Button,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  View,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  KeyboardAvoidingView
-} from "react-native";
-import firebase from "firebase/app";
-console.ignoredYellowBox = ["Warning:"];
+    Button,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    View,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Image
+} from 'react-native';
+import * as firebase from 'firebase'
+console.ignoredYellowBox = ['Warning:'];
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loginError: null,
-    };
-  }
-  state = {
-    email: "",
-    password: "",
-    userData: [],
-  };
-
-  async onLogin() {
-    try {
-      const { email, password } = this.state;
-      const result = await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password);
-      console.log("LOGGED IN");
-      // this.props.navigation.navigate('JakeAvatar', { email });
-      this.props.navigation.navigate("Map", { email });
-      //changing above to test page before merge
-    } catch (error) {
-      this.setState({ loginError: error });
-      console.log("LOGIN PAGE ERROR", error);
+    constructor(props) {
+        super(props);
+        this.state = {
+            loginError: null,
+        };
     }
-  }
+    state = {
+        email: '',
+        password: '',
+        userData: [],
+        trainerData: []
+    };
+
+    async onLogin() {
+        try {
+            const { email, password } = this.state;
+            const ref = await firebase.firestore().collection('Trainer');
+            ref.where('email', '==', email).onSnapshot((querySnapshot) => {
+                const items = [];
+                querySnapshot.forEach((doc) => {
+                    items.push(doc.data());
+                });
+                this.state.trainerData = items
+            })
+
+            const result = await firebase
+                .auth()
+                .signInWithEmailAndPassword(email, password)
+            this.props.navigation.navigate('Map', this.state);
+        } catch (error) {
+            this.setState({ loginError: error });
+            console.log('LOGIN PAGE ERROR', error);
+        }
+    }
+    pressSignUpHandler() {
+        this.props.navigation.navigate('SignUp');
+    }
+
   pressSignUpHandler() {
     this.props.navigation.navigate("SignUp");
   }

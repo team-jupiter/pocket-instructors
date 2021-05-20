@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import * as firebase from 'firebase';
-import { useEffect } from 'react';
 import {
     StyleSheet,
     Image,
@@ -10,6 +8,8 @@ import {
     TouchableOpacity,
     Button,
 } from 'react-native';
+import * as firebase from 'firebase';
+import { useEffect } from 'react';
 console.ignoredYellowBox = ['Warning:'];
 
 export default function OtherPokedex(props) {
