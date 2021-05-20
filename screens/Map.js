@@ -316,6 +316,7 @@ export default function Map({ navigation }) {
                         //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
                         //doesn't appear to work in conjunction w/ angled maps, buildings, etc.
                         // customMapStyle={require("../assets/map-design.json")}
+                        customMapStyle={require("../assets/map-design.json")}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={require('../assets/map-design.json')}
                         showsBuildings
