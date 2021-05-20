@@ -15,9 +15,7 @@ console.ignoredYellowBox = ['Warning:'];
 export default function OtherPokedex(props) {
     const [ownedInstructors, setOwnedInstructors] = useState();
     const ref = firebase.firestore().collection('Trainer');
-    const emailImport = props.navigation.state.params.userEmail;
-    // console.log('emailImport is ...', emailImport)
-
+    const emailImport = props.navigation.state.params.emailImport;
     function getOneTrainerData() {
         ref.where('email', '==', emailImport).onSnapshot((querySnapshot) => {
             const items = [];
@@ -27,6 +25,17 @@ export default function OtherPokedex(props) {
             setOwnedInstructors(items);
         });
     }
+    const onPressToBattle = () => {
+        let randomIdx = Math.floor(
+            Math.random() * ownedInstructors[0].instructors.length
+        );
+        let randomInstructor = ownedInstructors[0].instructors[randomIdx];
+
+        props.navigation.navigate('Pokedex', {
+            randomInstructor,
+            emailImport,
+        });
+    };
 
     const goBack = () => {
         props.navigation.pop();
@@ -37,7 +46,6 @@ export default function OtherPokedex(props) {
     }, []);
 
     if (ownedInstructors !== undefined) {
-        console.log('ownedInstructors is ...', ownedInstructors);
         return (
             <ScrollView>
                 <View style={styles.masterContainer}>
@@ -51,7 +59,7 @@ export default function OtherPokedex(props) {
                     </View>
                     <Text style={styles.title}> Their Owned Instructors </Text>
                     <Button
-                        onPress={() => props.navigation.navigate('Pokedex')}
+                        onPress={() => onPressToBattle()}
                         title="Battle!"
                         color="#f194ff"
                     />
@@ -77,18 +85,13 @@ export default function OtherPokedex(props) {
                                     </Text>
                                     <Text>Level: {eachInstructor.level}</Text>
                                     <Text>Xp: {eachInstructor.xp}</Text>
-                                    {/* <Text>MoveSet: {eachInstructor.moveSet}</Text> */}
                                     <Image
                                         source={{ uri: eachInstructor.imgUrl }}
                                         style={{ width: 300, height: 320 }}
-                                        // source={{
-                                        //   uri: eachInstructor.instructorUrl,
-                                        // }}
                                     />
                                 </View>
                             )
                         )}
-                        {/* <Text> Hello, it's loaded </Text> */}
                     </View>
                 </View>
             </ScrollView>
