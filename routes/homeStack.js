@@ -9,6 +9,9 @@ import OtherPokedex from '../screens/OtherPokedex';
 import JakeAvatar from '../screens/JakeAvatar';
 import BattleScreen from '../screens/BattleScreen';
 import BattlePokeDex from '../screens/BattlePokeDex';
+import Winner from '../screens/Winner';
+import Loser from '../screens/Loser';
+
 
 const screens = {
     Login: {
@@ -49,6 +52,18 @@ const screens = {
     },
     JakeAvatar: {
         screen: JakeAvatar,
+    },
+    Loser: {
+        screen: Loser,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    Winner: {
+        screen: Winner,
+        navigationOptions: {
+            header: null,
+        },
     },
 };
 
