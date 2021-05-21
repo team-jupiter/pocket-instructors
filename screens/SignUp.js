@@ -17,7 +17,6 @@ import Navigator from '../routes/homeStack';
 import FirebaseConfig from '../constants/ApiKey';
 if (firebase.apps.length === 0) {
     firebase.initializeApp(FirebaseConfig.FirebaseConfig);
-    console.log(FirebaseConfig);
 }
 
 console.ignoredYellowBox = ['Warning:'];
@@ -45,7 +44,6 @@ export default class SignUp extends Component {
                 .createUserWithEmailAndPassword(email, password);
             this.props.navigation.navigate('JakeAvatar', { email });
             ref.doc(email).set({ email, instructors: [] });
-            console.log(result);
         } catch (error) {
             console.log('ERROR AT SIGNUP', error);
             this.setState({ loginError: error });
@@ -56,7 +54,6 @@ export default class SignUp extends Component {
     }
     pressHandler() {
         this.props.navigation.navigate('Login');
-        // console.log(this.props.navigation);
     }
     render() {
         return (

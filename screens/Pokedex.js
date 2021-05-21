@@ -18,7 +18,7 @@ export default function Pokedex(props) {
     const ref = firebase.firestore().collection('Trainer');
     const emailImport = props.navigation.state.params.emailImport;
     const battleData = props.navigation.state.params.randomInstructor;
-    console.log('randominstructor ===>>>', battleData);
+    // console.log('randominstructor ===>>>', battleData);
 
     const getOneTrainerData = () => {
         ref.where('email', '==', emailImport).onSnapshot((querySnapshot) => {

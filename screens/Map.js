@@ -33,7 +33,7 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://ebdbd6d620b4.ngrok.io');
+let socket = io.connect('http://4123876a14f7.ngrok.io');
 export default function Map({ navigation }) {
     const targetRadius = 250;
     const [location, setLocation] = useState(null);
