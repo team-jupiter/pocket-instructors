@@ -278,6 +278,7 @@ export default function Map({ navigation }) {
                     );
                 // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
                 instructorTracker.push(newObjToPush);
+                console.log('INSTRUCTOR TRACKER--->>>', instructorTracker);
             }
         }
         if (friendsArr[0] !== undefined) {

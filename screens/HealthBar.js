@@ -3,7 +3,7 @@ import { View, Animated, Text } from 'react-native';
 
 const available_width = 100;
 export default function HealthBar(props) {
-    const [currentHealth, setCurrentHealth] = useState(props.currentHealth);
+    let currentHealth = props.currentHealth;
     let currHealth = new Animated.Value(currentHealth);
     useEffect(() => {
         Animated.timing(currHealth, {
