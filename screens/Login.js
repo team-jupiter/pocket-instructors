@@ -19,7 +19,8 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loginError: null,
+            loginErro1r: null,
+            trainerData: [],
         };
     }
     state = {
@@ -33,6 +34,9 @@ export default class Login extends Component {
         try {
             const { email, password } = this.state;
             const ref = await firebase.firestore().collection('Trainer');
+            const result = await firebase
+                .auth()
+                .signInWithEmailAndPassword(email, password);
             ref.where('email', '==', email).onSnapshot((querySnapshot) => {
                 const items = [];
                 querySnapshot.forEach((doc) => {
@@ -40,11 +44,9 @@ export default class Login extends Component {
                 });
                 this.state.trainerData = items;
             });
-
-            const result = await firebase
-                .auth()
-                .signInWithEmailAndPassword(email, password);
-            this.props.navigation.navigate('Map', this.state);
+            if (this.state.trainerData.length > 0) {
+                this.props.navigation.navigate('Map', this.state);
+            }
         } catch (error) {
             this.setState({ loginError: error });
             Alert.alert('Invalid Email/Password');
