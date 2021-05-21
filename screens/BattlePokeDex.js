@@ -10,36 +10,34 @@ import {
 } from 'react-native';
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
-console.ignoredYellowBox = ['Warning:'];
 
-export default function OtherPokedex(props) {
+// const testEmail = 'b@b.com'
+
+export default function BattlePokeDex(props) {
     const [ownedInstructors, setOwnedInstructors] = useState();
     const ref = firebase.firestore().collection('Trainer');
-    const emailImport = props.navigation.state.params.emailImport;
     const playerEmail = props.navigation.state.params.playerEmail;
-    function getOneTrainerData() {
-        ref.where('email', '==', emailImport).onSnapshot((querySnapshot) => {
+    const battleData = props.navigation.state.params.randomInstructor;
+
+    const getOneTrainerData = () => {
+        ref.where('email', '==', playerEmail).onSnapshot((querySnapshot) => {
             const items = [];
             querySnapshot.forEach((doc) => {
                 items.push(doc.data());
             });
             setOwnedInstructors(items);
         });
-    }
-    const onPressToBattle = () => {
-        let randomIdx = Math.floor(
-            Math.random() * ownedInstructors[0].instructors.length
-        );
-        let randomInstructor = ownedInstructors[0].instructors[randomIdx];
-
-        props.navigation.navigate('BattlePokeDex', {
-            randomInstructor,
-            playerEmail,
-        });
     };
 
     const goBack = () => {
         props.navigation.pop();
+    };
+
+    const onPressInstructor = (myInstructor) => {
+        props.navigation.navigate('BattleScreen', {
+            opponent: battleData,
+            myInstructor: myInstructor,
+        });
     };
 
     useEffect(() => {
@@ -58,12 +56,7 @@ export default function OtherPokedex(props) {
                             <Text style={styles.cancelText}>X</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={styles.title}> Their Owned Instructors </Text>
-                    <Button
-                        onPress={() => onPressToBattle()}
-                        title="Battle!"
-                        color="#f194ff"
-                    />
+                    <Text style={styles.title}> Owned Instructors </Text>
                     <View style={styles.container}>
                         {ownedInstructors[0].instructors.map(
                             (eachInstructor) => (
@@ -90,6 +83,14 @@ export default function OtherPokedex(props) {
                                         source={{ uri: eachInstructor.imgUrl }}
                                         style={{ width: 300, height: 320 }}
                                     />
+                                    <TouchableOpacity
+                                        style={styles.cancelButton}
+                                        onPress={() =>
+                                            onPressInstructor(eachInstructor)
+                                        }
+                                    >
+                                        <Text>Pick This Instructor </Text>
+                                    </TouchableOpacity>
                                 </View>
                             )
                         )}

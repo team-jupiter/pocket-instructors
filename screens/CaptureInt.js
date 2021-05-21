@@ -34,13 +34,12 @@ export default function CaptureInt(props) {
 
     // console.log('eachInstructor is ...', eachInstructor)
     // console.log('instructors is ...', instructors.length)
-    console.log('props are ...', props.navigation.state.params)
 
     function addInstructor(newInstructor) {
         // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
         //this is hardcoded, this needs to be adjusted
-        let testInstructors = [...instructors, newInstructor]
-        console.log('testInstructors is....', testInstructors)
+        let testInstructors = [...instructors, newInstructor];
+        console.log('testInstructors is....', testInstructors);
         ref.doc(email).update({
             instructors: [...instructors, newInstructor],
         });

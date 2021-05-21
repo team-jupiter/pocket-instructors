@@ -8,6 +8,7 @@ import Pokedex from '../screens/Pokedex';
 import OtherPokedex from '../screens/OtherPokedex';
 import JakeAvatar from '../screens/JakeAvatar';
 import BattleScreen from '../screens/BattleScreen';
+import BattlePokeDex from '../screens/BattlePokeDex';
 
 const screens = {
     Login: {
@@ -34,11 +35,14 @@ const screens = {
             header: null,
         },
     },
+    Pokedex: {
+        screen: Pokedex,
+    },
     OtherPokedex: {
         screen: OtherPokedex,
     },
-    Pokedex: {
-        screen: Pokedex,
+    BattlePokeDex: {
+        screen: BattlePokeDex,
     },
     BattleScreen: {
         screen: BattleScreen,
