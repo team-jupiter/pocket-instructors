@@ -8,6 +8,8 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+import useInterval from 'use-interval';
+
 import HealthBar from './HealthBar';
 
 //DUMMY DATA
@@ -78,25 +80,21 @@ export default function BattleScreen(props) {
         }
     };
     // CPU PLAYER -- runs every 1 second
-    setInterval(() => {
-        const interval = setInterval(() => {
+    useInterval(() => {
+        if (playerHealthState > 0 && oppHealthState > 0) {
             let clicksPerSecond = opponent.level + 3;
             console.log('DEFENSE ', opponent.defense);
             let damage =
                 (opponent.attack / myInstructor.defense) * clicksPerSecond;
-            playerHealth -= damage;
+            setPlayerHealthState(playerHealthState - damage);
             if (playerHealth <= 0 || oppHealthState <= 0) {
                 if (playerHealth <= 0) {
                     setWinner('CPU');
                     console.log('THE PLAYER HAS LOST');
                 }
-                clearInterval(interval);
             }
-            setPlayerHealthState(playerHealth);
-            // console.log('OPPONENET HEALTH STATE --->>>>', cu);
-            // console.log('PLAYER HEALTH--->>>', playerHealth);
-        }, 1000);
-    });
+        }
+    }, 1000);
 
     return (
         <View style={styles.container}>
