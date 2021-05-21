@@ -19,7 +19,7 @@ export default function BattleScreen(props) {
     let playerHealth = myInstructor.hp;
     let oppHealth = opponent.hp;
     // const [oppHealth, setOppHealth] = useState(opponent.hp);
-    let winner = null;
+    const [winner, setWinner] = useState(null);
     const opponentImage = opponent.frontImg;
     // console.log('OPPONENT--->>>>>>', opponent);
     // console.log('MY INSTRUCTOR --->>>>', myInstructor);
@@ -35,7 +35,7 @@ export default function BattleScreen(props) {
             console.log('PLAYER HEALTH--->>>', playerHealth);
             if (playerHealth <= 0 || winner) {
                 if (playerHealth <= 0) {
-                    winner = 'CPU';
+                    setWinner('CPU');
                     console.log('THE PLAYER HAS LOST');
                 }
                 clearInterval(interval);
@@ -52,55 +52,62 @@ export default function BattleScreen(props) {
             console.log(oppHealth);
             if (oppHealth <= 0) {
                 console.log('YOUUUU  WINNNN');
-                winner = 'player';
+
+                setWinner('PLAYER');
             }
         }
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.headerText}>battleGround</Text>
-            <View style={styles.battleGround}>
-                <View style={styles.opponent}>
-                    <HealthBar
-                        currentHealth={oppHealth}
-                        totalHealth={opponent.hp}
-                        label={`Pkmn Name`}
-                    />
-                    {opponentImage ? (
-                        <Animated.Image
-                            source={{
-                                uri: opponentImage,
-                            }}
-                            resizeMode={'contain'}
-                            style={{ width: 100, height: 100 }}
-                        />
-                    ) : (
-                        <Text> Opponent is not loaded </Text>
-                    )}
-                </View>
+            {winner === null ? (
+                <View style={styles.container}>
+                    <Text style={styles.headerText}>battleGround</Text>
+                    <View style={styles.battleGround}>
+                        <View style={styles.opponent}>
+                            <HealthBar
+                                currentHealth={oppHealth}
+                                totalHealth={opponent.hp}
+                                label={`Pkmn Name`}
+                            />
+                            {opponentImage ? (
+                                <Animated.Image
+                                    source={{
+                                        uri: opponentImage,
+                                    }}
+                                    resizeMode={'contain'}
+                                    style={{ width: 100, height: 100 }}
+                                />
+                            ) : (
+                                <Text> Opponent is not loaded </Text>
+                            )}
+                        </View>
 
-                <View style={styles.currentPlayer}>
-                    <HealthBar
-                        currentHealth={playerHealth}
-                        totalHealth={myInstructor.hp}
-                        label={`Pkmn Player`}
-                    />
-                    <Animated.Image
-                        source={{ uri: myInstructorImage }}
-                        resizeMode={'contain'}
-                        style={{ width: 100, height: 100 }}
-                    />
+                        <View style={styles.currentPlayer}>
+                            <HealthBar
+                                currentHealth={playerHealth}
+                                totalHealth={myInstructor.hp}
+                                label={`Pkmn Player`}
+                            />
+                            <Animated.Image
+                                source={{ uri: myInstructorImage }}
+                                resizeMode={'contain'}
+                                style={{ width: 100, height: 100 }}
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <TouchableOpacity
+                            onPress={tapToBattle}
+                            style={styles.roundButton1}
+                        >
+                            <Text>TapTapTap</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-            <View>
-                <TouchableOpacity
-                    onPress={tapToBattle}
-                    style={styles.roundButton1}
-                >
-                    <Text>TapTapTap</Text>
-                </TouchableOpacity>
-            </View>
+            ) : (
+                <Text> {`${winner} WON!`}</Text>
+            )}
         </View>
     );
 }
