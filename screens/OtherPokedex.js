@@ -17,6 +17,8 @@ export default function OtherPokedex(props) {
   const [searchField, setSearchField] = useState('');
   const ref = firebase.firestore().collection('Trainer');
   const emailImport = props.navigation.state.params.emailImport;
+  const playerEmail = props.navigation.state.params.playerEmail;
+
   const battleData = props.navigation.state.params.randomInstructor;
 
   //This is where you query for the Instructor Data

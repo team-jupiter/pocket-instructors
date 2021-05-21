@@ -88,13 +88,6 @@ export default function Pokedex(props) {
                     <Text>Attack: {Math.floor(instructor.attack)}</Text>
                     <Text>Defense: {Math.floor(instructor.defense)}</Text>
                     <Text>Xp: {Math.floor(instructor.xp)}</Text>
-                    <TouchableOpacity>
-                      <Button
-                        style={styles.cancelButton}
-                        onPress={() => onPressInstructor(instructor)}
-                        title='Pick This Instructor'
-                      ></Button>
-                    </TouchableOpacity>
                   </TouchableOpacity>
                 );
               })}
