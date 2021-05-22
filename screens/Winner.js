@@ -12,30 +12,36 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
-import firebase from 'firebase/app';
+import { useEffect } from 'react/cjs/react.development';
+import { wonBattle, lostBattle } from '../firebase/battleFunc.js';
 console.ignoredYellowBox = ['Warning:'];
 
-export default function Winner(props){
+export default function Winner(props) {
+    const myInstructor = props.navigation.state.params.myInstructor;
+    const allInstructors = props.navigation.state.params.allInstructors;
+    const playerEmail = props.navigation.state.params.playerEmail;
 
-        return (
-            <View style={styles.container}>
-                <Image
-                    source={require('../imgs/palletTown.jpeg')}
-                    style={styles.backgroundImage}
-                />
-                <Image
-                    source={require('../imgs/winner.png')}
-                    style={{ width: 380, height: 120, bottom: 60}}
-                />
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() =>{props.navigation.navigate('Map')}}
-                    >
-                        <Text style={styles.buttonText}> Return To Map </Text>
-                    </TouchableOpacity>
+    console.log('IN WINNING SCREEN');
+    const onPress = () => {
+        wonBattle(playerEmail, myInstructor, allInstructors);
+        props.navigation.navigate('Map');
+    };
 
-            </View>
-        );
+    return (
+        <View style={styles.container}>
+            <Image
+                source={require('../imgs/palletTown.jpeg')}
+                style={styles.backgroundImage}
+            />
+            <Image
+                source={require('../imgs/winner.png')}
+                style={{ width: 380, height: 120, bottom: 60 }}
+            />
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+                <Text style={styles.buttonText}> Return To Map </Text>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: 10,
         opacity: 0.8,
-        top:200
+        top: 200,
     },
     buttonText: {
         fontFamily: 'Baskerville',

@@ -3,23 +3,24 @@ import { View, Animated, Text } from 'react-native';
 
 const available_width = 100;
 export default function HealthBar(props) {
-    const [currentHealth, setCurrentHealth] = useState(props.currentHealth);
-    let currHealth = new Animated.Value(currentHealth);
+    let currentHealth = props.currentHealth;
+    const totalHealth = props.totalHealth;
+    let currHealthAnimation = new Animated.Value(currentHealth);
     useEffect(() => {
-        Animated.timing(currHealth, {
+        Animated.timing(currHealthAnimation, {
             duration: 1500,
             toValue: props.currentHealth,
         }).start();
     }, [currentHealth]);
 
     const getCurrentHealthStyles = () => {
-        const animated_width = currHealth.interpolate({
-            inputRange: [0, 250, 400],
+        const animated_width = currHealthAnimation.interpolate({
+            inputRange: [0, totalHealth / 2, totalHealth],
             outputRange: [0, available_width / 2, available_width],
         });
 
-        const color_animation = currHealth.interpolate({
-            inputRange: [0, 250, 500],
+        const color_animation = currHealthAnimation.interpolate({
+            inputRange: [0, totalHealth / 2, totalHealth],
             outputRange: [
                 'rgb(199, 45, 50)',
                 'rgb(224, 150, 39)',
@@ -64,7 +65,7 @@ const styles = {
     },
     rail: {
         height: 10,
-        width: 100,
+        width: 102.2,
         borderWidth: 1,
         borderRadius: 3,
         borderColor: '#616161',
