@@ -20,6 +20,8 @@ import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
 import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 import { LogBox } from 'react-native';
+import uuid from 'react-native-uuid';
+
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -110,7 +112,6 @@ export default function Map({ navigation }) {
             loadSound();
         }
     }, []);
-
     useEffect(() => {
         async function getIntLocations() {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -222,8 +223,7 @@ export default function Map({ navigation }) {
                 );
 
                 let newObjToPush = {};
-                newObjToPush.instructorDexID =
-                    allInstructors[randomInstructorNumber].instructorDexID;
+                newObjToPush.instructorDexId = uuid.v4();
                 newObjToPush.instructorName =
                     allInstructors[randomInstructorNumber].instructorName;
                 // newObjToPush.description =
@@ -278,9 +278,9 @@ export default function Map({ navigation }) {
                     );
                 // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
                 instructorTracker.push(newObjToPush);
-                console.log('INSTRUCTOR TRACKER--->>>', instructorTracker);
             }
         }
+
         if (friendsArr[0] !== undefined) {
             return (
                 <View style={styles.container}>

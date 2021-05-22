@@ -11,9 +11,6 @@ import BattleScreen from '../screens/BattleScreen';
 import BattlePokeDex from '../screens/BattlePokeDex';
 
 const screens = {
-    BattleScreen: {
-        screen: BattleScreen,
-    },
     Login: {
         screen: Login,
         navigationOptions: {
@@ -46,6 +43,9 @@ const screens = {
     },
     BattlePokeDex: {
         screen: BattlePokeDex,
+    },
+    BattleScreen: {
+        screen: BattleScreen,
     },
     JakeAvatar: {
         screen: JakeAvatar,

@@ -11,10 +11,8 @@ import {
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
 
-// const testEmail = 'b@b.com'
-
 export default function BattlePokeDex(props) {
-    const [ownedInstructors, setOwnedInstructors] = useState();
+    const [userData, setuserData] = useState();
     const ref = firebase.firestore().collection('Trainer');
     const playerEmail = props.navigation.state.params.playerEmail;
     const battleData = props.navigation.state.params.randomInstructor;
@@ -25,7 +23,7 @@ export default function BattlePokeDex(props) {
             querySnapshot.forEach((doc) => {
                 items.push(doc.data());
             });
-            setOwnedInstructors(items);
+            setuserData(items);
         });
     };
 
@@ -37,6 +35,8 @@ export default function BattlePokeDex(props) {
         props.navigation.navigate('BattleScreen', {
             opponent: battleData,
             myInstructor: myInstructor,
+            playerEmail,
+            allInstructors: userData[0].instructors,
         });
     };
 
@@ -44,7 +44,7 @@ export default function BattlePokeDex(props) {
         getOneTrainerData();
     }, []);
 
-    if (ownedInstructors !== undefined) {
+    if (userData !== undefined) {
         return (
             <ScrollView>
                 <View style={styles.masterContainer}>
@@ -58,42 +58,33 @@ export default function BattlePokeDex(props) {
                     </View>
                     <Text style={styles.title}> Owned Instructors </Text>
                     <View style={styles.container}>
-                        {ownedInstructors[0].instructors.map(
-                            (eachInstructor) => (
-                                <View
-                                    style={styles.eachPokemonContainer}
-                                    key={eachInstructor.instructorDexID}
+                        {userData[0].instructors.map((eachInstructor) => (
+                            <View
+                                style={styles.eachPokemonContainer}
+                                key={eachInstructor.instructorDexID}
+                            >
+                                <Text>
+                                    Instructor: {eachInstructor.instructorName}{' '}
+                                </Text>
+                                <Text>HP: {eachInstructor.hp} </Text>
+                                <Text>Attack: {eachInstructor.attack}</Text>
+                                <Text>Defense: {eachInstructor.defense}</Text>
+                                <Text>Level: {eachInstructor.level}</Text>
+                                <Text>Xp: {eachInstructor.xp}</Text>
+                                <Image
+                                    source={{ uri: eachInstructor.imgUrl }}
+                                    style={{ width: 300, height: 320 }}
+                                />
+                                <TouchableOpacity
+                                    style={styles.cancelButton}
+                                    onPress={() =>
+                                        onPressInstructor(eachInstructor)
+                                    }
                                 >
-                                    <Text>
-                                        Instructor:{' '}
-                                        {eachInstructor.instructorName}{' '}
-                                    </Text>
-                                    <Text>
-                                        Instructor Dex #:{' '}
-                                        {eachInstructor.instructorDexID}{' '}
-                                    </Text>
-                                    <Text>HP: {eachInstructor.hp} </Text>
-                                    <Text>Attack: {eachInstructor.attack}</Text>
-                                    <Text>
-                                        Defense: {eachInstructor.defense}
-                                    </Text>
-                                    <Text>Level: {eachInstructor.level}</Text>
-                                    <Text>Xp: {eachInstructor.xp}</Text>
-                                    <Image
-                                        source={{ uri: eachInstructor.imgUrl }}
-                                        style={{ width: 300, height: 320 }}
-                                    />
-                                    <TouchableOpacity
-                                        style={styles.cancelButton}
-                                        onPress={() =>
-                                            onPressInstructor(eachInstructor)
-                                        }
-                                    >
-                                        <Text>Pick This Instructor </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        )}
+                                    <Text>Pick This Instructor </Text>
+                                </TouchableOpacity>
+                            </View>
+                        ))}
                     </View>
                 </View>
             </ScrollView>

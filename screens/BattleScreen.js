@@ -7,10 +7,14 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    Vibration,
 } from 'react-native';
 import useInterval from 'use-interval';
-
 import HealthBar from './HealthBar';
+
+// FUNCTIONS THAT UPDATE THE DATABASE TO NEW XP AN LEVEL
+// wonBattle(email,singleInstructorInstance, allInstructors)
+import { wonBattle, lostBattle } from '../firebase/battleFunc.js';
 
 //DUMMY DATA
 const opponentDummyData = {
@@ -31,31 +35,139 @@ const opponentDummyData = {
     xp: 0,
 };
 
-const myInstructorDummyData = {
-    attack: 14,
-    backImg:
-        'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chrisBack.gif?alt=media&token=8578b721-692e-4758-9f42-85c82a0aef2a',
-    defense: 8,
-    frontImg:
-        'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
-    hp: 93,
-    imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
-    instructorDexID: 5,
-    instructorName: 'Christopher G.M.',
-    latitude: 25.395988227854865,
-    level: 1,
-    longitude: 51.520464763095816,
-    smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/cgm.webp?alt=media&token=65c0f5f9-ac06-43af-9d14-5af9ea99487f',
-    xp: 0,
-};
-
+// const myInstructorDummyData = {
+//     attack: 14,
+//     backImg:
+//         'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chrisBack.gif?alt=media&token=8578b721-692e-4758-9f42-85c82a0aef2a',
+//     defense: 8,
+//     frontImg:
+//         'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//     hp: 93,
+//     imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//     instructorDexID: 5,
+//     instructorName: 'Christopher G.M.',
+//     latitude: 25.395988227854865,
+//     level: 1,
+//     longitude: 51.520464763095816,
+//     smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/cgm.webp?alt=media&token=65c0f5f9-ac06-43af-9d14-5af9ea99487f',
+//     xp: 90,
+// };
+// const allInstructorsDummyData = [
+//     {
+//         attack: 14,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chrisBack.gif?alt=media&token=8578b721-692e-4758-9f42-85c82a0aef2a',
+//         defense: 8,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//         hp: 97,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//         instructorDexID: 5,
+//         instructorName: 'Christopher G.M.',
+//         latitude: 25.394824645792173,
+//         level: 1,
+//         longitude: 51.522245561258394,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/cgm.webp?alt=media&token=65c0f5f9-ac06-43af-9d14-5af9ea99487f',
+//         xp: 90,
+//     },
+//     {
+//         attack: 17,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/rickyBack.gif?alt=media&token=cddb8903-2953-446b-89ab-6e193f3bce2e',
+//         defense: 1,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/ricky.gif?alt=media&token=04853dc8-eaee-4088-8a6e-b65a483681a9',
+//         hp: 84,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/ricky.gif?alt=media&token=04853dc8-eaee-4088-8a6e-b65a483681a9',
+//         instructorDexID: '9',
+//         instructorName: 'Rick',
+//         latitude: 25.397696049668355,
+//         level: 1,
+//         longitude: 51.522744492795,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/ricky-map.png?alt=media&token=a9d0c51d-0710-45d2-b024-fc28fabdd235',
+//         xp: 0,
+//     },
+//     {
+//         attack: 6,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/mayback.gif?alt=media&token=e15e8b9f-e5a0-4999-b154-1aa7de1d8521',
+//         defense: 7,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/may.gif?alt=media&token=d18217ec-9d37-47df-9274-b2c64558851e',
+//         hp: 99,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/may.gif?alt=media&token=d18217ec-9d37-47df-9274-b2c64558851e',
+//         instructorDexID: 6,
+//         instructorName: 'May',
+//         latitude: 25.397954421921785,
+//         level: 1,
+//         longitude: 51.52302840541373,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/squirtle-may.png?alt=media&token=99e34db0-9a5e-4249-9c8e-31d9e40fe7ad',
+//         xp: 0,
+//     },
+//     {
+//         attack: 8,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissaBack.gif?alt=media&token=e8160fc5-aae4-4337-a4bc-eb333f5f3291',
+//         defense: 7,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa.gif?alt=media&token=43585bcb-3793-40cd-9746-b6cc858f065f',
+//         hp: 82,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa.gif?alt=media&token=43585bcb-3793-40cd-9746-b6cc858f065f',
+//         instructorDexID: 7,
+//         instructorName: 'Melissa',
+//         latitude: 25.39543185851903,
+//         level: 1,
+//         longitude: 51.52037378668351,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa-meowth.webp?alt=media&token=d2385a3d-058c-42b5-ab80-f6275b85f288',
+//         xp: 0,
+//     },
+//     {
+//         attack: 10,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissaBack.gif?alt=media&token=e8160fc5-aae4-4337-a4bc-eb333f5f3291',
+//         defense: 8,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa.gif?alt=media&token=43585bcb-3793-40cd-9746-b6cc858f065f',
+//         hp: 90,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa.gif?alt=media&token=43585bcb-3793-40cd-9746-b6cc858f065f',
+//         instructorDexID: 7,
+//         instructorName: 'Melissa',
+//         latitude: 25.397255878183234,
+//         level: 1,
+//         longitude: 51.520196202646304,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/melissa-meowth.webp?alt=media&token=d2385a3d-058c-42b5-ab80-f6275b85f288',
+//         xp: 0,
+//     },
+//     {
+//         attack: 14,
+//         backImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chrisBack.gif?alt=media&token=8578b721-692e-4758-9f42-85c82a0aef2a',
+//         defense: 8,
+//         frontImg:
+//             'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//         hp: 93,
+//         imgUrl: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/chris.gif?alt=media&token=5c0adb42-444a-4198-bf98-a19a8080420d',
+//         instructorDexID: 5,
+//         instructorName: 'Christopher G.M.',
+//         latitude: 25.395988227854865,
+//         level: 1,
+//         longitude: 51.520464763095816,
+//         smlImg: 'https://firebasestorage.googleapis.com/v0/b/pocket-instructor-87369.appspot.com/o/cgm.webp?alt=media&token=65c0f5f9-ac06-43af-9d14-5af9ea99487f',
+//         xp: 90,
+//     },
+// ];
 export default function BattleScreen(props) {
-    // const opponent = props.navigation.state.params.opponent;
-    // const myInstructor = props.navigation.state.params.myInstructor;
+    // REAL DATA PASSED FROM BattlePokeDex
+    const opponent = props.navigation.state.params.opponent;
+    const myInstructor = props.navigation.state.params.myInstructor;
+    const allInstructors = props.navigation.state.params.allInstructors;
+    const playerEmail = props.navigation.state.params.playerEmail;
 
-    // DUMMY DATA STUFF TO BE REMOVED
-    const opponent = opponentDummyData;
-    const myInstructor = myInstructorDummyData;
+    // // DUMMY DATA STUFF TO BE REMOVED
+    // const opponent = opponentDummyData;
+    // const myInstructor = myInstructorDummyData;
+    // const allInstructors = allInstructorsDummyData;
+    // const playerEmail = 'Kavin@g.com';
 
     const [playerHealthState, setPlayerHealthState] = useState(myInstructor.hp);
     let playerHealth = myInstructor.hp;
@@ -63,8 +175,6 @@ export default function BattleScreen(props) {
     const [oppHealthState, setOppHealthState] = useState(opponent.hp);
     const [winner, setWinner] = useState(null);
     const opponentImage = opponent.frontImg;
-    // console.log('OPPONENT--->>>>>>', opponent);
-    // console.log('MY INSTRUCTOR --->>>>', myInstructor);
     const myInstructorImage = myInstructor.backImg;
 
     // REAL LIFE PLAYER
@@ -77,22 +187,20 @@ export default function BattleScreen(props) {
         if (oppHealthState <= 0) {
             console.log('YOUUUU  WINNNN');
             setWinner('PLAYER');
+            wonBattle(playerEmail, myInstructor, allInstructors);
         }
     };
     // CPU PLAYER -- runs every 1 second
     useInterval(() => {
         if (playerHealthState > 0 && oppHealthState > 0) {
             let clicksPerSecond = opponent.level + 3;
-            console.log('DEFENSE ', opponent.defense);
             let damage =
                 (opponent.attack / myInstructor.defense) * clicksPerSecond;
+            Vibration.vibrate();
             setPlayerHealthState(playerHealthState - damage);
-            if (playerHealth <= 0 || oppHealthState <= 0) {
-                if (playerHealth <= 0) {
-                    setWinner('CPU');
-                    console.log('THE PLAYER HAS LOST');
-                }
-            }
+        } else if (playerHealthState <= 0 && !winner) {
+            setWinner('CPU');
+            lostBattle(playerEmail, myInstructor, allInstructors);
         }
     }, 1000);
 

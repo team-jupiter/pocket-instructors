@@ -26,9 +26,8 @@ export default function CaptureInt(props) {
     const ref4 = firebase.firestore().collection('Instructors');
 
     const { eachInstructor } = props.navigation.state.params;
-    const { instructorUrl } = props.navigation.state.params.eachInstructor;
+    // const { instructorUrl } = props.navigation.state.params.eachInstructor;
     const { instructors } = props.navigation.state.params;
-    const { instructorDexID } = props.navigation.state.params.instructors;
     const { imgUrl } = props.navigation.state.params.eachInstructor;
     const { email } = props.navigation.state.params;
 
