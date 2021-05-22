@@ -43,10 +43,8 @@ export default class Login extends Component {
                     items.push(doc.data());
                 });
                 this.state.trainerData = items;
-            });
-            if (this.state.trainerData.length > 0) {
                 this.props.navigation.navigate('Map', this.state);
-            }
+            });
         } catch (error) {
             this.setState({ loginError: error });
             Alert.alert('Invalid Email/Password');

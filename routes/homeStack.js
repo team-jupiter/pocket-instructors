@@ -9,6 +9,8 @@ import OtherPokedex from '../screens/OtherPokedex';
 import JakeAvatar from '../screens/JakeAvatar';
 import BattleScreen from '../screens/BattleScreen';
 import BattlePokeDex from '../screens/BattlePokeDex';
+import Winner from '../screens/Winner';
+import Loser from '../screens/Loser';
 
 const screens = {
     Login: {
@@ -27,6 +29,7 @@ const screens = {
         screen: Map,
         navigationOptions: {
             header: null,
+            gestureEnabled: false,
         },
     },
     CaptureInt: {
@@ -37,18 +40,52 @@ const screens = {
     },
     Pokedex: {
         screen: Pokedex,
+        // navigationOptions: {
+        //     header: null,
+        //     gestureEnabled: false,
+        // },
     },
     OtherPokedex: {
         screen: OtherPokedex,
+        // navigationOptions: {
+        //     header: null,
+        //     gestureEnabled: false,
+        // },
     },
     BattlePokeDex: {
         screen: BattlePokeDex,
+        navigationOptions: {
+            header: null,
+            gestureEnabled: false,
+        },
     },
     BattleScreen: {
         screen: BattleScreen,
+        navigationOptions: {
+            header: null,
+            gestureEnabled: false,
+        },
     },
     JakeAvatar: {
         screen: JakeAvatar,
+        navigationOptions: {
+            header: null,
+            gestureEnabled: false,
+        },
+    },
+    Loser: {
+        screen: Loser,
+        navigationOptions: {
+            header: null,
+            gestureEnabled: false,
+        },
+    },
+    Winner: {
+        screen: Winner,
+        navigationOptions: {
+            header: null,
+            gestureEnabled: false,
+        },
     },
 };
 

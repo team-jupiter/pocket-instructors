@@ -26,8 +26,9 @@ export default function CaptureInt(props) {
     const ref4 = firebase.firestore().collection('Instructors');
 
     const { eachInstructor } = props.navigation.state.params;
-    // const { instructorUrl } = props.navigation.state.params.eachInstructor;
+    const { instructorUrl } = props.navigation.state.params.eachInstructor;
     const { instructors } = props.navigation.state.params;
+    const { instructorDexID } = props.navigation.state.params.instructors;
     const { imgUrl } = props.navigation.state.params.eachInstructor;
     const { email } = props.navigation.state.params;
 
@@ -73,7 +74,7 @@ export default function CaptureInt(props) {
             if (isCaptured(gesture)) {
                 setCaptured(true),
                     () => {
-                        setTimeout(goBack, 1500);
+                        setTimeout(goBack, 2500);
                     };
             } else {
                 Animated.spring(animatedPokeball, {
@@ -144,7 +145,7 @@ export default function CaptureInt(props) {
         <View style={styles.container}>
             <StatusBar animated hidden />
             <Animated.Image
-                source={require('../imgs/image.png')}
+                source={require('../imgs/CaptureInt.jpg')}
                 styles={styles.background}
             />
             {captured ? (
@@ -214,9 +215,7 @@ const styles = StyleSheet.create({
     },
     background: {
         flex: 1,
-        width: null,
-        height: null,
-        resizeMode: 'center',
+        resizeMode: 'contain',
     },
     bottomOverlay: {
         bottom: 0,

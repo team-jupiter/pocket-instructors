@@ -11,7 +11,7 @@ const ref = firebase.firestore().collection('Trainer');
 export const wonBattle = (email, singleInstructorInstance, allInstructors) => {
     //updating allInstructors --> deleted the old instance of
     // the instructor we are updating
-    console.log('ALL INSTRUCTORS ===>>>>', singleInstructorInstance);
+    console.log('WOB BATTLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     const updatedAllInstructors = allInstructors.map((instructor) => {
         if (
             instructor.instructorDexId ===

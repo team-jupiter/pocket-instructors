@@ -21,7 +21,6 @@ import loading from '../screens/loading';
 import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 import { LogBox } from 'react-native';
 import uuid from 'react-native-uuid';
-
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -35,7 +34,7 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://4123876a14f7.ngrok.io');
+let socket = io.connect('http://ca9565af71f3.ngrok.io');
 export default function Map({ navigation }) {
     const targetRadius = 250;
     const [location, setLocation] = useState(null);
@@ -50,13 +49,11 @@ export default function Map({ navigation }) {
     const ref4 = firebase.firestore().collection('Instructors');
     const email = navigation.getParam('email');
     const globalJake = navigation.state.params.trainerData[0].jakeUrl;
-    const jakesDog = require('../imgs/jakedog.png');
     const music = new Audio.Sound();
 
     const onPress = (eachInstructor) => {
         navigation.navigate('CaptureInt', {
             instructors,
-            jakesDog,
             eachInstructor,
             email,
         });
@@ -112,6 +109,7 @@ export default function Map({ navigation }) {
             loadSound();
         }
     }, []);
+
     useEffect(() => {
         async function getIntLocations() {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -280,7 +278,6 @@ export default function Map({ navigation }) {
                 instructorTracker.push(newObjToPush);
             }
         }
-
         if (friendsArr[0] !== undefined) {
             return (
                 <View style={styles.container}>
@@ -325,7 +322,12 @@ export default function Map({ navigation }) {
                                 source={{
                                     uri: userData[0].jakeUrl,
                                 }}
-                                style={{ width: 40, height: 42 }}
+                                style={{
+                                    width: 40,
+                                    height: 42,
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                }}
                                 resizeMode="contain"
                             />
                         </MapView.Marker>
@@ -364,7 +366,12 @@ export default function Map({ navigation }) {
                                         uri: eachPlayer.globalJake,
                                     }}
                                     // source={require('../imgs/pic.png')}
-                                    style={{ width: 40, height: 42 }}
+                                    style={{
+                                        width: 40,
+                                        height: 42,
+                                        borderWidth: 1,
+                                        borderRadius: 20,
+                                    }}
                                     resizeMode="contain"
                                 />
                             </MapView.Marker>
@@ -409,7 +416,12 @@ export default function Map({ navigation }) {
                                 source={{
                                     uri: userData[0].jakeUrl,
                                 }}
-                                style={{ width: 40, height: 42 }}
+                                style={{
+                                    width: 40,
+                                    height: 42,
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                }}
                                 resizeMode="contain"
                             />
                         </MapView.Marker>
