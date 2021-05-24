@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'salmon',
     },
     titleText: {
         fontFamily: 'Baskerville',
