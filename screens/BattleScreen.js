@@ -74,7 +74,10 @@ export default function BattleScreen(props) {
         <View style={styles.container}>
             {winner === null ? (
                 <View style={styles.container}>
-                    <Text style={styles.headerText}>battleGround</Text>
+                    <Image
+                        source={require('../imgs/battle.png')}
+                        style={styles.backgroundImage}
+                    />
                     <View style={styles.battleGround}>
                         <View style={styles.opponent}>
                             <HealthBar
@@ -113,7 +116,7 @@ export default function BattleScreen(props) {
                             onPress={tapToBattle}
                             style={styles.roundButton1}
                         >
-                            <Text>TapTapTap</Text>
+                            <Text>TAP AS FAST AS YOU CAN </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -139,6 +142,8 @@ const styles = StyleSheet.create({
     },
     battleGround: {
         flex: 8,
+        top: 200,
+        backgroundColor: 'powderblue',
         padding: 12,
         flexDirection: 'column',
     },
@@ -162,7 +167,17 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         padding: 15,
-        borderRadius: 20,
-        backgroundColor: 'orange',
+        // borderRadius: 20,
+        backgroundColor: '#ffcb05',
+    },
+    backgroundImage: {
+        position: 'absolute',
+        justifyContent: 'center',
+        alignContent: 'center',
+        backgroundColor: 'powderblue',
+        top: 10,
+        height: 200,
+        width: 415,
+        resizeMode: 'contain',
     },
 });
