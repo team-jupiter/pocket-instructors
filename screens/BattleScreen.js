@@ -12,10 +12,6 @@ import {
 import useInterval from 'use-interval';
 import HealthBar from './HealthBar';
 
-// FUNCTIONS THAT UPDATE THE DATABASE TO NEW XP AN LEVEL
-// wonBattle(email,singleInstructorInstance, allInstructors)
-// import { wonBattle, lostBattle } from '../firebase/battleFunc.js';
-
 export default function BattleScreen(props) {
     // REAL DATA PASSED FROM BattlePokeDex
     const opponent = props.navigation.state.params.opponent;
@@ -35,11 +31,14 @@ export default function BattleScreen(props) {
     const tapToBattle = () => {
         // if nobody has won yet you can continue to play
         const damage = myInstructor.attack / opponent.defense;
-        oppHealth = oppHealth - damage;
+        if (oppHealthState - damage < 0) {
+            oppHealth = oppHealth - damage;
+            setOppHealthState(0);
+        } else {
+            setOppHealthState(oppHealthState - damage);
+        }
         setOppHealthState(oppHealthState - damage);
-        console.log('OPP HEALTH --->>', oppHealthState);
         if (oppHealthState <= 0) {
-            console.log('YOUUUU  WINNNN');
             setWinner('Winner');
             props.navigation.navigate('Winner', {
                 playerEmail,
@@ -55,7 +54,11 @@ export default function BattleScreen(props) {
             let damage =
                 (opponent.attack / myInstructor.defense) * clicksPerSecond;
             Vibration.vibrate();
-            setPlayerHealthState(playerHealthState - damage);
+            if (playerHealthState - damage < 0) {
+                setPlayerHealthState(0);
+            } else {
+                setPlayerHealthState(playerHealthState - damage);
+            }
         } else if (playerHealthState <= 0 && !winner) {
             setWinner('Loser');
             props.navigation.navigate('Loser', {
@@ -65,10 +68,6 @@ export default function BattleScreen(props) {
             });
         }
     }, 1000);
-
-    if (winner === 'Winner') {
-        // wonBattle(playerEmail, myInstructor, allInstructors);
-    }
 
     return (
         <View style={styles.container}>
@@ -167,7 +166,6 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         padding: 15,
-        // borderRadius: 20,
         backgroundColor: '#ffcb05',
     },
     backgroundImage: {

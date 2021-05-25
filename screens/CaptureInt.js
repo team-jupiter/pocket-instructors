@@ -32,14 +32,8 @@ export default function CaptureInt(props) {
     const { imgUrl } = props.navigation.state.params.eachInstructor;
     const { email } = props.navigation.state.params;
 
-    // console.log('eachInstructor is ...', eachInstructor)
-    // console.log('instructors is ...', instructors.length)
-
     function addInstructor(newInstructor) {
-        // console.log('DATA FROM ADD INSTRUCTOR -->', instructors);
-        //this is hardcoded, this needs to be adjusted
         let testInstructors = [...instructors, newInstructor];
-        console.log('testInstructors is....', testInstructors);
         ref.doc(email).update({
             instructors: [...instructors, newInstructor],
         });
@@ -103,7 +97,6 @@ export default function CaptureInt(props) {
         const pokemonX = width / 5 + pokemonPosition.x;
         const pokemonY = height / 5 + pokemonPosition.y;
 
-        //only returns if both these absolute vals under 50
         return (
             Math.abs(pokeballX - pokemonX) < 300 &&
             Math.abs(pokeballY - pokemonY) < 300

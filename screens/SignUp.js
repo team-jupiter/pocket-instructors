@@ -12,8 +12,8 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
+import * as Location from 'expo-location';
 import * as firebase from 'firebase';
-import Navigator from '../routes/homeStack';
 import FirebaseConfig from '../constants/ApiKey';
 if (firebase.apps.length === 0) {
     firebase.initializeApp(FirebaseConfig.FirebaseConfig);
@@ -38,6 +38,8 @@ export default class SignUp extends Component {
 
     async onSignUp() {
         try {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+
             const { email, password } = this.state;
             const result = await firebase
                 .auth()
@@ -45,7 +47,6 @@ export default class SignUp extends Component {
             this.props.navigation.navigate('JakeAvatar', { email });
             ref.doc(email).set({ email, instructors: [] });
         } catch (error) {
-            console.log('ERROR AT SIGNUP', error);
             this.setState({ loginError: error });
             Alert.alert(
                 'ERROR: Check email format and make sure password is at least 6 characters!'

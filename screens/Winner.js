@@ -21,7 +21,6 @@ export default function Winner(props) {
     const allInstructors = props.navigation.state.params.allInstructors;
     const playerEmail = props.navigation.state.params.playerEmail;
 
-    console.log('IN WINNING SCREEN');
     const onPress = () => {
         wonBattle(playerEmail, myInstructor, allInstructors);
         props.navigation.navigate('Map');

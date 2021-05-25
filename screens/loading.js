@@ -35,7 +35,6 @@ const loading = () => {
                 speed={1}
                 onAnimationFinish={() => {
                     // console.log('Animation Finished!');
-                    // this.props.navigation.replace('Home');
                 }}
             />
         </View>

@@ -9,9 +9,6 @@ const ref = firebase.firestore().collection('Trainer');
 
 // will update the trainers instructors to increase xp and or level
 export const wonBattle = (email, singleInstructorInstance, allInstructors) => {
-    //updating allInstructors --> deleted the old instance of
-    // the instructor we are updating
-    console.log('WOB BATTLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     const updatedAllInstructors = allInstructors.map((instructor) => {
         if (
             instructor.instructorDexId ===
@@ -31,14 +28,12 @@ export const wonBattle = (email, singleInstructorInstance, allInstructors) => {
     ref.doc(email).update({
         instructors: updatedAllInstructors,
     });
-    // console.log(updatedAllInstructors);
 };
 
 // will update the trainers instructors to increase xp and or level
 export const lostBattle = (email, singleInstructorInstance, allInstructors) => {
     //updating allInstructors --> deleted the old instance of
     // the instructor we are updating
-    console.log('LOST BATTLE FUNC HAS BEEN HITT');
     const updatedAllInstructors = allInstructors.map((instructor) => {
         if (
             instructor.instructorDexId ===
@@ -58,5 +53,4 @@ export const lostBattle = (email, singleInstructorInstance, allInstructors) => {
     ref.doc(email).update({
         instructors: updatedAllInstructors,
     });
-    console.log(updatedAllInstructors);
 };
