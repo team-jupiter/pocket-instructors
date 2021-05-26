@@ -12,8 +12,6 @@ import {
 import * as firebase from 'firebase';
 import { useEffect } from 'react';
 
-// const testEmail = 'b@b.com'
-
 export default function BattlePokeDex(props) {
     const [ownedInstructors, setOwnedInstructors] = useState();
     const [searchField, setSearchField] = useState('');

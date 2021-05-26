@@ -13,6 +13,8 @@ import {
     Alert,
 } from 'react-native';
 import firebase from 'firebase/app';
+import * as Location from 'expo-location';
+
 console.ignoredYellowBox = ['Warning:'];
 
 export default class Login extends Component {
@@ -32,6 +34,7 @@ export default class Login extends Component {
 
     async onLogin() {
         try {
+            let { status } = await Location.requestForegroundPermissionsAsync();
             const { email, password } = this.state;
             const ref = await firebase.firestore().collection('Trainer');
             const result = await firebase

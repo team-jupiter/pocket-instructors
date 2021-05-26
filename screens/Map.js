@@ -10,15 +10,12 @@ import {
     Button,
 } from 'react-native';
 import { Audio } from 'expo-av';
-import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { generateRandomPoint } from '../utilities/locationGenerator';
-import LottieView from 'lottie-react-native';
 import * as firebase from 'firebase';
 import FirebaseConfig from '../constants/ApiKey';
 import loading from '../screens/loading';
-import { getPixelSizeForLayoutSize } from 'react-native/Libraries/Utilities/PixelRatio';
 import { LogBox } from 'react-native';
 import uuid from 'react-native-uuid';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -34,7 +31,7 @@ let tempFriends = {};
 let musicPlayer = 0;
 
 const io = require('socket.io-client');
-let socket = io.connect('http://414c9262cb9d.ngrok.io');
+let socket = io.connect('http://486776b5fa58.ngrok.io');
 export default function Map({ navigation }) {
     const targetRadius = 250;
     const [location, setLocation] = useState(null);
@@ -113,10 +110,13 @@ export default function Map({ navigation }) {
     useEffect(() => {
         async function getIntLocations() {
             let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
             const interval = setInterval(() => {
                 (async () => {
                     getAllInstructorData();
-                    // let { status } = await Location.requestForegroundPermissionsAsync();
                     let locationForIns = await Location.getCurrentPositionAsync(
                         {}
                     );
@@ -138,10 +138,10 @@ export default function Map({ navigation }) {
             const interval = setInterval(() => {
                 (async () => {
                     getTrainerData();
-                    // if (status !== "granted") {
-                    //   setErrorMsg("Permission to access location was denied");
-                    //   return;
-                    // }
+                    if (status !== 'granted') {
+                        setErrorMsg('Permission to access location was denied');
+                        return;
+                    }
                     let location = await Location.getCurrentPositionAsync({});
                     setLocation(location);
                     socket.emit('position', {
@@ -224,12 +224,8 @@ export default function Map({ navigation }) {
                 newObjToPush.instructorDexId = uuid.v4();
                 newObjToPush.instructorName =
                     allInstructors[randomInstructorNumber].instructorName;
-                // newObjToPush.description =
-                //   allInstructors[randomInstructorNumber].description;
-                // img for capture
                 newObjToPush.imgUrl =
                     allInstructors[randomInstructorNumber].imgUrl;
-                // img for smol map
                 newObjToPush.smlImg =
                     allInstructors[randomInstructorNumber].smlImg;
                 newObjToPush.longitude = instructorLocation.longitude;
@@ -274,7 +270,6 @@ export default function Map({ navigation }) {
                     Math.floor(
                         0.8 * allInstructors[randomInstructorNumber].maxHP
                     );
-                // newObjToPush.moveSet = allInstructors[randomInstructorNumber].moveSet;
                 instructorTracker.push(newObjToPush);
             }
         }
@@ -282,17 +277,9 @@ export default function Map({ navigation }) {
             return (
                 <View style={styles.container}>
                     <MapView
-                        //customMapStyle imports map designs from https://mapstyle.withgoogle.com/
                         customMapStyle={require('../assets/map-design.json')}
                         provider={PROVIDER_GOOGLE}
                         showsBuildings
-                        // ref={(ref) => {
-                        //   this.map = ref;
-                        // }}
-                        // onLayout={() => {
-                        //   this.map.animateToBearing(125);
-                        //   this.map.animateToViewingAngle(45);
-                        // }}
                         initialRegion={{
                             latitude: location.coords.latitude,
                             longitude: location.coords.longitude,
@@ -361,11 +348,9 @@ export default function Map({ navigation }) {
                                 }}
                             >
                                 <Image
-                                    //modify this line here
                                     source={{
                                         uri: eachPlayer.globalJake,
                                     }}
-                                    // source={require('../imgs/pic.png')}
                                     style={{
                                         width: 40,
                                         height: 42,

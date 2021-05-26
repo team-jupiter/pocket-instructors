@@ -7,16 +7,10 @@ const PORT = 3000;
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-// if (process.env.NODE_ENV !== 'production') require('../secrets')
-// logging middleware
 app.use(morgan('dev'));
 // body parsing middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// bodyParser = {
-//   json: {limit: '50mb', extended: true},
-//   urlencoded: {limit: '50mb', extended: true}
-// };
 
 // compression middleware
 app.use(compression());
